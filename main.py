@@ -18,6 +18,7 @@ if os.path.isfile("config.json"):
 parser = argparse.ArgumentParser(
     description="Tool for running Nations Cup. Supports creating matchups for countries, starting & monitoring games through the WZ API and writing player results.",
     allow_abbrev=True,
+    epilog="Created by JustinR17"
 )
 parser.add_argument(
     "-r",
@@ -26,10 +27,10 @@ parser.add_argument(
     action="store_true",
 )
 parser.add_argument(
-    "cmd", choices=["cmatches", "cgames", "pgames", "pplayers", "setup"]
+    "cmd", choices=["cmatches", "cgames", "pgames", "pplayers", "setup"], help="Nations cup command."
 )
-parser.add_argument("-e", "--email")
-parser.add_argument("-t", "--token")
+parser.add_argument("-e", "--email", help="Warzone email used for commands requiring the API. Not required for `setup`, `cmatches` and `pplayers`. Refer to `setup` for generating a config file.")
+parser.add_argument("-t", "--token", help="Warzone API token (https://www.warzone.com/wiki/Get_API_Token_API) used for commands requiring the API. Not required for `setup`, `cmatches` and `pplayers`. Refer to `setup` for generating a config file.")
 args = parser.parse_args()
 print(args)
 
