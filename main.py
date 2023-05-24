@@ -2,6 +2,11 @@
 import argparse
 import os
 import json
+from CreateGames import CreateGames
+
+from CreateMatches import CreateMatches
+from ParseGames import ParseGames
+from ParsePlayers import ParsePlayers
 
 config = {}
 if os.path.isfile("config.json"):
@@ -33,8 +38,17 @@ if args.email is None and args.cmd in ["cgames", "pgames"]:
 if args.token is None and args.cmd in ["cgames", "pgames"]:
     parser.error("-t/--token is required if no config is present")
 
+config["run"] = args.run
 
-if args.cmd == "setup":
+if args.cmd == "cmatches":
+    create_matches = CreateMatches(config)
+elif args.cmd == "cgames":
+    create_games = CreateGames(config)
+elif args.cmd == "pgames":
+    parse_games = ParseGames(config)
+elif args.cmd == "pplayers":
+    parse_players = ParsePlayers(config)
+elif args.cmd == "setup":
     print(
         f"Running setup to create a config.json file locally. This will allow you to run commands without needing to input the warzone email and API token every time. Note that everything is stored locally and no data is sent anywhere."
     )
@@ -47,3 +61,6 @@ if args.cmd == "setup":
     config_file = open("config.json", "w")
     json.dump(config, config_file)
     config_file.close()
+else:
+    # Should not occur due to argparse library
+    raise f"Unknown command supplied: '{args.cmd}'"
