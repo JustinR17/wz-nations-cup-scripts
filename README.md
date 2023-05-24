@@ -1,0 +1,1 @@
+# wz-nations-cup-scripts
