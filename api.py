@@ -1,31 +1,34 @@
-
-
 # https://www.warzone.com/wiki/Category:API
 from typing import List, Tuple
 import requests
 
-class GameResult:
-    def __init__(self) -> None:
-        pass
+from NCTypes import GameResult
+
 
 class API:
-
     CREATE_GAME_ENDPOINT = "https://www.warzone.com/API/CreateGame"
     DELETE_GAME_ENDPOINT = "https://www.warzone.com/API/DeleteLobbyGame"
-    QUERY_GAME_ENDPOINT = "https://www.warzone.com/API/GameFeed?GameID="
-    VALIDATE_INVITE_TOKEN_ENDPOINT = "https://www.warzone.com/API/ValidateInviteToken?Token="
+    QUERY_GAME_ENDPOINT = "https://www.warzone.com/API/GameFeed"
+    VALIDATE_INVITE_TOKEN_ENDPOINT = (
+        "https://www.warzone.com/API/ValidateInviteToken"
+    )
 
     def __init__(self, config):
         self.config = config
-    
+
     def check_game(self, game_id: str) -> GameResult:
         """
         Checks the progress and results of a game using the WZ API.
 
         Returns the result of the game (in-progress or completed).
         """
-        pass
-    
+        game_json = requests.post(
+            f"{API.QUERY_GAME_ENDPOINT}?GameID={game_id}",
+            {"Email": self.config["email"], "APIToken": self.config["token"]},
+        ).json()
+
+        # game_result = GameResult(GameResult.Outcome[game_json["state"]])
+
     def create_game(self, players, template, name: str, description: str) -> str | None:
         """
         Creates a game using the WZ API with the specified players, template, and game name/description.
@@ -34,10 +37,23 @@ class API:
         """
         pass
 
-    def validate_player_template_access(self, player_id: str, templates: List) -> Tuple[bool, List[bool]]:
+    def validate_player_template_access(
+        self, player_id: str, templates: List[str]
+    ) -> Tuple[bool, List[bool]]:
         """
         Checks if the player has access to the list of templates.
 
         Returns a tuple containing (True if player has access to all templates, List of booleans on access for each template).
         """
-        pass
+        validate_response = requests.post(
+            f"{API.VALIDATE_INVITE_TOKEN_ENDPOINT}?Token={player_id}&TemplateIDs={','.join(templates)}",
+            {"Email": self.config["email"], "APIToken": self.config["token"]},
+        ).json()
+
+        has_acces_to_all_templates = True
+        template_access = []
+        for template in templates:
+            has_acces_to_all_templates = has_acces_to_all_templates and "CanUseTemplate" in validate_response[f"template{template}"]["result"]
+            template_access.append("CanUseTemplate" in validate_response[f"template{template}"]["result"])
+        
+        return has_acces_to_all_templates, template_access

@@ -7,8 +7,9 @@ from CreateGames import CreateGames
 from CreateMatches import CreateMatches
 from ParseGames import ParseGames
 from ParsePlayers import ParsePlayers
+from api import API
 
-config = {}
+config = {"email": None, "token": None}
 if os.path.isfile("config.json"):
     config_file = open("config.json", "r")
     config = json.load(config_file)
@@ -34,9 +35,14 @@ parser.add_argument("-t", "--token", help="Warzone API token (https://www.warzon
 args = parser.parse_args()
 print(args)
 
-if args.email is None and args.cmd in ["cgames", "pgames"]:
+if args.email:
+    config["email"] = args.email
+if args.token:
+    config["token"] = args.token
+
+if config["email"] is None and args.cmd in ["cgames", "pgames"]:
     parser.error("-e/--email is required if no config is present")
-if args.token is None and args.cmd in ["cgames", "pgames"]:
+if config["token"] is None and args.cmd in ["cgames", "pgames"]:
     parser.error("-t/--token is required if no config is present")
 
 config["run"] = args.run
@@ -45,6 +51,8 @@ if args.cmd == "cmatches":
     create_matches = CreateMatches(config)
 elif args.cmd == "cgames":
     create_games = CreateGames(config)
+    print(API(config).check_game(25876595))
+    print(API(config).validate_player_template_access(1277277659, ["342040","342041","342042","342043"]))
 elif args.cmd == "pgames":
     parse_games = ParseGames(config)
 elif args.cmd == "pplayers":
