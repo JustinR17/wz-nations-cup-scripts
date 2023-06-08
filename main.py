@@ -8,8 +8,9 @@ from CreateMatches import CreateMatches
 from ParseGames import ParseGames
 from ParsePlayers import ParsePlayers
 from api import API
+from sheet import GoogleSheet
 
-config = {"email": None, "token": None}
+config = {"email": None, "token": None, "spreadsheet_id": None}
 if os.path.isfile("config.json"):
     config_file = open("config.json", "r")
     config = json.load(config_file)
@@ -32,6 +33,7 @@ parser.add_argument(
 )
 parser.add_argument("-e", "--email", help="Warzone email used for commands requiring the API. Not required for `setup`, `cmatches` and `pplayers`. Refer to `setup` for generating a config file.")
 parser.add_argument("-t", "--token", help="Warzone API token (https://www.warzone.com/wiki/Get_API_Token_API) used for commands requiring the API. Not required for `setup`, `cmatches` and `pplayers`. Refer to `setup` for generating a config file.")
+parser.add_argument("-s", "--spreadsheet_id", help="Google Sheets Spreadsheet ID. This is the ID in the URL for the sheet.")
 args = parser.parse_args()
 print(args)
 
@@ -44,6 +46,8 @@ if config["email"] is None and args.cmd in ["cgames", "pgames"]:
     parser.error("-e/--email is required if no config is present")
 if config["token"] is None and args.cmd in ["cgames", "pgames"]:
     parser.error("-t/--token is required if no config is present")
+if config["spreadsheet_id"] is None and args.cmd in ["cmatches", "cgames", "pgames", "pplayers"]:
+    parser.error("-s/--spreadsheet_id is required if no config is present")
 
 config["run"] = args.run
 
@@ -64,6 +68,9 @@ elif args.cmd == "setup":
     config["email"] = input("What is your Warzone Email? ")
     config["token"] = input(
         "What is your Warzone API Token? (https://www.warzone.com/wiki/Get_API_Token_API) "
+    )
+    config["spreadsheet_id"] = input(
+        "What is the spreadsheet ID of the Google Sheets? (The ID in the URL) "
     )
     print(f"Writing the following to 'config.json'\n{config}")
 
