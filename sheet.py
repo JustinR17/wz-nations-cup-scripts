@@ -1,9 +1,10 @@
 from __future__ import print_function
 
 import os.path
+from typing import List
 
 from google.oauth2.service_account import Credentials
-from googleapiclient.discovery import build
+from googleapiclient.discovery import build, Resource
 from googleapiclient.errors import HttpError
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
@@ -19,19 +20,18 @@ class GoogleSheet:
             creds = Credentials.from_service_account_file('token.json', scopes=SCOPES)
 
         try:
-            service = build('sheets', 'v4', credentials=creds)
+            service: Resource = build('sheets', 'v4', credentials=creds)
 
             # Call the Sheets API
-            self.sheet = service.spreadsheets()
+            self.sheet: Resource = service.spreadsheets()
             self.spreadsheet_id = config["spreadsheet_id"]
             result = self.sheet.values().get(spreadsheetId=config["spreadsheet_id"],
                                     range="Summary!A1:O128").execute()
             values = result.get('values', [])
-            # print(values)
         except HttpError as err:
             print(err)
     
-    def get_rows(self, range):
+    def get_rows(self, range) -> List[List[str]]:
         return self.sheet.values().get(spreadsheetId=self.spreadsheet_id, range=range).execute()
 
     def update_rows_raw(self, range, data):
