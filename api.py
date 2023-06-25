@@ -13,6 +13,10 @@ class API:
         "https://www.warzone.com/API/ValidateInviteToken"
     )
 
+    class GameCreationException(Exception):
+        pass
+
+
     def __init__(self, config):
         self.config = config
 
@@ -29,7 +33,7 @@ class API:
 
         # game_result = GameResult(GameResult.Outcome[game_json["state"]])
 
-    def create_game(self, players, template, name: str, description: str) -> str | None:
+    def create_game(self, players: List[str], template: str, name: str, description: str) -> str | None:
         """
         Creates a game using the WZ API with the specified players, template, and game name/description.
 

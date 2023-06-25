@@ -14,9 +14,9 @@ class Player:
 
 class Team:
 
-    def __init__(self, name: str):
+    def __init__(self, name: str, players = []):
         self.name = name
-        self.players: List[Player] = []
+        self.players: List[Player] = players
     
 
 class Matchup:

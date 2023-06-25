@@ -1,5 +1,6 @@
 import json
 from random import shuffle
+from types import SimpleNamespace
 
 from typing import List
 from NCTypes import Matchup, Player, Team
@@ -87,13 +88,13 @@ class CreateMatches:
             seen_matches.add((team_a[i].id, team_b[i].id))
         return True
 
-    def write_matchups(self, sheet_name: str, matchups: List[Matchup]):
+    def write_matchups(self, sheet_name: str, matchups: List[Matchup], round: str):
         """
         Output the matchups to a file for safety and to the google sheets
         """
 
         # Output to file first since this is safer
-        with open("matchups_output.json", "w", encoding="utf-8") as output_file:
+        with open(f"data/matchups_output_r{round}.json", "w", encoding="utf-8") as output_file:
             print("JSON version of matchups data is stored to 'matchups_output.json'")
             json.dump(matchups, output_file)
 
@@ -101,7 +102,7 @@ class CreateMatches:
         for matchup in matchups:
             sheet_data.append([matchup.teams[0], 0, "vs.", matchup.teams[1], 0])
             for game in matchup.games:
-                sheet_data.append([game.players[0].name, game.players[0].id, "", game.players[0].name, game.players[0].id, ""])
+                sheet_data.append([game.players[0].name, game.players[0].id, "", game.players[0].name, game.players[0].id, game.link])
             sheet_data.append([]) # Empty row to divide teams
         
         self.sheet.update_rows_raw(f"{sheet_name}!A1:F{len(sheet_data)}", sheet_data)
