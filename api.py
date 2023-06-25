@@ -2,7 +2,7 @@
 from typing import List, Tuple
 import requests
 
-from NCTypes import GameResult
+from NCTypes import Game
 
 
 class API:
@@ -20,7 +20,7 @@ class API:
     def __init__(self, config):
         self.config = config
 
-    def check_game(self, game_id: str) -> GameResult:
+    def check_game(self, game_id: str) -> Game:
         """
         Checks the progress and results of a game using the WZ API.
 
