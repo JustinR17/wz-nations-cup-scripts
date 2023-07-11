@@ -63,7 +63,7 @@ Match is between:
 """
                 
                 try:
-                    game_link = self.api.create_game([game.players[0].id, game.players[0].id], template, title, description)
+                    game_link = self.api.create_game([(game.players[0].id,matchup.teams[0].name) , (game.players[0].id,matchup.teams[0].name)], template, title, description)
 
                     if game_link:
                         print(f"\tGame created between {game.players[0].name} & {game.players[1].name} - {game_link}")

@@ -2,6 +2,7 @@
 
 from enum import Enum
 from typing import List
+from bidict import bidict
 
 
 class Player:
@@ -44,3 +45,35 @@ class Game:
         self.winner: str = ""
         self.players: List[Player] = players
         self.link: str = link
+
+
+class WarzonePlayer:
+
+    class Outcome(Enum):
+        WON = "Won"
+        SURRENDER_ACCEPTED = "SurrenderAccepted"
+        VOTED_TO_END = "voted_to_end"
+        UNDEFINED = "undefined"
+
+    def __init__(self, name, id, outcome=""):
+        self.name: str = name
+        self.id: int = id
+        self.team: str = ""
+
+        if outcome == "":
+            self.outcome = WarzonePlayer.Outcome.UNDEFINED
+        else:
+            self.outcome = WarzonePlayer.Outcome[outcome]
+
+
+class WarzoneGame:
+
+    def __init__(self, players, outcome=Game.Outcome.UNDEFINED, link="") -> None:
+        self.outcome: Game.Outcome = outcome
+        self.winner: str = ""
+        self.players: List[WarzonePlayer] = players
+        self.link: str = link
+
+TEAM_NAME_TO_API_VALUE = bidict({
+    
+})

@@ -8,6 +8,7 @@ from CreateGames import CreateGames
 from CreateMatches import CreateMatches
 from ParseGames import ParseGames
 from ParsePlayers import ParsePlayers
+from bot import NationsCupBot
 from sheet import GoogleSheet
 
 config = {"email": None, "token": None, "spreadsheet_id": None}
@@ -42,6 +43,7 @@ cgames.add_argument("template", type=int, help="Template ID")
 pgames = subparsers.add_parser("pgames", help="Parse games and update google sheets")
 pplayers = subparsers.add_parser("pplayers", help="Parse player stats and update google sheets")
 setup = subparsers.add_parser("setup", help="Create a setup config to avoid common parameters")
+bot = subparsers.add_parser("bot", help="Initializes the discord bot and hourly job to post new game updates")
 
 parser.add_argument("-e", "--email", help="Warzone email used for commands requiring the API. Not required for `setup`, `cmatches` and `pplayers`. Refer to `setup` for generating a config file.")
 parser.add_argument("-t", "--token", help="Warzone API token (https://www.warzone.com/wiki/Get_API_Token_API) used for commands requiring the API. Not required for `setup`, `cmatches` and `pplayers`. Refer to `setup` for generating a config file.")
@@ -94,6 +96,9 @@ elif args.cmd == "setup":
     config_file = open("config.json", "w")
     json.dump(config, config_file)
     config_file.close()
+elif args.cmd == "bot":
+    bot = NationsCupBot(config)
+    bot.run(config["discord_token"])
 else:
     # Should not occur due to argparse library
     raise f"Unknown command supplied: '{args.cmd}'"

@@ -2,7 +2,7 @@
 from typing import List, Tuple
 import requests
 
-from NCTypes import Game
+from NCTypes import TEAM_NAME_TO_API_VALUE, Game, WarzoneGame, WarzonePlayer
 
 
 class API:
@@ -12,6 +12,7 @@ class API:
     VALIDATE_INVITE_TOKEN_ENDPOINT = (
         "https://www.warzone.com/API/ValidateInviteToken"
     )
+    GAME_URL = "https://www.warzone.com/MultiPlayer?GameID="
 
     class GameCreationException(Exception):
         pass
@@ -20,7 +21,7 @@ class API:
     def __init__(self, config):
         self.config = config
 
-    def check_game(self, game_id: str) -> Game:
+    def check_game(self, game_id: str) -> WarzoneGame:
         """
         Checks the progress and results of a game using the WZ API.
 
@@ -31,15 +32,35 @@ class API:
             {"Email": self.config["email"], "APIToken": self.config["token"]},
         ).json()
 
-        # game_result = GameResult(GameResult.Outcome[game_json["state"]])
+        players = []
+        for player in game_json["players"]:
+            players.append(WarzonePlayer(player["name"], player["id"], player["state"]))
+        
+        game = WarzoneGame(
+            players, Game.Outcome[game_json["state"]], f"{API.GAME_URL}{game_json['id']}"
+        )
 
-    def create_game(self, players: List[str], template: str, name: str, description: str) -> str | None:
+        return game
+
+    def create_game(self, players: List[Tuple(str, str)], template: str, name: str, description: str) -> str:
         """
         Creates a game using the WZ API with the specified players, template, and game name/description.
 
-        Returns the game ID if successfully created, else None.
+        Returns the game ID if successfully created, else raises a GameCreationException.
         """
-        pass
+        game_response = requests.post(
+            API.CREATE_GAME_ENDPOINT,
+            {
+                "hostEmail": self.config["email"], "hostAPIToken": self.config["token"],
+                "templateID": int(template), "gameName": name, "personalMessage": description,
+                "players": List(map(lambda e: {"token": e[0], "team": TEAM_NAME_TO_API_VALUE[e[1]]}, players))
+            },
+        ).json()
+
+        if "error" in game_response:
+            raise API.GameCreationException(game_response["error"])
+        else:
+            return game_response["gameID"]
 
     def validate_player_template_access(
         self, player_id: str, templates: List[str]
