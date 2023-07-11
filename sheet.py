@@ -28,6 +28,7 @@ class GoogleSheet:
             result = self.sheet.values().get(spreadsheetId=config["spreadsheet_id"],
                                     range="Summary!A1:O128").execute()
             values = result.get('values', [])
+            # print(values)
         except HttpError as err:
             print(err)
     
@@ -36,3 +37,11 @@ class GoogleSheet:
 
     def update_rows_raw(self, range, data):
         return self.sheet.values().get(spreadsheetId=self.spreadsheet_id, range=range, valueInputOption="USER_ENTERED", data=data).execute()
+    
+    def get_sheet_tabs_data(self):
+        return self.sheet.get(spreadsheetId=self.spreadsheet_id).execute().get("sheets")
+
+        for val in res:
+            print(val)
+            print(val["properties"])
+            print()

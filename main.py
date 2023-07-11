@@ -2,11 +2,13 @@
 import argparse
 import os
 import json
+import sys
 from CreateGames import CreateGames
 
 from CreateMatches import CreateMatches
 from ParseGames import ParseGames
 from ParsePlayers import ParsePlayers
+from sheet import GoogleSheet
 
 config = {"email": None, "token": None, "spreadsheet_id": None}
 if os.path.isfile("config.json"):
@@ -60,6 +62,10 @@ if config["spreadsheet_id"] is None and args.cmd in ["cmatches", "cgames", "pgam
     parser.error("-s/--spreadsheet_id is required if no config is present")
 
 config["run"] = args.run
+
+# ns = GoogleSheet(config)
+# print(ns.get_sheet_tabs_data())
+# sys.exit(0)
 
 if args.cmd == "cmatches":
     create_matches = CreateMatches(config)

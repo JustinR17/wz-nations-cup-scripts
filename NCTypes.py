@@ -41,5 +41,6 @@ class Game:
 
     def __init__(self, players, outcome=Outcome.UNDEFINED, link="") -> None:
         self.outcome: Game.Outcome = outcome
+        self.winner: str = ""
         self.players: List[Player] = players
         self.link: str = link
