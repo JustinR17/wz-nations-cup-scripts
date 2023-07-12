@@ -5,6 +5,7 @@ from types import SimpleNamespace
 from typing import List
 from NCTypes import Matchup, Player, Team
 from sheet import GoogleSheet
+import jsonpickle
 
 
 class CreateMatches:
@@ -13,14 +14,14 @@ class CreateMatches:
         self.config = config
         self.sheet = GoogleSheet(config)
 
-    def run(self, input_sheet_name: str, output_sheet_name: str):
+    def run(self, input_sheet_name: str, output_sheet_name: str, round: int):
         """
         Reads the google sheet with a list of teams. Creates matchups between countries and outputs to google sheets, a file & terminal output
         """
 
         teams = self.parse_sheet_for_teams(input_sheet_name)
         matchups = self.create_team_matchups(teams)
-        self.write_matchups(output_sheet_name, matchups)
+        self.write_matchups(output_sheet_name, matchups, round)
 
 
     def parse_sheet_for_teams(self, sheet_name) -> List[Team]:
@@ -36,10 +37,11 @@ class CreateMatches:
                 # New team to add
                 current_team = Team(row[0])
                 teams.append(current_team)
+                print(current_team.name)
+                print(current_team.players)
             elif row:
                 # New player to add to team
                 current_team.players.append(Player(row[0], int(row[1]), current_team))
-        
         return teams
 
     def create_team_matchups(self, teams: List[Team]) -> List[Matchup]:
@@ -96,14 +98,14 @@ class CreateMatches:
         # Output to file first since this is safer
         with open(f"data/matchups_output_r{round}.json", "w", encoding="utf-8") as output_file:
             print("JSON version of matchups data is stored to 'matchups_output.json'")
-            json.dump(matchups, output_file)
+            json.dump(jsonpickle.encode(matchups), output_file)
 
-        sheet_data: List[List[str]] = []
+        sheet_data: List[List[str]] = [[]]
         for matchup in matchups:
-            sheet_data.append([matchup.teams[0], 0, "vs.", matchup.teams[1], 0])
+            sheet_data.append([matchup.teams[0].name, len(matchup.teams[0].players)-6, "vs.", matchup.teams[1].name, len(matchup.teams[1].players)-6])
             for game in matchup.games:
-                sheet_data.append([game.players[0].name, game.players[0].id, "", game.players[0].name, game.players[0].id, game.link])
+                sheet_data.append([game.players[0].name, game.players[0].id, "", game.players[1].name, game.players[1].id, game.link])
             sheet_data.append([]) # Empty row to divide teams
-        
+        print(sheet_data)
         self.sheet.update_rows_raw(f"{sheet_name}!A1:F{len(sheet_data)}", sheet_data)
 

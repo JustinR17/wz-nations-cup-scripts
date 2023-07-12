@@ -1,5 +1,6 @@
 
 
+from datetime import datetime
 from enum import Enum
 from typing import List
 from bidict import bidict
@@ -15,9 +16,9 @@ class Player:
 
 class Team:
 
-    def __init__(self, name: str, players = []):
+    def __init__(self, name: str):
         self.name = name
-        self.players: List[Player] = players
+        self.players: List[Player] = []
     
 
 class Matchup:
@@ -51,6 +52,8 @@ class WarzonePlayer:
 
     class Outcome(Enum):
         WON = "Won"
+        INVITED = "Invited"
+        DECLINED = "Declined"
         SURRENDER_ACCEPTED = "SurrenderAccepted"
         VOTED_TO_END = "voted_to_end"
         UNDEFINED = "undefined"
@@ -63,17 +66,21 @@ class WarzonePlayer:
         if outcome == "":
             self.outcome = WarzonePlayer.Outcome.UNDEFINED
         else:
-            self.outcome = WarzonePlayer.Outcome[outcome]
+            self.outcome = WarzonePlayer.Outcome(outcome)
 
 
 class WarzoneGame:
 
-    def __init__(self, players, outcome=Game.Outcome.UNDEFINED, link="") -> None:
+    def __init__(self, players, outcome=Game.Outcome.UNDEFINED, link="", start_time=datetime.now()) -> None:
         self.outcome: Game.Outcome = outcome
         self.winner: str = ""
         self.players: List[WarzonePlayer] = players
         self.link: str = link
+        self.start_time: datetime = start_time
 
 TEAM_NAME_TO_API_VALUE = bidict({
-    
+    "canada": "1",
+    "quebec": "2",
+    "greenland": "3",
+    "iceland": "4"
 })

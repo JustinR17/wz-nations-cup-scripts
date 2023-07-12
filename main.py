@@ -34,6 +34,7 @@ subparsers = parser.add_subparsers(help="Command to run", dest="cmd")
 cmatches = subparsers.add_parser("cmatches", help="Create matches between teams")
 cmatches.add_argument("input", help="Input sheet tab name to read from")
 cmatches.add_argument("output", help="Output sheet tab name")
+cmatches.add_argument("round", help="Integer value specifying the round number")
 
 cgames = subparsers.add_parser("cgames", help="Create Warzone games from matchups")
 cgames.add_argument("sheet", help="Input sheet tab name to read from")
@@ -71,13 +72,15 @@ config["run"] = args.run
 
 if args.cmd == "cmatches":
     create_matches = CreateMatches(config)
-    create_matches.run(args.input, args.output)
+    create_matches.run(args.input, args.output, args.round)
 elif args.cmd == "cgames":
     create_games = CreateGames(config)
+    create_games.run(args.sheet, args.round, args.template)
     # print(API(config).check_game(25876595))
     # print(API(config).validate_player_template_access(1277277659, ["342040","342041","342042","342043"]))
 elif args.cmd == "pgames":
     parse_games = ParseGames(config)
+    parse_games.run()
 elif args.cmd == "pplayers":
     parse_players = ParsePlayers(config)
 elif args.cmd == "setup":
