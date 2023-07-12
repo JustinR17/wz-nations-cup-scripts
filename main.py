@@ -100,7 +100,7 @@ elif args.cmd == "setup":
     json.dump(config, config_file)
     config_file.close()
 elif args.cmd == "bot":
-    bot = NationsCupBot(config)
+    bot = NationsCupBot(config=config)
     bot.run(config["discord_token"])
 else:
     # Should not occur due to argparse library

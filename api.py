@@ -1,9 +1,10 @@
 # https://www.warzone.com/wiki/Category:API
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Tuple
 import requests
 
 from NCTypes import TEAM_NAME_TO_API_VALUE, Game, WarzoneGame, WarzonePlayer
+from utils import log_message
 
 
 class API:
@@ -34,14 +35,15 @@ class API:
         ).json()
 
         players = []
-        print(game_id)
-        print(game_json)
         for player in game_json["players"]:
             players.append(WarzonePlayer(player["name"], player["id"], player["state"]))
         
         game = WarzoneGame(
-            players, Game.Outcome(game_json["state"]), f"{API.GAME_URL}{game_json['id']}", datetime.strptime(game_json["created"], "%m/%d/%Y %H:%M:%S")
+            players, Game.Outcome(game_json["state"]), f"{API.GAME_URL}{game_json['id']}", datetime.strptime(game_json["created"], "%m/%d/%Y %H:%M:%S").replace(tzinfo=timezone.utc)
         )
+        print(game.link)
+        print(game.start_time)
+        print(game.outcome)
 
         return game
 
@@ -52,9 +54,9 @@ class API:
         Returns the game ID if successfully created, else raises a GameCreationException.
         """
 
-        game_response = {
-            "gameID": 25876586
-        }
+        # game_response = {
+        #     "gameID": 25876586
+        # }
 
         data = {
                 "hostEmail": self.config["email"], "hostAPIToken": self.config["token"],
@@ -62,21 +64,24 @@ class API:
                 "players": list(map(lambda e: {"token": e[0], "team": TEAM_NAME_TO_API_VALUE[e[1]]}, players))
             }
         print(f"Creating game with following specs:\n{data}")
-        # game_response = requests.post(
-        #     API.CREATE_GAME_ENDPOINT,
-        #     {
-        #         "hostEmail": self.config["email"], "hostAPIToken": self.config["token"],
-        #         "templateID": int(template), "gameName": name, "personalMessage": description,
-        #         "players": List(map(lambda e: {"token": e[0], "team": TEAM_NAME_TO_API_VALUE[e[1]]}, players))
-        #     },
-        # ).json()
+        game_response = requests.post(
+            API.CREATE_GAME_ENDPOINT,
+            json={
+                "hostEmail": self.config["email"], "hostAPIToken": self.config["token"],
+                "templateID": int(template), "gameName": name, "personalMessage": description,
+                "players": list(map(lambda e: {"token": str(e[0]), "team": TEAM_NAME_TO_API_VALUE[e[1]]}, players))
+            },
+        ).json()
+
+        print(game_response)
+        print()
 
         if "error" in game_response:
             raise API.GameCreationException(game_response["error"])
         else:
             return game_response["gameID"]
         
-    def delete_game(self, game_id: str):
+    def delete_game(self, game_id: int):
         """
         Deletes a warzone game if a player did not join in time.
 
@@ -84,8 +89,8 @@ class API:
         """
         game_response = requests.post(
             API.DELETE_GAME_ENDPOINT,
-            {
-                "Email": self.config["email"], "APIToken": self.config["token"], "gameID": int(game_id)
+            json={
+                "Email": self.config["email"], "APIToken": self.config["token"], "gameID": game_id
             },
         ).json()
 
@@ -102,7 +107,7 @@ class API:
         """
         validate_response = requests.post(
             f"{API.VALIDATE_INVITE_TOKEN_ENDPOINT}?Token={player_id}&TemplateIDs={','.join(templates)}",
-            {"Email": self.config["email"], "APIToken": self.config["token"]},
+            json={"Email": self.config["email"], "APIToken": self.config["token"]},
         ).json()
 
         has_acces_to_all_templates = True

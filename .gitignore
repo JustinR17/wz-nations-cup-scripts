@@ -5,3 +5,5 @@ archive/
 
 config.json
 token.json
+
+data/*

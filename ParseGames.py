@@ -1,10 +1,10 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import json
 import os
 from typing import Dict, List, Tuple
 
 import jsonpickle
-from NCTypes import Game, Matchup, Player, Team, WarzoneGame, WarzonePlayer
+from NCTypes import Game, WarzoneGame, WarzonePlayer
 from api import API
 from sheet import GoogleSheet
 import re
@@ -52,10 +52,12 @@ class ParseGames:
                         game = self.api.check_game(self.convert_wz_game_link_to_id(row[5]))
                         if game.players[0].id != row[1]:
                             game.players.reverse()
-                        
+                        game.players[0].team, game.players[1].team = team_a,  team_b
+
+                        print(game.start_time)
+                        print(datetime.now())
                         if game.outcome == Game.Outcome.FINISHED:
                             # TODO check these game outcomes
-                            game.players[0].team, game.players[1].team = team_a,  team_b
                             newly_finished_games.setdefault(tab, []).append(game)
                             if game.players[0].outcome == WarzonePlayer.Outcome.WON and game.players[0].id == row[1]:
                                 # Left team wins
@@ -64,7 +66,7 @@ class ParseGames:
                             else:
                                 row[2] = "loses to"
                                 score_row[4] = int(score_row[4]) + 1
-                        elif game.outcome == Game.Outcome.INVITED and datetime.now() - game.start_time > timedelta(days=4):
+                        elif game.outcome == Game.Outcome.WAITING_FOR_PLAYERS and datetime.now(timezone.utc) - game.start_time > timedelta(minutes=4):
                             newly_finished_games.setdefault(tab, []).append(game)
                             if (game.players[0].outcome == WarzonePlayer.Outcome.INVITED or game.players[0].outcome == WarzonePlayer.Outcome.DECLINED) \
                                 and game.players[0].id == row[1]:
@@ -98,8 +100,8 @@ class ParseGames:
         Deletes a list of warzone games that have not begun yet through the WZ API.
         """
         for game in games_to_delete:
-            print(f"Deleting the {game.players[0].team} v {game.players[1].team} game between {game.players[0].name} ({game.players[0].id}) & {game.players[1].name} ({game.players[1].id})")
-            self.api.delete_game(self.convert_wz_game_link_to_id(game.link))
+            print(f"Deleting the {game.players[0].team} v {game.players[1].team} game between {game.players[0].name} ({game.players[0].id}) & {game.players[1].name} ({game.players[1].id})".encode())
+            self.api.delete_game(int(self.convert_wz_game_link_to_id(game.link)))
     
     def write_newly_finished_games(self, newly_finished_games: Dict[str, List[WarzoneGame]]):
         """

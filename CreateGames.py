@@ -2,10 +2,12 @@
 
 import json
 from typing import List
-from NCTypes import Game, Matchup, Player, Team
+from NCTypes import Matchup
 from api import API
 from sheet import GoogleSheet
 import jsonpickle
+
+from utils import log_exception, log_message
 
 
 class CreateGames:
@@ -31,13 +33,13 @@ class CreateGames:
     
     def create_games(self, matchups: List[Matchup], round: int, template: str) -> List[Matchup]:
         for matchup in matchups:
-            print(f"Beginning game creation for {matchup.teams[0].name} vs. {matchup.teams[1].name}")
+            log_message(f"Beginning game creation for {matchup.teams[0].name} vs. {matchup.teams[1].name}", "create_games")
 
             for game in matchup.games:
 
                 title = f"Nations' Cup 2023 R{round} {matchup.teams[0].name} vs. {matchup.teams[1].name}"
                 description = f"""This game is a part of the Nations' Cup R{round}, run by Marcus (https://docs.google.com/spreadsheets/d/1QPKGgwToBd2prap8u3XVUx9F47SuvMH9wJruvG0t2D4). 
-You have 7 days to join the game.
+You have 4 days to join the game.
                 
 Match is between:
 \t{game.players[0].name} in {matchup.teams[0].name}
@@ -48,10 +50,10 @@ Match is between:
                     game_link = self.api.create_game([(game.players[0].id,matchup.teams[0].name) , (game.players[1].id,matchup.teams[1].name)], template, title, description)
 
                     if game_link:
-                        print(f"\tGame created between {game.players[0].name} & {game.players[1].name} - {game_link}")
+                        log_message(f"\tGame created between {game.players[0].name} & {game.players[1].name} - {game_link}", "create_games")
                         game.link = game_link
                 except API.GameCreationException as e:
-                    print(f"\tUnable to create game between {game.players[0].name} & {game.players[1].name}: '{str(e)}'")
+                    log_exception(f"\tUnable to create game between {game.players[0].name} & {game.players[1].name}: '{str(e)}'")
         
         return matchups
 
@@ -62,7 +64,7 @@ Match is between:
 
         # Output to file first since this is safer
         with open(f"data/games_output_r{round}.json", "w", encoding="utf-8") as output_file:
-            print("JSON version of matchups data is stored to 'matchups_output.json'")
+            log_message("JSON version of matchups data is stored to 'matchups_output.json'", "write_games")
             json.dump(jsonpickle.encode(matchups), output_file)
 
         sheet_data: List[List[str]] = []
@@ -94,6 +96,7 @@ Match is between:
                         updated_game_links.append([f"{API.GAME_URL}{game.link}"])
                         break              
         self.sheet.update_rows_raw(f"{sheet_name}!F1:F{len(updated_game_links)}", updated_game_links)
+        log_message(f"Updated the google sheet with {len(updated_game_links)} new links", "write_games")
 
 
 

@@ -52,6 +52,7 @@ class WarzonePlayer:
 
     class Outcome(Enum):
         WON = "Won"
+        PLAYING = "Playing"
         INVITED = "Invited"
         DECLINED = "Declined"
         SURRENDER_ACCEPTED = "SurrenderAccepted"
