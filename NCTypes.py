@@ -38,7 +38,6 @@ class Game:
         DISTRIBUTING_TERRITORIES = "DistributingTerritories"
         IN_PROGRESS = "Playing"
         FINISHED = "Finished"
-        VOTED_TO_END = "voted_to_end"
         UNDEFINED = "undefined"
 
     def __init__(self, players, outcome=Outcome.UNDEFINED, link="") -> None:
@@ -54,15 +53,19 @@ class WarzonePlayer:
         WON = "Won"
         PLAYING = "Playing"
         INVITED = "Invited"
-        DECLINED = "Declined"
         SURRENDER_ACCEPTED = "SurrenderAccepted"
-        VOTED_TO_END = "voted_to_end"
+        ELIMINATED = "Eliminated"
+        BOOTED = "Booted"
+        ENDED_BY_VOTE = "EndedByVote"
+        DECLINED = "Declined"
+        REMOVED_BY_HOST = "RemovedByHost"
         UNDEFINED = "undefined"
 
     def __init__(self, name, id, outcome=""):
         self.name: str = name
         self.id: int = id
         self.team: str = ""
+        self.score: int = 0
 
         if outcome == "":
             self.outcome = WarzonePlayer.Outcome.UNDEFINED

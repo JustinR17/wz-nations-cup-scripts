@@ -19,6 +19,9 @@ class API:
     class GameCreationException(Exception):
         pass
 
+    class GameDeletionException(Exception):
+        pass
+
 
     def __init__(self, config):
         self.config = config
@@ -41,9 +44,6 @@ class API:
         game = WarzoneGame(
             players, Game.Outcome(game_json["state"]), f"{API.GAME_URL}{game_json['id']}", datetime.strptime(game_json["created"], "%m/%d/%Y %H:%M:%S").replace(tzinfo=timezone.utc)
         )
-        print(game.link)
-        print(game.start_time)
-        print(game.outcome)
 
         return game
 
@@ -61,7 +61,7 @@ class API:
         data = {
                 "hostEmail": self.config["email"], "hostAPIToken": self.config["token"],
                 "templateID": int(template), "gameName": name, "personalMessage": description,
-                "players": list(map(lambda e: {"token": e[0], "team": TEAM_NAME_TO_API_VALUE[e[1]]}, players))
+                "players": list(map(lambda e: {"token": e[0], "team": TEAM_NAME_TO_API_VALUE.get(e[1], "50")}, players))
             }
         print(f"Creating game with following specs:\n{data}")
         game_response = requests.post(
@@ -69,7 +69,7 @@ class API:
             json={
                 "hostEmail": self.config["email"], "hostAPIToken": self.config["token"],
                 "templateID": int(template), "gameName": name, "personalMessage": description,
-                "players": list(map(lambda e: {"token": str(e[0]), "team": TEAM_NAME_TO_API_VALUE[e[1]]}, players))
+                "players": list(map(lambda e: {"token": str(e[0]), "team": TEAM_NAME_TO_API_VALUE.get(e[1], "50")}, players))
             },
         ).json()
 
@@ -95,7 +95,7 @@ class API:
         ).json()
 
         if "error" in game_response:
-            raise API.GameCreationException(f"Unable to delete game {game_id}")
+            raise API.GameDeletionException(f"Unable to delete game {game_id}")
 
     def validate_player_template_access(
         self, player_id: str, templates: List[str]

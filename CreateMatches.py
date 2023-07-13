@@ -2,12 +2,12 @@ from collections import Counter
 import json
 from random import shuffle
 
-from typing import List
+from typing import Dict, List
 from NCTypes import Matchup, Player, Team
 from sheet import GoogleSheet
 import jsonpickle
 
-from utils import log_message
+from utils import log_exception, log_message
 
 
 class CreateMatches:
@@ -20,7 +20,7 @@ class CreateMatches:
         """
         Reads the google sheet with a list of teams. Creates matchups between countries and outputs to google sheets, a file & terminal output
         """
-
+        log_message("Running CreateMatches", "CreateMatches.run")
         teams = self.parse_sheet_for_teams(input_sheet_name)
         matchups = self.create_team_matchups(teams)
         self.write_matchups(output_sheet_name, matchups, round)
@@ -67,6 +67,11 @@ class CreateMatches:
                 iterations += 1
                 shuffle(extended_teams[0])
                 shuffle(extended_teams[1])
+            
+            if iterations == 1000:
+                # This should not happen if the matchup was added correctly
+                log_exception(f"Reached 1000 iterations while finding matchups for {teams[i].name} vs {teams[i+1].name}")
+            
             matchups.append(Matchup(teams[i], teams[i+1]))
             matchups[-1].import_games_from_pairing_lists(extended_teams)
             
@@ -78,17 +83,30 @@ class CreateMatches:
 
     def is_valid_matchup(self, team_a: List[Player], team_b: List[Player], minimum_teams: bool) -> bool:
         """
-        Check if a shuffled list of teams is valid (ie. no two players face each other more than once).
+        Check if a shuffled list of teams is valid. This varies if both team has 3 players vs not.
+
+        1. If both teams have 3 players (denoted by minimum_teams), then each player will have a duplicate game agaisnt 1 opponent only.
+        2. If not, then not player should have a duplicate game against an opponent.
 
         Returns true if the matchup is valid.
         """
-        seen_matches = []
+        seen_matches: Dict[str, List[str]] = {}
 
 
         for i in range(12):
-            seen_matches.append((team_a[i].id, team_b[i].id))
+            seen_matches.setdefault(team_a[i].id, []).append(team_b[i].id)
+            seen_matches.setdefault(team_b[i].id, []).append(team_a[i].id)
         
-        return Counter(seen_matches).most_common(1)[0][1] <= (2 if minimum_teams else 1)
+        # Only when both teams have 3 should players get a duplicate game
+        # Each player should only get one game that is duplicate (ie. cannot face only two people twice)
+        for opps in seen_matches.values():
+            # Only when both teams have 3 should players get a duplicate game
+            # Each player should only get one game that is duplicate (ie. cannot face only two people twice)
+            most_seen_matches = Counter(opps).most_common(2)
+            if len(most_seen_matches) < 2 or most_seen_matches[0][1] > (2 if minimum_teams else 1) or most_seen_matches[1][1] > 1:
+                return False
+        
+        return True
 
     def write_matchups(self, sheet_name: str, matchups: List[Matchup], round: str):
         """

@@ -21,6 +21,7 @@ class CreateGames:
         """
         Reads the sheet_name matchups and creates games. The sheet will be updated with the game links
         """
+        log_message("Running CreateGames", "CreateGames.run")
         matchups = self.parse_sheet_matchups(round)
         matchups = self.create_games(matchups, round, template)
         self.write_games(sheet_name, matchups, round)
@@ -38,8 +39,7 @@ class CreateGames:
             for game in matchup.games:
 
                 title = f"Nations' Cup 2023 R{round} {matchup.teams[0].name} vs. {matchup.teams[1].name}"
-                description = f"""This game is a part of the Nations' Cup R{round}, run by Marcus (https://docs.google.com/spreadsheets/d/1QPKGgwToBd2prap8u3XVUx9F47SuvMH9wJruvG0t2D4). 
-You have 4 days to join the game.
+                description = f"""This game is a part of the Nations' Cup R{round}, run by Marcus (https://docs.google.com/spreadsheets/d/1QPKGgwToBd2prap8u3XVUx9F47SuvMH9wJruvG0t2D4). You have 4 days to join the game.
                 
 Match is between:
 \t{game.players[0].name} in {matchup.teams[0].name}
@@ -50,10 +50,10 @@ Match is between:
                     game_link = self.api.create_game([(game.players[0].id,matchup.teams[0].name) , (game.players[1].id,matchup.teams[1].name)], template, title, description)
 
                     if game_link:
-                        log_message(f"\tGame created between {game.players[0].name} & {game.players[1].name} - {game_link}", "create_games")
+                        log_message(f"\tGame created between {game.players[0].name.encode()} & {game.players[1].name.encode()} - {game_link}", "create_games")
                         game.link = game_link
                 except API.GameCreationException as e:
-                    log_exception(f"\tUnable to create game between {game.players[0].name} & {game.players[1].name}: '{str(e)}'")
+                    log_exception(f"\tUnable to create game between {game.players[0].name.encode()} & {game.players[1].name.encode()}: '{str(e)}'")
         
         return matchups
 
@@ -94,6 +94,8 @@ Match is between:
                 for game in current_matchup.games:
                     if int(row[1]) == game.players[0].id and int(row[4]) == game.players[1].id or int(row[1]) == game.players[1].id and int(row[4]) == game.players[0].id:
                         updated_game_links.append([f"{API.GAME_URL}{game.link}"])
+                        # Need to remove games in case there are scenarios where two players get matched up twice (ie. 3 players per team)
+                        current_matchup.games.remove(game)
                         break              
         self.sheet.update_rows_raw(f"{sheet_name}!F1:F{len(updated_game_links)}", updated_game_links)
         log_message(f"Updated the google sheet with {len(updated_game_links)} new links", "write_games")
