@@ -3,7 +3,7 @@ from typing import Any, Dict, List
 import discord
 import sys
 import json
-from discord.flags import Intents
+from discord.ext import commands
 import jsonpickle
 import requests
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -14,6 +14,7 @@ from datetime import datetime
 import traceback
 import random
 import subprocess
+from discord import app_commands
 
 from NCTypes import WarzoneGame
 from utils import log_exception, log_message
@@ -21,6 +22,7 @@ from utils import log_exception, log_message
 intents = discord.Intents.default()
 intents.members = True
 intents.messages = True
+intents.message_content = True
 client = discord.Client(intents=intents)
 
 
@@ -40,12 +42,42 @@ ROUND_TO_COLOUR = {
     "R5": discord.Colour.red(),
 }
 
-class NationsCupBot(discord.Client):
+class NCComands(commands.Cog):
+
+    def __init__(self, bot: commands.Bot) -> None:
+        self.bot = bot
+    
+    @app_commands.command(name="score", description="returns a list of scores")
+    async def score(self, interaction: discord.Interaction):
+        print(interaction)
+        await interaction.response.send_message("Hello!")
+    
+    @app_commands.command(name="link", description="returns the google sheets link")
+    async def link(self, interaction: discord.Interaction):
+        await interaction.response.send_message("<https://docs.google.com/spreadsheets/d/1QPKGgwToBd2prap8u3XVUx9F47SuvMH9wJruvG0t2D4/edit#gid=1668893548>")
+    
+    @app_commands.command(name="kill", description="justin only command")
+    async def kill(self, interaction: discord.Interaction):
+        if interaction.user.id == 162968893177069568:
+            await interaction.response.send_message("Killing the bot")
+            await self.bot.close()
+        else:
+            await interaction.response.send_message("Only Justin can use this command")
+            await self.bot.close()
+    
+    @commands.command(name="sync") 
+    async def sync(self, ctx):
+        synced = await self.bot.tree.sync()
+        print(f"Synced {len(synced)} command(s).")
+        await ctx.send(f"Synced {len(synced)} command(s).")
+
+class NationsCupBot(commands.Bot):
 
     def __init__(self, *, config: Dict, **options: Any) -> None:
-        super().__init__(intents=intents, **options)
+        super().__init__(command_prefix="nc", intents=intents, **options)
         self.config = config
         self.jobs_scheduled = False
+
 
     async def post_game_updates_job(self):
         """
@@ -89,6 +121,7 @@ class NationsCupBot(discord.Client):
                 json.dump(jsonpickle.encode({}), output_file)
 
     async def on_ready(self):
+        await self.add_cog(NCComands(self))
         # Start schedulers (only on first run)
         if not self.jobs_scheduled:
             log_message("Scheduled post_game_updates_job", "bot")
