@@ -2,9 +2,10 @@
 
 from datetime import datetime
 from enum import Enum
-from typing import List
+from typing import Dict, List
 from bidict import bidict
 
+NUM_GAMES = 12
 
 class Player:
     
@@ -88,3 +89,71 @@ TEAM_NAME_TO_API_VALUE = bidict({
     "greenland": "3",
     "iceland": "4"
 })
+
+class TeamResult:
+
+    def __init__(self, name) -> None:
+        self.name: str = name
+        self.players: List[PlayerResult] = []
+        self.round_wins: float = 0
+        self.round_losses: float = 0
+        self.games_result: Dict[str, GameResult] = {}
+
+    def init_score(self, round: str, opp: str, pts_for: int, pts_against: int):
+        if round not in self.games_result:
+            self.games_result[round] = GameResult(opp, pts_for, pts_against)
+
+    def add_win(self, round: str):
+        self.games_result[round].add_win()
+        if self.games_result[round].total == NUM_GAMES:
+            # round over
+            if self.games_result[round].pts_for > self.games_result[round].pts_against:
+                self.round_wins += 1
+            elif self.games_result[round].pts_for < self.games_result[round].pts_against:
+                self.round_losses += 1
+            else:
+                self.round_wins += 0.5
+                self.round_losses += 0.5
+    
+    def add_loss(self, round: str):
+        self.games_result[round].add_loss()
+        if self.games_result[round].total == NUM_GAMES:
+            # round over
+            if self.games_result[round].pts_for > self.games_result[round].pts_against:
+                self.round_wins += 1
+            elif self.games_result[round].pts_for < self.games_result[round].pts_against:
+                self.round_losses += 1
+            else:
+                self.round_wins += 0.5
+                self.round_losses += 0.5
+
+
+class GameResult:
+    
+    def __init__(self, opp: str, starting_pts_for = 0, starting_pts_against = 0) -> None:
+        self.opp = opp
+        self.pts_for = starting_pts_for
+        self.pts_against = starting_pts_against
+        self.wins = 0
+        self.losses = 0
+        self.total = 0
+    
+    def add_win(self):
+        self.wins += 1
+        self.pts_for += 1
+        self.total += 1
+    
+    def add_loss(self):
+        self.losses += 1
+        self.pts_against += 1
+        self.total += 1
+
+
+class PlayerResult:
+    
+    def __init__(self, name, id, team) -> None:
+        self.name: str = name
+        self.id: int = id
+        self.wins: int = 0
+        self.losses: int = 0
+        self.team: str = team

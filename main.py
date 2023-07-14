@@ -68,6 +68,7 @@ config["run"] = args.run
 
 # ns = GoogleSheet(config)
 # print(ns.get_sheet_tabs_data())
+# print(ns.get_rows("Player_Stats!A1:E200"))
 # sys.exit(0)
 
 if args.cmd == "cmatches":
@@ -76,8 +77,6 @@ if args.cmd == "cmatches":
 elif args.cmd == "cgames":
     create_games = CreateGames(config)
     create_games.run(args.sheet, args.round, args.template)
-    # print(API(config).check_game(25876595))
-    # print(API(config).validate_player_template_access(1277277659, ["342040","342041","342042","342043"]))
 elif args.cmd == "pgames":
     parse_games = ParseGames(config)
     parse_games.run()

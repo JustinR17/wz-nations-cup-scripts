@@ -16,7 +16,7 @@ import random
 import subprocess
 from discord import app_commands
 
-from NCTypes import WarzoneGame
+from NCTypes import PlayerResult, TeamResult, WarzoneGame
 from utils import log_exception, log_message
 
 intents = discord.Intents.default()
@@ -29,7 +29,7 @@ client = discord.Client(intents=intents)
 ROUND_TO_TEMPLATE = {
     "R1": "Test",
     "R2": "Volcano Island",
-    "R3": "",
+    "R3": "MME",
     "R4": "",
     "R5": "",
 }
@@ -47,10 +47,40 @@ class NCComands(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
     
-    @app_commands.command(name="score", description="returns a list of scores")
-    async def score(self, interaction: discord.Interaction):
-        print(interaction)
-        await interaction.response.send_message("Hello!")
+    @app_commands.command(name="pstats", description="returns a player's statistics")
+    @app_commands.describe(player_id="the player ID to search for")
+    async def pstats(self, interaction: discord.Interaction, player_id: str):
+        team_standings: Dict[str, TeamResult] = {}
+        player_standings: Dict[str, PlayerResult] = {}
+        if not os.path.isfile("data/standings.json"):
+            await interaction.response.send_message("No standings file exists yet")
+            return
+        with open("data/standings.json", "r", encoding="utf-8") as input_file:
+            team_standings, player_standings = jsonpickle.decode(json.load(input_file))
+        
+        if player_id in player_standings:
+            await interaction.response.send_message(f"**{player_standings[player_id].name}** ({player_standings[player_id].team}): {player_standings[player_id].wins}-{player_standings[player_id].losses}")
+        else:
+            await interaction.response.send_message(f"Unable to find player with ID '{player_id}'")
+    
+    @app_commands.command(name="cstats", description="returns a country's statistics")
+    @app_commands.describe(country_name="the country name to search for")
+    async def cstats(self, interaction: discord.Interaction, country_name: str):
+        team_standings: Dict[str, TeamResult] = {}
+        player_standings: Dict[str, PlayerResult] = {}
+        if not os.path.isfile("data/standings.json"):
+            await interaction.response.send_message("No standings file exists yet")
+            return
+        with open("data/standings.json", "r", encoding="utf-8") as input_file:
+            team_standings, player_standings = jsonpickle.decode(json.load(input_file))
+        
+        if country_name in team_standings:
+            output_str = f"**{team_standings[country_name].name}**: {team_standings[country_name].round_wins} round wins, {team_standings[country_name].round_losses} round losses\n"
+            for round, gr in team_standings[country_name].games_result.items():
+                output_str += f"\t{round} vs {gr.opp}: {gr.pts_for}-{gr.pts_against} ({gr.wins} wins, {gr.losses} losses)\n"
+            await interaction.response.send_message(output_str)
+        else:
+            await interaction.response.send_message(f"Unable to find country with name '{country_name}'")
     
     @app_commands.command(name="link", description="returns the google sheets link")
     async def link(self, interaction: discord.Interaction):
@@ -74,7 +104,7 @@ class NCComands(commands.Cog):
 class NationsCupBot(commands.Bot):
 
     def __init__(self, *, config: Dict, **options: Any) -> None:
-        super().__init__(command_prefix="nc", intents=intents, **options)
+        super().__init__(command_prefix="nc!", intents=intents, **options)
         self.config = config
         self.jobs_scheduled = False
 

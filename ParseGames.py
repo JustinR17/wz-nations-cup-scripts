@@ -5,7 +5,7 @@ import random
 from typing import Dict, List, Tuple
 
 import jsonpickle
-from NCTypes import Game, WarzoneGame, WarzonePlayer
+from NCTypes import Game, GameResult, PlayerResult, TeamResult, WarzoneGame, WarzonePlayer
 from api import API
 from sheet import GoogleSheet
 import re
@@ -28,6 +28,7 @@ class ParseGames:
         newly_finished_games, games_to_delete = self.update_new_games()
         self.delete_unstarted_games(games_to_delete)
         self.write_newly_finished_games(newly_finished_games)
+        self.write_standings()
 
     
     def update_new_games(self) -> Tuple[Dict[str, List[WarzoneGame]], List[WarzoneGame]]:
@@ -36,6 +37,11 @@ class ParseGames:
 
         Returns a dictionary of lists (tab name -> List[Games])
         """
+
+        team_standings: Dict[str, TeamResult] = {}
+        player_standings: Dict[str, GameResult] = {}
+        with open("data/standings.json", "r", encoding="utf-8") as input_file:
+            team_standings, player_standings = jsonpickle.decode(json.load(input_file))
         
         newly_finished_games: Dict[str, List[WarzoneGame]] = {}
         newly_finished_games_count = 0
@@ -71,12 +77,16 @@ class ParseGames:
                                 score_row[1] = int(score_row[1]) + 1
                                 game.players[0].score += 1
                                 game.winner = game.players[0].id
+                                self.update_standings_with_game(team_standings, player_standings, team_a, game.players[0].name, game.players[0].id, tab[0:2], True)
+                                self.update_standings_with_game(team_standings, player_standings, team_b, game.players[1].name, game.players[1].id, tab[0:2], False)
                             elif game.players[1].outcome == WarzonePlayer.Outcome.WON:
                                 # Right team wins
                                 row[2] = "loses to"
                                 score_row[4] = int(score_row[4]) + 1
                                 game.players[1].score += 1
                                 game.winner = game.players[1].id
+                                self.update_standings_with_game(team_standings, player_standings, team_a, game.players[0].name, game.players[0].id, tab[0:2], False)
+                                self.update_standings_with_game(team_standings, player_standings, team_b, game.players[1].name, game.players[1].id, tab[0:2], True)
                             else:
                                 # Randomly assign win (probably because they voted to end)
                                 left_team_won = bool(random.getrandbits(1))
@@ -84,8 +94,10 @@ class ParseGames:
                                 score_row[1 if left_team_won else 4] = int(score_row[1 if left_team_won else 4]) + 1
                                 game.players[0 if left_team_won else 1].score += 1
                                 game.winner = game.players[0 if left_team_won else 1].id
+                                self.update_standings_with_game(team_standings, player_standings, team_a, game.players[0].name, game.players[0].id, tab[0:2], left_team_won)
+                                self.update_standings_with_game(team_standings, player_standings, team_b, game.players[1].name, game.players[1].id, tab[0:2], not left_team_won)
                         
-                        elif game.outcome == Game.Outcome.WAITING_FOR_PLAYERS and datetime.now(timezone.utc) - game.start_time > timedelta(minutes=4):
+                        elif game.outcome == Game.Outcome.WAITING_FOR_PLAYERS and datetime.now(timezone.utc) - game.start_time > timedelta(days=4):
                             # Game has been in the join lobby for too long. Game will be deleted and appropriate winner selected according to algorithm:
                             # 1. Assign win to left player if they have joined, or are invited and the right player declined
                             # 2. Assign win to the right player if they have joined, or are invited and the left player declined
@@ -100,6 +112,8 @@ class ParseGames:
                                 score_row[1] = int(score_row[1]) + 1
                                 game.players[0].score += 1
                                 game.winner = game.players[0].id
+                                self.update_standings_with_game(team_standings, player_standings, team_a, game.players[0].name, game.players[0].id, tab[0:2], True)
+                                self.update_standings_with_game(team_standings, player_standings, team_b, game.players[1].name, game.players[1].id, tab[0:2], False)
                             elif game.players[1].outcome == WarzonePlayer.Outcome.PLAYING or \
                                 (game.players[1].outcome == WarzonePlayer.Outcome.INVITED and game.players[0].outcome != WarzonePlayer.Outcome.INVITED):
                                 # Right team wins
@@ -107,6 +121,8 @@ class ParseGames:
                                 score_row[4] = int(score_row[4]) + 1
                                 game.players[1].score += 1
                                 game.winner = game.players[1].id
+                                self.update_standings_with_game(team_standings, player_standings, team_a, game.players[0].name, game.players[0].id, tab[0:2], False)
+                                self.update_standings_with_game(team_standings, player_standings, team_b, game.players[1].name, game.players[1].id, tab[0:2], True)
                             else:
                                 # Some weird combo where neither player accepted
                                 # Randomly assign winner
@@ -115,10 +131,16 @@ class ParseGames:
                                 score_row[1 if left_team_won else 4] = int(score_row[1 if left_team_won else 4]) + 1
                                 game.players[0 if left_team_won else 1].score += 1
                                 game.winner = game.players[0 if left_team_won else 1].id
+                                self.update_standings_with_game(team_standings, player_standings, team_a, game.players[0].name, game.players[0].id, tab[0:2], left_team_won)
+                                self.update_standings_with_game(team_standings, player_standings, team_b, game.players[1].name, game.players[1].id, tab[0:2], not left_team_won)
                             
                             games_to_delete.append(game)
             self.sheet.update_rows_raw(f"{tab}!A1:F300", tab_rows)
             log_message(f"Finished updating games in {tab}. Newly finished games: {newly_finished_games_count}; games to delete: {len(games_to_delete)}", "update_new_games")
+        
+        with open("data/standings.json", "w", encoding="utf-8") as output_file:
+            json.dump(jsonpickle.encode((team_standings, player_standings)), output_file)
+        
         return newly_finished_games, games_to_delete
     
     def get_game_tabs(self) -> List[str]:
@@ -148,6 +170,32 @@ class ParseGames:
             except Exception as e:
                 failed_to_delete_games.append(game)
                 log_exception(f"Unable to delete game {game.link}:\n{e}")
+    
+    def update_standings_with_game(self, team_standings: Dict[str, TeamResult], player_standings: Dict[str, PlayerResult], team: str, player_name: str, player_id: int, round: str, is_won: bool):
+        if is_won:
+            team_standings[team].add_win(round)
+            player_standings.setdefault(player_id, PlayerResult(player_name, player_id, team)).wins += 1
+        else:
+            team_standings[team].add_loss(round)
+            player_standings.setdefault(player_id, PlayerResult(player_name, player_id, team)).losses += 1
+    
+    def write_standings(self):
+        team_standings: Dict[str, TeamResult] = {}
+        player_standings: Dict[str, PlayerResult] = {}
+        with open("data/standings.json", "r", encoding="utf-8") as input_file:
+            team_standings, player_standings = jsonpickle.decode(json.load(input_file))
+        
+        current_data = self.sheet.get_rows("Player_Stats!A1:E200")
+        for row in current_data:
+            if row and row[0] != "Name":
+                row[3] = player_standings[row[1]].wins
+                row[4] = player_standings[row[1]].losses
+                player_standings.pop(row[1])
+        for _, ps in player_standings.items():
+            current_data.append([ps.name, ps.id, ps.team, ps.wins, ps.losses])
+        
+        log_message(f"Updated player stats with a total {len(current_data)} rows", "write_standings")
+        self.sheet.update_rows_raw(f"Player_Stats!A1:E{len(current_data)}", current_data)
     
     def write_newly_finished_games(self, newly_finished_games: Dict[str, List[WarzoneGame]]):
         """

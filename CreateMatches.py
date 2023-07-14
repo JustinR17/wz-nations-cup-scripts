@@ -1,9 +1,11 @@
 from collections import Counter
 import json
+import os
+from pprint import pprint
 from random import shuffle
 
-from typing import Dict, List
-from NCTypes import Matchup, Player, Team
+from typing import Dict, List, Tuple
+from NCTypes import GameResult, Matchup, Player, Team, TeamResult
 from sheet import GoogleSheet
 import jsonpickle
 
@@ -63,7 +65,7 @@ class CreateMatches:
             iterations = 1
             shuffle(extended_teams[0])
             shuffle(extended_teams[1])
-            while not self.is_valid_matchup(extended_teams[0], extended_teams[1], len(teams[i].players) == 3 and len(teams[i].players) == 3) and iterations < 1000:
+            while not self.is_valid_matchup(extended_teams[0], extended_teams[1], len(teams[i].players) == 3 and len(teams[i+1].players) == 3) and iterations < 1000:
                 iterations += 1
                 shuffle(extended_teams[0])
                 shuffle(extended_teams[1])
@@ -117,13 +119,29 @@ class CreateMatches:
         with open(f"data/matchups_output_r{round}.json", "w", encoding="utf-8") as output_file:
             log_message("JSON version of matchups data is stored to 'matchups_output.json'", "write_matchups")
             json.dump(jsonpickle.encode(matchups), output_file)
+        
+        team_results: Dict[str, TeamResult] = {}
+        player_results: Dict[str, GameResult] = {}
+        if os.path.isfile("data/standings.json"):
+            with open("data/standings.json", "r", encoding="utf-8") as input_file:
+                results_input = jsonpickle.decode(json.load(input_file))
+                team_results, player_results = results_input
+        
 
         sheet_data: List[List[str]] = [[]]
         for matchup in matchups:
             sheet_data.append([matchup.teams[0].name, len(matchup.teams[0].players)-6, "vs.", matchup.teams[1].name, len(matchup.teams[1].players)-6])
+            team_results.setdefault(matchup.teams[0].name, TeamResult(matchup.teams[0].name)).init_score(f"R{round}", matchup.teams[1].name, len(matchup.teams[0].players)-6, len(matchup.teams[1].players)-6)
+            team_results.setdefault(matchup.teams[1].name, TeamResult(matchup.teams[1].name)).init_score(f"R{round}", matchup.teams[0].name, len(matchup.teams[1].players)-6, len(matchup.teams[0].players)-6)
             for game in matchup.games:
                 sheet_data.append([game.players[0].name, game.players[0].id, "", game.players[1].name, game.players[1].id, game.link])
             sheet_data.append([]) # Empty row to divide teams
         self.sheet.update_rows_raw(f"{sheet_name}!A1:F{len(sheet_data)}", sheet_data)
         log_message(f"Updated google sheets with {len(sheet_data)} new rows", "write_matchups")
+
+        pprint(team_results)
+        pprint(player_results)
+        with open(f"data/standings.json", "w", encoding="utf-8") as output_file:
+            log_message("JSON version of standings data is stored to 'standings.json'", "write_matchups")
+            json.dump(jsonpickle.encode((team_results, player_results)), output_file)
 
