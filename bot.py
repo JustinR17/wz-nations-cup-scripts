@@ -63,6 +63,34 @@ class NCComands(commands.Cog):
         else:
             await interaction.response.send_message(f"Unable to find player with ID '{player_id}'")
     
+    @app_commands.command(name="pnstats", description="returns a player's statistics by name")
+    @app_commands.describe(player_name="the player name to search for")
+    async def pnstats(self, interaction: discord.Interaction, player_name: str):
+        team_standings: Dict[str, TeamResult] = {}
+        player_standings: Dict[str, PlayerResult] = {}
+        if not os.path.isfile("data/standings.json"):
+            await interaction.response.send_message("No standings file exists yet")
+            return
+        with open("data/standings.json", "r", encoding="utf-8") as input_file:
+            team_standings, player_standings = jsonpickle.decode(json.load(input_file))
+        
+        found_matches: List[PlayerResult] = []
+        for _, player in player_standings.items():
+            if player_name.lower() in player.name.lower():
+                found_matches.append(player)
+        if len(found_matches) > 1:
+            player_str = "\n\t".join(
+                map(
+                    lambda e: f"**{e.name}** ({e.team}): {e.wins}-{e.losses}", found_matches
+                )
+            )
+            output_str = f"{len(found_matches)} matches found:\n\t{player_str}"
+            await interaction.response.send_message(output_str)
+        elif len(found_matches) == 1:
+            await interaction.response.send_message(f"**{found_matches[0].name}** ({found_matches[0].team}): {found_matches[0].wins}-{found_matches[0].losses}")
+        else:
+            await interaction.response.send_message(f"Unable to find player with name '{player_name}'")
+    
     @app_commands.command(name="cstats", description="returns a country's statistics")
     @app_commands.describe(country_name="the country name to search for")
     async def cstats(self, interaction: discord.Interaction, country_name: str):
@@ -156,6 +184,6 @@ class NationsCupBot(commands.Bot):
         if not self.jobs_scheduled:
             log_message("Scheduled post_game_updates_job", "bot")
             scheduler = AsyncIOScheduler()
-            scheduler.add_job(self.post_game_updates_job, CronTrigger(hour="*", minute="40", second="0"))
+            scheduler.add_job(self.post_game_updates_job, CronTrigger(hour="*", minute="5", second="0"))
             scheduler.start()
             self.jobs_scheduled = True
