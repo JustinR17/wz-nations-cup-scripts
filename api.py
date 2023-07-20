@@ -25,6 +25,7 @@ class API:
 
     def __init__(self, config):
         self.config = config
+        self.dryrun = "dryrun" in config and config["dryrun"]
 
     def check_game(self, game_id: str) -> WarzoneGame:
         """
@@ -64,14 +65,19 @@ class API:
                 "players": list(map(lambda e: {"token": e[0], "team": TEAM_NAME_TO_API_VALUE.get(e[1], "50")}, players))
             }
         print(f"Creating game with following specs:\n{data}")
-        game_response = requests.post(
-            API.CREATE_GAME_ENDPOINT,
-            json={
-                "hostEmail": self.config["email"], "hostAPIToken": self.config["token"],
-                "templateID": int(template), "gameName": name, "personalMessage": description,
-                "players": list(map(lambda e: {"token": str(e[0]), "team": TEAM_NAME_TO_API_VALUE.get(e[1], "50")}, players))
-            },
-        ).json()
+
+        if self.dryrun:
+            print("Running dryrun on game creation")
+            game_response = { "gameID": 25876586 }
+        else:
+            game_response = requests.post(
+                API.CREATE_GAME_ENDPOINT,
+                json={
+                    "hostEmail": self.config["email"], "hostAPIToken": self.config["token"],
+                    "templateID": int(template), "gameName": name, "personalMessage": description,
+                    "players": list(map(lambda e: {"token": str(e[0]), "team": TEAM_NAME_TO_API_VALUE.get(e[1], "50")}, players))
+                },
+            ).json()
 
         print(game_response)
         print()
@@ -87,33 +93,40 @@ class API:
 
         Returns None if successful, otherwise raises a GameCreationException
         """
-        game_response = requests.post(
-            API.DELETE_GAME_ENDPOINT,
-            json={
-                "Email": self.config["email"], "APIToken": self.config["token"], "gameID": game_id
-            },
-        ).json()
+        if self.dryrun:
+            print("Running dryrun on game deletion")
+            game_response = {}
+        else:
+            game_response = requests.post(
+                API.DELETE_GAME_ENDPOINT,
+                json={
+                    "Email": self.config["email"], "APIToken": self.config["token"], "gameID": game_id
+                },
+            ).json()
 
         if "error" in game_response:
             raise API.GameDeletionException(f"Unable to delete game {game_id}")
 
     def validate_player_template_access(
         self, player_id: str, templates: List[str]
-    ) -> Tuple[bool, List[bool]]:
+    ) -> Tuple[bool, bool, List[bool]]:
         """
         Checks if the player has access to the list of templates.
 
-        Returns a tuple containing (True if player has access to all templates, List of booleans on access for each template).
+        Returns a tuple containing (True if not blacklisted, True if player has access to all templates, List of booleans on access for each template).
         """
         validate_response = requests.post(
             f"{API.VALIDATE_INVITE_TOKEN_ENDPOINT}?Token={player_id}&TemplateIDs={','.join(templates)}",
-            json={"Email": self.config["email"], "APIToken": self.config["token"]},
+            data=f"Email={self.config['email']}&APIToken={self.config['token']}",
         ).json()
 
-        has_acces_to_all_templates = True
+        if "error" in validate_response:
+            # Probably blacklisted
+            return False, False, []
+        has_access_to_all_templates = True
         template_access = []
         for template in templates:
-            has_acces_to_all_templates = has_acces_to_all_templates and "CanUseTemplate" in validate_response[f"template{template}"]["result"]
+            has_access_to_all_templates = has_access_to_all_templates and "CanUseTemplate" in validate_response[f"template{template}"]["result"]
             template_access.append("CanUseTemplate" in validate_response[f"template{template}"]["result"])
         
-        return has_acces_to_all_templates, template_access
+        return True, has_access_to_all_templates, template_access

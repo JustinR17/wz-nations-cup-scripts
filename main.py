@@ -8,6 +8,7 @@ from CreateGames import CreateGames
 from CreateMatches import CreateMatches
 from ParseGames import ParseGames
 from ParsePlayers import ParsePlayers
+from ValidatePlayers import ValidatePlayers
 from bot import NationsCupBot
 from sheet import GoogleSheet
 
@@ -46,9 +47,14 @@ pplayers = subparsers.add_parser("pplayers", help="Parse player stats and update
 setup = subparsers.add_parser("setup", help="Create a setup config to avoid common parameters")
 bot = subparsers.add_parser("bot", help="Initializes the discord bot and hourly job to post new game updates")
 
+validate = subparsers.add_parser("validate", help="Validates that players on teams can be invited to games on templates")
+validate.add_argument("templates", default="", help="Comma separated lists of templates")
+validate.add_argument("sheet", help="Input sheet tab name to read from")
+
 parser.add_argument("-e", "--email", help="Warzone email used for commands requiring the API. Not required for `setup`, `cmatches` and `pplayers`. Refer to `setup` for generating a config file.")
 parser.add_argument("-t", "--token", help="Warzone API token (https://www.warzone.com/wiki/Get_API_Token_API) used for commands requiring the API. Not required for `setup`, `cmatches` and `pplayers`. Refer to `setup` for generating a config file.")
 parser.add_argument("-s", "--spreadsheet_id", help="Google Sheets Spreadsheet ID. This is the ID in the URL for the sheet.")
+parser.add_argument("-d", "--dryrun", default=False, type=bool, help="run dry-run without creasting games")
 args = parser.parse_args()
 print(args)
 
@@ -56,6 +62,7 @@ if args.email:
     config["email"] = args.email
 if args.token:
     config["token"] = args.token
+config["dryrun"] = args.dryrun
 
 if config["email"] is None and args.cmd in ["cgames", "pgames"]:
     parser.error("-e/--email is required if no config is present")
@@ -101,6 +108,9 @@ elif args.cmd == "setup":
 elif args.cmd == "bot":
     bot = NationsCupBot(config=config)
     bot.run(config["discord_token"])
+elif args.cmd == "validate":
+    validate_players = ValidatePlayers(config)
+    validate_players.run(args.templates.split(","), args.sheet)
 else:
     # Should not occur due to argparse library
     raise f"Unknown command supplied: '{args.cmd}'"

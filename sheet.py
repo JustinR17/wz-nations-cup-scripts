@@ -12,6 +12,7 @@ SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 class GoogleSheet:
 
     def __init__(self, config):
+        self.dryrun = config["dryrun"]
         creds = None
         # The file token.json stores the user's access and refresh tokens, and is
         # created automatically when the authorization flow completes for the first
@@ -36,7 +37,10 @@ class GoogleSheet:
         return self.sheet.values().get(spreadsheetId=self.spreadsheet_id, range=range).execute()["values"]
 
     def update_rows_raw(self, range, data):
-        return self.sheet.values().update(spreadsheetId=self.spreadsheet_id, range=range, valueInputOption="USER_ENTERED", body={"values": data}).execute()
+        if self.dryrun:
+            print("Running dryun on update_rows_raw")
+        else:
+            return self.sheet.values().update(spreadsheetId=self.spreadsheet_id, range=range, valueInputOption="USER_ENTERED", body={"values": data}).execute()
     
     def get_sheet_tabs_data(self):
         return self.sheet.get(spreadsheetId=self.spreadsheet_id).execute().get("sheets")
