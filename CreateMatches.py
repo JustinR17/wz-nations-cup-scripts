@@ -3,6 +3,7 @@ import json
 import os
 from pprint import pprint
 from random import shuffle
+import re
 
 from typing import Dict, List, Tuple
 from NCTypes import GameResult, Matchup, Player, Team, TeamResult
@@ -42,8 +43,8 @@ class CreateMatches:
                 current_team = Team(row[0])
                 teams.append(current_team)
             elif row:
-                # New player to add to team
-                current_team.players.append(Player(row[0], int(row[1]), current_team))
+                # New player to add to team (need to regex capture the ID since warzone URLs are provided)
+                current_team.players.append(Player(row[0], int(re.search(r'^.*?p=(\d*).*$', row[1]).group(1)), current_team))
         return teams
 
     def create_team_matchups(self, teams: List[Team]) -> List[Matchup]:

@@ -39,11 +39,13 @@ class CreateGames:
             for game in matchup.games:
 
                 title = f"Nations' Cup 2023 R{round} {matchup.teams[0].name} vs. {matchup.teams[1].name}"
-                description = f"""This game is a part of the Nations' Cup R{round}, run by Marcus (https://docs.google.com/spreadsheets/d/1QPKGgwToBd2prap8u3XVUx9F47SuvMH9wJruvG0t2D4). You have 4 days to join the game.
+                description = f"""This game is a part of the Nations' Cup R{round}, run by Marcus. You have 3 days to join the game.
                 
 Match is between:
 \t{game.players[0].name} in {matchup.teams[0].name}
 \t{game.players[1].name} in {matchup.teams[1].name}
+
+https://docs.google.com/spreadsheets/d/1QPKGgwToBd2prap8u3XVUx9F47SuvMH9wJruvG0t2D4
 """
                 
                 try:
