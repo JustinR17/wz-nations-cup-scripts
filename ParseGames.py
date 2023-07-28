@@ -164,7 +164,7 @@ class ParseGames:
         """
         failed_to_delete_games = []
         for game in games_to_delete:
-            log_message(f"Deleting the {game.players[0].team} v {game.players[1].team} game between {game.players[0].name.encode()} ({game.players[0].id}) & {game.players[1].name.encode()} ({game.players[1].id})", "delete_unstarted_games")
+            log_message(f"Deleting the {game.players[0].team} v {game.players[1].team} game between {game.players[0].name.encode()} ({game.players[0].id}) & {game.players[1].name.encode()} ({game.players[1].id}) -- {game.link}", "delete_unstarted_games")
             try:
                 self.api.delete_game(int(self.convert_wz_game_link_to_id(game.link)))
             except Exception as e:
