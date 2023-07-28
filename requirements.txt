@@ -1,0 +1,7 @@
+APScheduler==3.10.1
+bidict==0.22.1
+discord.py==2.3.1
+google_api_python_client==2.88.0
+jsonpickle==3.0.1
+protobuf==4.23.4
+Requests==2.31.0
