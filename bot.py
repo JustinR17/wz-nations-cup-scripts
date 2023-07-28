@@ -1,19 +1,11 @@
 import os
 from typing import Any, Dict, List
 import discord
-import sys
 import json
 from discord.ext import commands
 import jsonpickle
-import requests
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
-import socket
-from dotenv import load_dotenv
-from datetime import datetime
-import traceback
-import random
-import subprocess
 from discord import app_commands
 
 from NCTypes import PlayerResult, TeamResult, WarzoneGame
@@ -27,11 +19,11 @@ client = discord.Client(intents=intents)
 
 
 ROUND_TO_TEMPLATE = {
-    "R1": "Test",
-    "R2": "Volcano Island",
-    "R3": "MME",
-    "R4": "",
-    "R5": "",
+    "R1": "Phobia",
+    "R2": "Yorkshire Brawl",
+    "R3": "Malvia",
+    "R4": "Laketown",
+    "R5": "Volcano 2v2",
 }
 
 ROUND_TO_COLOUR = {
