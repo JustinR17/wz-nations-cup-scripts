@@ -17,7 +17,7 @@ class CreateGames:
         self.sheet = GoogleSheet(config)
         self.api = API(config)
     
-    def run(self, sheet_name: str, round: str, template: str):
+    def run(self, sheet_name: str, round: str, template: str, players: int):
         """
         Reads the sheet_name matchups and creates games. The sheet will be updated with the game links
         """
@@ -42,8 +42,8 @@ class CreateGames:
                 description = f"""This game is a part of the Nations' Cup R{round}, run by Marcus. You have 3 days to join the game.
                 
 Match is between:
-\t{game.players[0].name} in {matchup.teams[0].name}
-\t{game.players[1].name} in {matchup.teams[1].name}
+\t{game.players[0].name.encode()} in {matchup.teams[0].name}
+\t{game.players[1].name.encode()} in {matchup.teams[1].name}
 
 https://docs.google.com/spreadsheets/d/1QPKGgwToBd2prap8u3XVUx9F47SuvMH9wJruvG0t2D4
 """
@@ -88,13 +88,13 @@ https://docs.google.com/spreadsheets/d/1QPKGgwToBd2prap8u3XVUx9F47SuvMH9wJruvG0t
             elif row and not current_matchup:
                 # New matchup
                 for matchup in matchups:
-                    if row[0] == matchup.teams[0].name or row[0] == matchup.teams[1].name:
+                    if row[0].strip() == matchup.teams[0].name or row[0].strip() == matchup.teams[1].name:
                         current_matchup = matchup
                 updated_game_links.append([""])
             elif row:
                 # New game link to add
                 for game in current_matchup.games:
-                    if int(row[1]) == game.players[0].id and int(row[4]) == game.players[1].id or int(row[1]) == game.players[1].id and int(row[4]) == game.players[0].id:
+                    if int(row[1].strip()) == game.players[0].id and int(row[4].strip()) == game.players[1].id or int(row[1].strip()) == game.players[1].id and int(row[4].strip()) == game.players[0].id:
                         updated_game_links.append([f"{API.GAME_URL}{game.link}"])
                         # Need to remove games in case there are scenarios where two players get matched up twice (ie. 3 players per team)
                         current_matchup.games.remove(game)

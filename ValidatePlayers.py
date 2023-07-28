@@ -1,3 +1,4 @@
+import re
 from typing import List
 
 from NCTypes import Player, Team
@@ -37,7 +38,7 @@ class ValidatePlayers:
                 teams.append(current_team)
             elif row:
                 # New player to add to team
-                current_team.players.append(Player(row[0], int(row[1]), current_team))
+                current_team.players.append(Player(row[0], int(re.search(r'^.*?p=(\d*).*$', row[1]).group(1)), current_team))
         return teams
 
     def validate_players_on_template(self, teams: List[Team], templates: List[str]):

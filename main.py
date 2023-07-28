@@ -36,11 +36,13 @@ cmatches = subparsers.add_parser("cmatches", help="Create matches between teams"
 cmatches.add_argument("input", help="Input sheet tab name to read from")
 cmatches.add_argument("output", help="Output sheet tab name")
 cmatches.add_argument("round", help="Integer value specifying the round number")
+cmatches.add_argument("players", type=int, help="Integer value specifying the number of players per team")
 
 cgames = subparsers.add_parser("cgames", help="Create Warzone games from matchups")
 cgames.add_argument("sheet", help="Input sheet tab name to read from")
 cgames.add_argument("round", type=int, help="Round number")
 cgames.add_argument("template", type=int, help="Template ID")
+cgames.add_argument("players", type=int, help="Integer value specifying the number of players per team")
 
 pgames = subparsers.add_parser("pgames", help="Parse games and update google sheets")
 pplayers = subparsers.add_parser("pplayers", help="Parse player stats and update google sheets")
@@ -54,7 +56,7 @@ validate.add_argument("sheet", help="Input sheet tab name to read from")
 parser.add_argument("-e", "--email", help="Warzone email used for commands requiring the API. Not required for `setup`, `cmatches` and `pplayers`. Refer to `setup` for generating a config file.")
 parser.add_argument("-t", "--token", help="Warzone API token (https://www.warzone.com/wiki/Get_API_Token_API) used for commands requiring the API. Not required for `setup`, `cmatches` and `pplayers`. Refer to `setup` for generating a config file.")
 parser.add_argument("-s", "--spreadsheet_id", help="Google Sheets Spreadsheet ID. This is the ID in the URL for the sheet.")
-parser.add_argument("-d", "--dryrun", default=False, type=bool, help="run dry-run without creasting games")
+parser.add_argument("-d", "--dryrun", action='store_true', help="run dry-run without creasting games")
 args = parser.parse_args()
 print(args)
 
@@ -80,10 +82,10 @@ config["run"] = args.run
 
 if args.cmd == "cmatches":
     create_matches = CreateMatches(config)
-    create_matches.run(args.input, args.output, args.round)
+    create_matches.run(args.input, args.output, args.round, args.players)
 elif args.cmd == "cgames":
     create_games = CreateGames(config)
-    create_games.run(args.sheet, args.round, args.template)
+    create_games.run(args.sheet, args.round, args.template, args.players)
 elif args.cmd == "pgames":
     parse_games = ParseGames(config)
     parse_games.run()

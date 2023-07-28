@@ -57,14 +57,14 @@ class ParseGames:
                 else:
                     if not team_a and not team_b:
                         # New teams to add
-                        team_a, team_b, score_row = row[0], row[3], row
+                        team_a, team_b, score_row = row[0].strip(), row[3].strip(), row
                     elif not row[2]:
                         # Game to check
-                        game = self.api.check_game(self.convert_wz_game_link_to_id(row[5]))
-                        if game.players[0].id != row[1]:
+                        game = self.api.check_game(self.convert_wz_game_link_to_id(row[5].strip()))
+                        if game.players[0].id != row[1].strip():
                             game.players.reverse()
                         game.players[0].team, game.players[1].team = team_a,  team_b
-                        game.players[0].score, game.players[1].score = int(score_row[1]), int(score_row[4])
+                        game.players[0].score, game.players[1].score = int(score_row[1].strip()), int(score_row[4].strip())
 
                         if game.outcome == Game.Outcome.FINISHED:
                             # Game is finished, assign the defeat/loses to label
@@ -74,7 +74,7 @@ class ParseGames:
                             if game.players[0].outcome == WarzonePlayer.Outcome.WON:
                                 # Left team wins
                                 row[2] = "defeats"
-                                score_row[1] = int(score_row[1]) + 1
+                                score_row[1] = int(score_row[1].strip()) + 1
                                 game.players[0].score += 1
                                 game.winner = game.players[0].id
                                 self.update_standings_with_game(team_standings, player_standings, team_a, game.players[0].name, game.players[0].id, tab[0:2], True)
@@ -82,7 +82,7 @@ class ParseGames:
                             elif game.players[1].outcome == WarzonePlayer.Outcome.WON:
                                 # Right team wins
                                 row[2] = "loses to"
-                                score_row[4] = int(score_row[4]) + 1
+                                score_row[4] = int(score_row[4].strip()) + 1
                                 game.players[1].score += 1
                                 game.winner = game.players[1].id
                                 self.update_standings_with_game(team_standings, player_standings, team_a, game.players[0].name, game.players[0].id, tab[0:2], False)
