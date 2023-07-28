@@ -7,9 +7,6 @@ config.json
 token.json
 
 # Ignore everything except . files
-data/*
-!data/.*
-
 logs/*
 !logs/.*
 
