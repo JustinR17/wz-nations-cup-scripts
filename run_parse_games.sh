@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 
 source /home/pi/.bashrc
 pushd /home/pi/Desktop/nc
