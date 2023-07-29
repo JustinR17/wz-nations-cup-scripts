@@ -58,6 +58,8 @@ class ParseGames:
                     if not team_a and not team_b:
                         # New teams to add
                         team_a, team_b, score_row = row[0].strip(), row[3].strip(), row
+                        if team_a:
+                            log_message(f"Checking games for {tab} - {team_a} vs {team_b}", "update_new_games")
                     elif not row[2]:
                         # Game to check
                         game = self.api.check_game(self.convert_wz_game_link_to_id(row[5].strip()))
@@ -67,12 +69,14 @@ class ParseGames:
                         game.players[0].score, game.players[1].score = int(score_row[1]), int(score_row[4])
 
                         # Game is not finished, but we will update the progress (ie round or stage)
+                        while len(row) < 7:
+                            row.append("")
                         if game.outcome == Game.Outcome.WAITING_FOR_PLAYERS:
-                            row[6] = "Waiting for Players"
+                            row[6] = "Lobby"
                         elif game.outcome == Game.Outcome.DISTRIBUTING_TERRITORIES:
-                            row[6] = "Picks Stage"
+                            row[6] = "Picks"
                         else:
-                            row[6] = game.round+1
+                            row[6] = f"Turn {game.round+1}"
 
                         if game.outcome == Game.Outcome.FINISHED:
                             # Game is finished, assign the defeat/loses to label
