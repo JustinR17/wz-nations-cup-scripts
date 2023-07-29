@@ -47,7 +47,7 @@ class ParseGames:
         newly_finished_games_count = 0
         games_to_delete = []
         for tab in self.get_game_tabs():
-            tab_rows = self.sheet.get_rows(f"{tab}!A1:F300")
+            tab_rows = self.sheet.get_rows(f"{tab}!A1:G300")
 
             team_a, team_b, score_row = "", "", []
             for row in tab_rows:
@@ -64,7 +64,15 @@ class ParseGames:
                         if game.players[0].id != row[1].strip():
                             game.players.reverse()
                         game.players[0].team, game.players[1].team = team_a,  team_b
-                        game.players[0].score, game.players[1].score = int(score_row[1].strip()), int(score_row[4].strip())
+                        game.players[0].score, game.players[1].score = int(score_row[1]), int(score_row[4])
+
+                        # Game is not finished, but we will update the progress (ie round or stage)
+                        if game.outcome == Game.Outcome.WAITING_FOR_PLAYERS:
+                            row[6] = "Waiting for Players"
+                        elif game.outcome == Game.Outcome.DISTRIBUTING_TERRITORIES:
+                            row[6] = "Picks Stage"
+                        else:
+                            row[6] = game.round+1
 
                         if game.outcome == Game.Outcome.FINISHED:
                             # Game is finished, assign the defeat/loses to label
@@ -74,7 +82,7 @@ class ParseGames:
                             if game.players[0].outcome == WarzonePlayer.Outcome.WON:
                                 # Left team wins
                                 row[2] = "defeats"
-                                score_row[1] = int(score_row[1].strip()) + 1
+                                score_row[1] = int(score_row[1]) + 1
                                 game.players[0].score += 1
                                 game.winner = game.players[0].id
                                 self.update_standings_with_game(team_standings, player_standings, team_a, game.players[0].name, game.players[0].id, tab[0:2], True)
@@ -82,7 +90,7 @@ class ParseGames:
                             elif game.players[1].outcome == WarzonePlayer.Outcome.WON:
                                 # Right team wins
                                 row[2] = "loses to"
-                                score_row[4] = int(score_row[4].strip()) + 1
+                                score_row[4] = int(score_row[4]) + 1
                                 game.players[1].score += 1
                                 game.winner = game.players[1].id
                                 self.update_standings_with_game(team_standings, player_standings, team_a, game.players[0].name, game.players[0].id, tab[0:2], False)
@@ -135,7 +143,7 @@ class ParseGames:
                                 self.update_standings_with_game(team_standings, player_standings, team_b, game.players[1].name, game.players[1].id, tab[0:2], not left_team_won)
                             
                             games_to_delete.append(game)
-            self.sheet.update_rows_raw(f"{tab}!A1:F300", tab_rows)
+            self.sheet.update_rows_raw(f"{tab}!A1:G300", tab_rows)
             log_message(f"Finished updating games in {tab}. Newly finished games: {newly_finished_games_count}; games to delete: {len(games_to_delete)}", "update_new_games")
         
         with open("data/standings.json", "w", encoding="utf-8") as output_file:

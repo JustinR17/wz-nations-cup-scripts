@@ -43,7 +43,11 @@ class API:
             players.append(WarzonePlayer(player["name"], player["id"], player["state"]))
         
         game = WarzoneGame(
-            players, Game.Outcome(game_json["state"]), f"{API.GAME_URL}{game_json['id']}", datetime.strptime(game_json["created"], "%m/%d/%Y %H:%M:%S").replace(tzinfo=timezone.utc)
+            players,
+            Game.Outcome(game_json["state"]),
+            f"{API.GAME_URL}{game_json['id']}",
+            datetime.strptime(game_json["created"], "%m/%d/%Y %H:%M:%S").replace(tzinfo=timezone.utc),
+            int(game_json["numberOfTurns"])
         )
 
         return game

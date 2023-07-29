@@ -91,12 +91,13 @@ class WarzonePlayer:
 
 class WarzoneGame:
 
-    def __init__(self, players, outcome=Game.Outcome.UNDEFINED, link="", start_time=datetime.now()) -> None:
+    def __init__(self, players, outcome=Game.Outcome.UNDEFINED, link="", start_time=datetime.now(), round=0) -> None:
         self.outcome: Game.Outcome = outcome
         self.winner: str = ""
         self.players: List[WarzonePlayer] = players
         self.link: str = link
         self.start_time: datetime = start_time
+        self.round: int = round
 
 TEAM_NAME_TO_API_VALUE = bidict({
     "AUS A": "1",
