@@ -28,7 +28,8 @@ class ParseGames:
         newly_finished_games, games_to_delete = self.update_new_games()
         self.delete_unstarted_games(games_to_delete)
         self.write_newly_finished_games(newly_finished_games)
-        self.write_standings()
+        self.write_player_standings()
+        self.write_team_standings()
 
     
     def update_new_games(self) -> Tuple[Dict[str, List[WarzoneGame]], List[WarzoneGame]]:
@@ -191,11 +192,11 @@ class ParseGames:
             team_standings[team].add_loss(round)
             player_standings.setdefault(player_id, PlayerResult(player_name, player_id, team)).losses += 1
     
-    def write_standings(self):
-        team_standings: Dict[str, TeamResult] = {}
+    def write_player_standings(self):
+        _: Dict[str, TeamResult] = {}
         player_standings: Dict[str, PlayerResult] = {}
         with open("data/standings.json", "r", encoding="utf-8") as input_file:
-            team_standings, player_standings = jsonpickle.decode(json.load(input_file))
+            _, player_standings = jsonpickle.decode(json.load(input_file))
         
         current_data = self.sheet.get_rows("Player_Stats!A1:E200")
         for row in current_data:
@@ -208,6 +209,31 @@ class ParseGames:
         
         log_message(f"Updated player stats with a total {len(current_data)} rows", "write_standings")
         self.sheet.update_rows_raw(f"Player_Stats!A1:E{len(current_data)}", current_data)
+    
+    def write_team_standings(self):
+        team_standings: Dict[str, TeamResult] = {}
+        _: Dict[str, PlayerResult] = {}
+        with open("data/standings.json", "r", encoding="utf-8") as input_file:
+            team_standings, _ = jsonpickle.decode(json.load(input_file))
+        
+        current_data = self.sheet.get_rows("Team_Stats!A1:E50")
+        for row in current_data:
+            if row and row[0] != "Country":
+                row[1] = team_standings[row[0]].round_wins
+                row[2] = team_standings[row[0]].round_losses
+                row[3] = sum(map(lambda e: e.wins, team_standings[row[0]].games_result.values()))
+                row[4] = sum(map(lambda e: e.losses, team_standings[row[0]].games_result.values()))
+                team_standings.pop(row[0])
+        for _, ts in team_standings.items():
+            current_data.append(
+                [ts.name, ts.round_wins, ts.round_losses,
+                 sum(map(lambda e: e.wins, team_standings[row[0]].games_result.values())),
+                 sum(map(lambda e: e.losses, team_standings[row[0]].games_result.values()))
+                ]
+            )
+        
+        log_message(f"Updated team stats with a total {len(current_data)} rows", "write_standings")
+        self.sheet.update_rows_raw(f"Team_Stats!A1:E{len(current_data)}", current_data)
     
     def write_newly_finished_games(self, newly_finished_games: Dict[str, List[WarzoneGame]]):
         """
