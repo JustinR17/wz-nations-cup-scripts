@@ -94,7 +94,7 @@ class NCComands(commands.Cog):
         with open("data/standings.json", "r", encoding="utf-8") as input_file:
             team_standings, player_standings = jsonpickle.decode(json.load(input_file))
         
-        if country_name in team_standings:
+        if country_name.upper() in team_standings:
             output_str = f"**{team_standings[country_name].name}**: {team_standings[country_name].round_wins} round wins, {team_standings[country_name].round_losses} round losses\n"
             for round, gr in team_standings[country_name].games_result.items():
                 output_str += f"\t{round} vs {gr.opp}: {gr.pts_for}-{gr.pts_against} ({gr.wins} wins, {gr.losses} losses)\n"
@@ -176,6 +176,6 @@ class NationsCupBot(commands.Bot):
         if not self.jobs_scheduled:
             log_message("Scheduled post_game_updates_job", "bot")
             scheduler = AsyncIOScheduler()
-            scheduler.add_job(self.post_game_updates_job, CronTrigger(hour="*", minute="10", second="0"))
+            scheduler.add_job(self.post_game_updates_job, CronTrigger(hour="*", minute="8-59/10", second="0"))
             scheduler.start()
             self.jobs_scheduled = True
