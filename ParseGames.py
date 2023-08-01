@@ -113,7 +113,7 @@ class ParseGames:
                                 self.update_standings_with_game(team_standings, player_standings, team_a, game.players[0].name, game.players[0].id, tab[0:2], left_team_won)
                                 self.update_standings_with_game(team_standings, player_standings, team_b, game.players[1].name, game.players[1].id, tab[0:2], not left_team_won)
                             if loser.outcome == WarzonePlayer.Outcome.BOOTED:
-                                row[6] = "Booted"
+                                row[6] = f"Turn {game.round+1} - Booted"
                         
                         elif game.outcome == Game.Outcome.WAITING_FOR_PLAYERS and datetime.now(timezone.utc) - game.start_time > timedelta(days=4):
                             # Game has been in the join lobby for too long. Game will be deleted and appropriate winner selected according to algorithm:
