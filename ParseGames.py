@@ -86,6 +86,7 @@ class ParseGames:
                             newly_finished_games_count += 1
                             if game.players[0].outcome == WarzonePlayer.Outcome.WON:
                                 # Left team wins
+                                loser = game.players[1]
                                 row[2] = "defeats"
                                 score_row[1] = int(score_row[1]) + 1
                                 game.players[0].score += 1
@@ -94,6 +95,7 @@ class ParseGames:
                                 self.update_standings_with_game(team_standings, player_standings, team_b, game.players[1].name, game.players[1].id, tab[0:2], False)
                             elif game.players[1].outcome == WarzonePlayer.Outcome.WON:
                                 # Right team wins
+                                loser = game.players[0]
                                 row[2] = "loses to"
                                 score_row[4] = int(score_row[4]) + 1
                                 game.players[1].score += 1
@@ -103,12 +105,15 @@ class ParseGames:
                             else:
                                 # Randomly assign win (probably because they voted to end)
                                 left_team_won = bool(random.getrandbits(1))
+                                loser = game.players[int(left_team_won)]
                                 row[2] = "defeats" if left_team_won else "loses to"
                                 score_row[1 if left_team_won else 4] = int(score_row[1 if left_team_won else 4]) + 1
                                 game.players[0 if left_team_won else 1].score += 1
                                 game.winner = game.players[0 if left_team_won else 1].id
                                 self.update_standings_with_game(team_standings, player_standings, team_a, game.players[0].name, game.players[0].id, tab[0:2], left_team_won)
                                 self.update_standings_with_game(team_standings, player_standings, team_b, game.players[1].name, game.players[1].id, tab[0:2], not left_team_won)
+                            if loser.outcome == WarzonePlayer.Outcome.BOOTED:
+                                row[6] = "Booted"
                         
                         elif game.outcome == Game.Outcome.WAITING_FOR_PLAYERS and datetime.now(timezone.utc) - game.start_time > timedelta(days=4):
                             # Game has been in the join lobby for too long. Game will be deleted and appropriate winner selected according to algorithm:
