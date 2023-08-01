@@ -158,7 +158,11 @@ class NationsCupBot(commands.Bot):
                         )
                         embed.add_field(name=f"{round[0:2]} {ROUND_TO_TEMPLATE[round[0:2]]}"[0:256], value=f"**{winner_team}** won"[0:1024])
                         embed.set_footer(text=f"{game.players[0].team} {game.players[0].score} - {game.players[1].team} {game.players[1].score}"[0:2048])
-                        await discord_channel.send(embed=embed)
+                        sent_embed = await discord_channel.send(embed=embed)
+
+                        if winner_team == "CAN":
+                            sent_embed.add_reaction("🇨🇦")
+                            sent_embed.add_reaction("🎉")
                         successfully_posted += 1
                     except Exception as e:
                         log_exception(f"Error while handling game {game.link}: {e}")
