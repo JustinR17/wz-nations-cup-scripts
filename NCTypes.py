@@ -87,6 +87,9 @@ class WarzonePlayer:
             self.outcome = WarzonePlayer.Outcome.UNDEFINED
         else:
             self.outcome = WarzonePlayer.Outcome(outcome)
+    
+    def __repr__(self) -> str:
+        return f"**{self.team}** {self.name} ({self.id})"
 
 
 class WarzoneGame:
@@ -98,6 +101,15 @@ class WarzoneGame:
         self.link: str = link
         self.start_time: datetime = start_time
         self.round: int = round
+    
+    def __repr__(self) -> str:
+        output_str = " vs ".join(self.players)
+        output_str += f"\n\tWinner: {self.winner}"
+        output_str += f"\n\tStart time: {self.start_time}"
+        output_str += f"\n\tOutcome: {self.outcome}"
+        output_str += f"\n\tRound: {self.round}"
+        output_str += f"\n\tLink: {self.link}"
+        return output_str
 
 TEAM_NAME_TO_API_VALUE = bidict({
     "AUS A": "1",

@@ -116,10 +116,12 @@ class ParseGames:
                             # 2. Assign win to the right player if they have joined, or are invited and the left player declined
                             # 3. Randomly assign win if both players are invited, or declined
                             log_message(f"New game pased join time: {game.players[0].name.encode()} {game.players[0].outcome} v {game.players[1].name.encode()} {game.players[1].outcome} ({game.link})", "update_new_games")
+                            log_message(f"Storing end response: {game}")
                             newly_finished_games.setdefault(tab, []).append(game)
                             newly_finished_games_count += 1
+                            row[6] = "Deleted"
                             if game.players[0].outcome == WarzonePlayer.Outcome.PLAYING or \
-                                (game.players[0].outcome == WarzonePlayer.Outcome.INVITED and game.players[1].outcome != WarzonePlayer.Outcome.INVITED):
+                                (game.players[0].outcome == WarzonePlayer.Outcome.INVITED and game.players[1].outcome == WarzonePlayer.Outcome.DECLINED):
                                 # Left team wins
                                 row[2] = "defeats"
                                 score_row[1] = int(score_row[1]) + 1
@@ -128,7 +130,7 @@ class ParseGames:
                                 self.update_standings_with_game(team_standings, player_standings, team_a, game.players[0].name, game.players[0].id, tab[0:2], True)
                                 self.update_standings_with_game(team_standings, player_standings, team_b, game.players[1].name, game.players[1].id, tab[0:2], False)
                             elif game.players[1].outcome == WarzonePlayer.Outcome.PLAYING or \
-                                (game.players[1].outcome == WarzonePlayer.Outcome.INVITED and game.players[0].outcome != WarzonePlayer.Outcome.INVITED):
+                                (game.players[1].outcome == WarzonePlayer.Outcome.INVITED and game.players[0].outcome == WarzonePlayer.Outcome.DECLINED):
                                 # Right team wins
                                 row[2] = "loses to"
                                 score_row[4] = int(score_row[4]) + 1

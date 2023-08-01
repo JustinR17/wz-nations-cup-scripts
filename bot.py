@@ -95,8 +95,8 @@ class NCComands(commands.Cog):
             team_standings, player_standings = jsonpickle.decode(json.load(input_file))
         
         if country_name.upper() in team_standings:
-            output_str = f"**{team_standings[country_name].name}**: {team_standings[country_name].round_wins} round wins, {team_standings[country_name].round_losses} round losses\n"
-            for round, gr in team_standings[country_name].games_result.items():
+            output_str = f"**{team_standings[country_name.upper()].name}**: {team_standings[country_name.upper()].round_wins} round wins, {team_standings[country_name.upper()].round_losses} round losses\n"
+            for round, gr in team_standings[country_name.upper()].games_result.items():
                 output_str += f"\t{round} vs {gr.opp}: {gr.pts_for}-{gr.pts_against} ({gr.wins} wins, {gr.losses} losses)\n"
             await interaction.response.send_message(output_str)
         else:
