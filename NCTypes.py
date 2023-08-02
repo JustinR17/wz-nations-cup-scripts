@@ -112,8 +112,8 @@ class WarzoneGame:
         return output_str
 
 TEAM_NAME_TO_API_VALUE = bidict({
-    "AUS A": "1",
-    "AUS B": "2",
+    "ANZ A": "1",
+    "ANZ B": "2",
     "BEL": "3",
     "CAN": "4",
     "CZE": "5",
