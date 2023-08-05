@@ -115,11 +115,17 @@ class NCComands(commands.Cog):
             await interaction.response.send_message("Only Justin can use this command")
             await self.bot.close()
     
-    @commands.command(name="sync") 
+    @commands.command(name="sync")
     async def sync(self, ctx):
         synced = await self.bot.tree.sync()
         print(f"Synced {len(synced)} command(s).")
         await ctx.send(f"Synced {len(synced)} command(s).")
+    
+    @commands.command(name="msg")
+    async def msg(self, ctx: commands.Context, channel: str, *msg):
+        if ctx.author.id == 162968893177069568:
+            dc = self.bot.get_channel(int(channel))
+            await dc.send(" ".join(msg))
 
 class NationsCupBot(commands.Bot):
 
