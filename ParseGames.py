@@ -49,9 +49,15 @@ class ParseGames:
         games_to_delete = []
         for tab in self.get_game_tabs():
             tab_rows = self.sheet.get_rows(f"{tab}!A1:G300")
+            if not len(tab_rows) or not len(tab_rows[0]) or tab_rows[0][0] != "in-progress":
+                log_message(f"Skipping the game log tab '{tab}' due to missing 'in-progress' tag", "update_new_games")
+                continue
+            log_message(f"Checking games in game log tab '{tab}'", "update_new_games")
 
             team_a, team_b, score_row = "", "", []
             for row in tab_rows:
+                if row == tab_rows[0]:
+                    continue
                 if not row:
                     # Finished the previous matchup
                     team_a, team_b, score_row = "", "", []

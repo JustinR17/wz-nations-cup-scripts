@@ -34,7 +34,10 @@ class GoogleSheet:
             print(err)
     
     def get_rows(self, range) -> List[List[str]]:
-        return self.sheet.values().get(spreadsheetId=self.spreadsheet_id, range=range).execute()["values"]
+        try:
+            return self.sheet.values().get(spreadsheetId=self.spreadsheet_id, range=range).execute()["values"]
+        except:
+            return []
 
     def update_rows_raw(self, range, data):
         if self.dryrun:

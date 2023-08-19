@@ -157,8 +157,9 @@ class TeamResult:
         self.games_result: Dict[str, GameResult] = {}
 
     def init_score(self, round: str, opp: str, pts_for: int, pts_against: int):
-        if round not in self.games_result:
-            self.games_result[round] = GameResult(opp, pts_for, pts_against)
+        if round in self.games_result:
+            self.games_result.pop(round)
+        self.games_result[round] = GameResult(opp, pts_for, pts_against)
 
     def update_round_score(self, round: str):
         if self.games_result[round].total == NUM_GAMES:
@@ -172,7 +173,7 @@ class TeamResult:
                 self.round_losses += 0.25
             elif self.games_result[round].pts_for + 1 < self.games_result[round].pts_against:
                 # Full loss
-                self.round_losses += 0
+                self.round_losses += 1
             elif self.games_result[round].pts_for < self.games_result[round].pts_against:
                 # Close loss
                 self.round_wins += 0.25
