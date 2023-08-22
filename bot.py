@@ -102,6 +102,17 @@ class NCComands(commands.Cog):
         else:
             await interaction.response.send_message(f"Unable to find country with name '{country_name}'")
     
+    @app_commands.command(name="countries", description="returns the list of country shortnames")
+    async def countries(self, interaction: discord.Interaction):
+        team_standings: Dict[str, TeamResult] = {}
+        player_standings: Dict[str, PlayerResult] = {}
+        with open("data/standings.json", "r", encoding="utf-8") as input_file:
+            team_standings, player_standings = jsonpickle.decode(json.load(input_file))
+        
+        embed = discord.Embed(title='Country List')
+        embed.add_field(name='Shortnames', value="\n".join(sorted(team_standings.keys())))
+        await interaction.response.send_message(embed=embed)
+    
     @app_commands.command(name="link", description="returns the google sheets link")
     async def link(self, interaction: discord.Interaction):
         await interaction.response.send_message("<https://docs.google.com/spreadsheets/d/1QPKGgwToBd2prap8u3XVUx9F47SuvMH9wJruvG0t2D4/edit#gid=1668893548>")
@@ -169,6 +180,11 @@ class NationsCupBot(commands.Bot):
                         if winner_team == "CAN":
                             await sent_embed.add_reaction("🇨🇦")
                             await sent_embed.add_reaction("🎉")
+                            await sent_embed.add_reaction("🇨")
+                            await sent_embed.add_reaction("🇦")
+                            await sent_embed.add_reaction("🇳")
+                            await sent_embed.add_reaction("🍁")
+                            await sent_embed.add_reaction("🦫")
                         successfully_posted += 1
                     except Exception as e:
                         log_exception(f"Error while handling game {game.link}: {e}")

@@ -55,7 +55,9 @@ https://docs.google.com/spreadsheets/d/1QPKGgwToBd2prap8u3XVUx9F47SuvMH9wJruvG0t
                         log_message(f"\tGame created between {game.players[0].name.encode()} & {game.players[1].name.encode()} - {game_link}", "create_games")
                         game.link = game_link
                 except API.GameCreationException as e:
-                    log_exception(f"\tUnable to create game between {game.players[0].name.encode()} & {game.players[1].name.encode()}: '{str(e)}'")
+                    log_exception(f"\tGameCreationException: Unable to create game between {game.players[0].name.encode()} & {game.players[1].name.encode()}: '{str(e)}'")
+                except Exception as e:
+                    log_exception(f"\tUnknown Exception: Unable to create game between {game.players[0].name.encode()} & {game.players[1].name.encode()}: '{str(e)}'")
         
         return matchups
 
@@ -93,12 +95,16 @@ https://docs.google.com/spreadsheets/d/1QPKGgwToBd2prap8u3XVUx9F47SuvMH9wJruvG0t
                 updated_game_links.append([""])
             elif row:
                 # New game link to add
+                has_added_game = False
                 for game in current_matchup.games:
                     if int(row[1].strip()) == game.players[0].id and int(row[4].strip()) == game.players[1].id or int(row[1].strip()) == game.players[1].id and int(row[4].strip()) == game.players[0].id:
                         updated_game_links.append([f"{API.GAME_URL}{game.link}"])
                         # Need to remove games in case there are scenarios where two players get matched up twice (ie. 3 players per team)
                         current_matchup.games.remove(game)
-                        break              
+                        has_added_game = True
+                        break
+                if not has_added_game:
+                    updated_game_links.append([""])
         self.sheet.update_rows_raw(f"{sheet_name}!F1:F{len(updated_game_links)}", updated_game_links)
         log_message(f"Updated the google sheet with {len(updated_game_links)} new links", "write_games")
 
