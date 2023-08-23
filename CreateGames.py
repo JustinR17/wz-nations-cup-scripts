@@ -21,10 +21,13 @@ class CreateGames:
         """
         Reads the sheet_name matchups and creates games. The sheet will be updated with the game links
         """
-        log_message("Running CreateGames", "CreateGames.run")
-        matchups = self.parse_sheet_matchups(round)
-        matchups = self.create_games(matchups, round, template)
-        self.write_games(sheet_name, matchups, round)
+        try:
+            log_message("Running CreateGames", "CreateGames.run")
+            matchups = self.parse_sheet_matchups(round)
+            matchups = self.create_games(matchups, round, template)
+            self.write_games(sheet_name, matchups, round)
+        except Exception as e:
+            log_exception(e)
 
     def parse_sheet_matchups(self, round):
         with open(f"data/matchups_output_r{round}.json", "r", encoding="utf-8") as json_file:

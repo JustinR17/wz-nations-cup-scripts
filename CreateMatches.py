@@ -24,18 +24,21 @@ class CreateMatches:
         """
         Reads the google sheet with a list of teams. Creates matchups between countries and outputs to google sheets, a file & terminal output
         """
-        log_message("Running CreateMatches", "CreateMatches.run")
-        teams = self.parse_sheet_for_teams(input_sheet_name)
-        
-        # Did not want to mix up the flows too much so separated 1v1s and 2v2s
-        if players_per_team == 1:
-            matchups = self.create_team_matchups(teams)
-            self.write_matchups(output_sheet_name, matchups, round)
-        elif players_per_team == 2:
-            matchups = self.create_2v2_team_matchups(teams)
-            self.write_2v2_matchups(output_sheet_name, matchups, round)
-        else:
-            raise Exception(f"Invalid players_per_team argument provided: '{players_per_team}'")
+        try:
+            log_message("Running CreateMatches", "CreateMatches.run")
+            teams = self.parse_sheet_for_teams(input_sheet_name)
+            
+            # Did not want to mix up the flows too much so separated 1v1s and 2v2s
+            if players_per_team == 1:
+                matchups = self.create_team_matchups(teams)
+                self.write_matchups(output_sheet_name, matchups, round)
+            elif players_per_team == 2:
+                matchups = self.create_2v2_team_matchups(teams)
+                self.write_2v2_matchups(output_sheet_name, matchups, round)
+            else:
+                raise Exception(f"Invalid players_per_team argument provided: '{players_per_team}'")
+        except Exception as e:
+            log_exception(e)
 
 
     def parse_sheet_for_teams(self, sheet_name) -> List[Team]:

@@ -24,12 +24,15 @@ class ParseGames:
         """
         Reads the google sheets games and updates finished games. Newly finished games are stored in a buffer file for the discord bot to read
         """
-        log_message("Running ParseGames", "ParseGames.run")
-        newly_finished_games, games_to_delete = self.update_new_games()
-        self.delete_unstarted_games(games_to_delete)
-        self.write_newly_finished_games(newly_finished_games)
-        self.write_player_standings()
-        self.write_team_standings()
+        try:
+            log_message("Running ParseGames", "ParseGames.run")
+            newly_finished_games, games_to_delete = self.update_new_games()
+            self.delete_unstarted_games(games_to_delete)
+            self.write_newly_finished_games(newly_finished_games)
+            self.write_player_standings()
+            self.write_team_standings()
+        except Exception as e:
+            log_exception(e)
 
     
     def update_new_games(self) -> Tuple[Dict[str, List[WarzoneGame]], List[WarzoneGame]]:
