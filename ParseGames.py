@@ -60,6 +60,13 @@ class ParseGames:
             team_a, team_b, score_row = "", "", []
             for row in tab_rows:
                 if row == tab_rows[0]:
+                    # Add the last updated time to the sheet so people know when it is broken
+                    if len(row) < 6:
+                        # Likely only 5 elements then
+                        row.append(datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"))
+                    else:
+                        # Overwrite previous value
+                        row[5] = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
                     continue
                 if not row:
                     # Finished the previous matchup

@@ -140,7 +140,8 @@ TEAM_NAME_TO_API_VALUE = bidict({
     "POL A": "26",
     "POL B": "27",
     "POL C": "28",
-    "SWZ": "29",
+    "SUI": "29",
+    "SWZ": "34", # In case marcus does anything weird
     "US A": "30",
     "US B": "31",
     "US C": "32",
