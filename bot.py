@@ -180,11 +180,11 @@ class NationsCupBot(commands.Bot):
                         if winner_team == "CAN":
                             await sent_embed.add_reaction("🇨🇦")
                             await sent_embed.add_reaction("🎉")
-                            await sent_embed.add_reaction("🇨")
-                            await sent_embed.add_reaction("🇦")
-                            await sent_embed.add_reaction("🇳")
-                            await sent_embed.add_reaction("🍁")
-                            await sent_embed.add_reaction("🦫")
+                            # await sent_embed.add_reaction("🇨")
+                            # await sent_embed.add_reaction("🇦")
+                            # await sent_embed.add_reaction("🇳")
+                            # await sent_embed.add_reaction("🍁")
+                            # await sent_embed.add_reaction("🦫")
                         successfully_posted += 1
                     except Exception as e:
                         log_exception(f"Error while handling game {game.link}: {e}")
