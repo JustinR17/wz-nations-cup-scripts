@@ -9,8 +9,8 @@ def log_message(msg: str, type="FIXME"):
 
 def log_exception(msg: Exception):
     time_str = "[" + datetime.now().isoformat() + "] {}: ".format(type)
-    print("{}{}".format(time_str, str(msg).encode()))
+    print("{}{}".format(time_str, repr(msg).encode()))
     with open("./logs/{}.txt".format(datetime.now().isoformat()[:10]), 'a') as log_writer:
-        log_writer.write("{}{}\n".format(time_str, str(msg).encode()))
+        log_writer.write("{}{}\n".format(time_str, repr(msg).encode()))
     with open("./errors/{}.txt".format(datetime.now().isoformat()[:10]), 'a') as log_writer:
-        log_writer.write("{}{}\n".format(time_str, str(msg).encode()))
+        log_writer.write("{}{}\n".format(time_str, repr(msg).encode()))
