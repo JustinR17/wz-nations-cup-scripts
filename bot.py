@@ -201,7 +201,7 @@ class NationsCupBot(commands.Bot):
         # Start schedulers (only on first run)
         if not self.jobs_scheduled:
             log_message("Scheduled post_game_updates_job", "bot")
+            self.jobs_scheduled = True
             scheduler = AsyncIOScheduler()
             scheduler.add_job(self.post_game_updates_job, CronTrigger(hour="*", minute="8-59/10", second="0"))
             scheduler.start()
-            self.jobs_scheduled = True

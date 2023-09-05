@@ -63,10 +63,10 @@ class ParseGames:
                     # Add the last updated time to the sheet so people know when it is broken
                     if len(row) < 6:
                         # Likely only 5 elements then
-                        row.append(datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"))
+                        row.append(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
                     else:
                         # Overwrite previous value
-                        row[5] = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+                        row[5] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     continue
                 if not row:
                     # Finished the previous matchup
@@ -221,7 +221,7 @@ class ParseGames:
         with open("data/standings.json", "r", encoding="utf-8") as input_file:
             _, player_standings = jsonpickle.decode(json.load(input_file))
         
-        current_data = self.sheet.get_rows("Player_Stats!A1:E200")
+        current_data = self.sheet.get_rows("Player_Stats!A1:E300")
         for row in current_data:
             if row and row[0] != "Name":
                 row[3] = player_standings[row[1]].wins

@@ -1,4 +1,4 @@
-APScheduler==3.10.1
+APScheduler==3.10.4
 bidict==0.22.1
 discord.py==2.3.2
 google_api_python_client==2.88.0
