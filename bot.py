@@ -7,6 +7,7 @@ import jsonpickle
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from discord import app_commands
+import os
 
 from NCTypes import PlayerResult, TeamResult, WarzoneGame
 from utils import log_exception, log_message
@@ -131,6 +132,11 @@ class NCComands(commands.Cog):
         synced = await self.bot.tree.sync()
         print(f"Synced {len(synced)} command(s).")
         await ctx.send(f"Synced {len(synced)} command(s).")
+    
+    @commands.command(name="reboot")
+    async def reboot(self, ctx):
+        await ctx.send("Restarting rpi")
+        os.system('sudo shutdown -r now')
     
     @commands.command(name="msg")
     async def msg(self, ctx: commands.Context, channel: str, *msg):
