@@ -103,7 +103,7 @@ class WarzoneGame:
         self.round: int = round
     
     def __repr__(self) -> str:
-        output_str = " vs ".join(self.players)
+        output_str = " vs ".join([str(player) for player in self.players])
         output_str += f"\n\tWinner: {self.winner}"
         output_str += f"\n\tStart time: {self.start_time}"
         output_str += f"\n\tOutcome: {self.outcome}"

@@ -136,7 +136,7 @@ class ParseGames:
                             # 1. Assign win to left player if they have joined, or are invited and the right player declined
                             # 2. Assign win to the right player if they have joined, or are invited and the left player declined
                             # 3. Randomly assign win if both players are invited, or declined
-                            log_message(f"New game pased join time: {game.players[0].name.encode()} {game.players[0].outcome} v {game.players[1].name.encode()} {game.players[1].outcome} ({game.link})", "update_new_games")
+                            log_message(f"New game passed join time: {game.players[0].name.encode()} {game.players[0].outcome} v {game.players[1].name.encode()} {game.players[1].outcome} ({game.link})", "update_new_games")
                             log_message(f"Storing end response: {game}")
                             newly_finished_games.setdefault(tab, []).append(game)
                             newly_finished_games_count += 1
