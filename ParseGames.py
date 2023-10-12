@@ -95,6 +95,10 @@ class ParseGames:
                         else:
                             row[6] = f"Turn {game.round+1}"
 
+                        declined_players = [player for player in game.players if player.outcome == WarzonePlayer.Outcome.DECLINED]
+                        if len(declined_players):
+                            log_message(f"Game at lobby with declined player(s): {', '.join(declined_players)}")
+
                         if game.outcome == Game.Outcome.FINISHED:
                             # Game is finished, assign the defeat/loses to label
                             log_message(f"New game finished with the following outcome: {game.players[0].name.encode()} {game.players[0].outcome} v {game.players[1].name.encode()} {game.players[1].outcome} ({game.link})", "update_new_games")
