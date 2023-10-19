@@ -1,5 +1,5 @@
 from collections import Counter
-from itertools import permutations
+from itertools import combinations
 import json
 import os
 from pprint import pprint
@@ -18,6 +18,7 @@ class CreateMatches:
 
     def __init__(self, config):
         self.config = config
+        self.dryrun = "dryrun" in config and config["dryrun"]
         self.sheet = GoogleSheet(config)
 
     def run(self, input_sheet_name: str, output_sheet_name: str, round: int, players_per_team: int):
@@ -30,9 +31,11 @@ class CreateMatches:
             
             # Did not want to mix up the flows too much so separated 1v1s and 2v2s
             if players_per_team == 1:
+                log_message("Running 1v1 matchup creation", "CreateMatches.run")
                 matchups = self.create_team_matchups(teams)
                 self.write_matchups(output_sheet_name, matchups, round)
             elif players_per_team == 2:
+                log_message("Running 2v2 matchup creation", "CreateMatches.run")
                 matchups = self.create_2v2_team_matchups(teams)
                 self.write_2v2_matchups(output_sheet_name, matchups, round)
             else:
@@ -173,40 +176,55 @@ class CreateMatches:
         """
 
         matchups: List[Matchup] = []
+        print(", ".join([str(player) for player in teams[0].players]))
+        print(", ".join([str(player) for player in teams[1].players]))
         for i in range(0, len(teams), 2):
             team_permutations = [
-                list(permutations(teams[i].players, 2)),
-                list(permutations(teams[i+1].players, 2))
+                list(combinations(teams[i].players, 2)),
+                list(combinations(teams[i+1].players, 2))
             ]
 
-            # First step is to get the pairs on each team
-            extended_teams: List[List[Tuple[Player, Player]]] = [[], []]
-            for idx, tps in enumerate(team_permutations):
-                if len(teams[i+idx].players) == 3:
-                    # There will be duplicates. 3 games each
-                    extended_teams[idx] += team_permutations[idx] + team_permutations[idx]
-                else:
-                    copy_tp: List[Tuple[Player, Player]] = tps.copy()
-                    # No duplications, but possibly 3 games
-                    # Number of individual games
-                    individual_games: Dict[str, int] = {}
-                    extra_game_player_selected = False
-                    for tp in copy_tp:
-                        if individual_games.get(tp[0].id, 0) < (3 if len(teams[i+idx].players) == 4 else 2) and individual_games.get(tp[1].id, 0) < (3 if len(teams[i+idx].players) == 4 else 2):
-                            # valid matchup
-                            extended_teams[idx].append(tp)
-                            individual_games[tp[0].id] = individual_games.get(tp[0].id, 0) + 1
-                            individual_games[tp[1].id] = individual_games.get(tp[1].id, 0) + 1
-                        elif len(teams[i+idx].players) == 5 and not extra_game_player_selected and \
-                                ((individual_games.get(tp[0].id, 0) == 2 and individual_games.get(tp[1].id, 0) < 2) or \
-                                    (individual_games.get(tp[0].id, 0) < 2 and individual_games.get(tp[1].id, 0) == 2)):
-                            # valid matchup, extra game for 1 player has been added
-                            extended_teams[idx].append(tp)
-                            individual_games[tp[0].id] = individual_games.get(tp[0].id, 0) + 1
-                            individual_games[tp[1].id] = individual_games.get(tp[1].id, 0) + 1
-                            extra_game_player_selected = True
-                        if len(extended_teams[idx]) == 6:
-                            break
+            iterations = 0
+            while iterations < 1000:
+                shuffle(team_permutations[0])
+                shuffle(team_permutations[1])
+
+                # First step is to get the pairs on each team
+                extended_teams: List[List[Tuple[Player, Player]]] = [[], []]
+                for idx, tps in enumerate(team_permutations):
+                    if len(teams[i+idx].players) == 3:
+                        # There will be duplicates. 3 games each
+                        extended_teams[idx] += team_permutations[idx] + team_permutations[idx]
+                    else:
+                        copy_tp: List[Tuple[Player, Player]] = tps.copy()
+                        # No duplications, but possibly 3 games
+                        # Number of individual games
+                        individual_games: Dict[str, int] = {}
+                        extra_game_player_selected = False
+                        for tp in copy_tp:
+                            if individual_games.get(tp[0].id, 0) < (3 if len(teams[i+idx].players) == 4 else 2) \
+                                and individual_games.get(tp[1].id, 0) < (3 if len(teams[i+idx].players) == 4 else 2):
+                                # valid matchup
+                                extended_teams[idx].append(tp)
+                                individual_games[tp[0].id] = individual_games.get(tp[0].id, 0) + 1
+                                individual_games[tp[1].id] = individual_games.get(tp[1].id, 0) + 1
+                            elif len(teams[i+idx].players) == 5 and not extra_game_player_selected and \
+                                    ((individual_games.get(tp[0].id, 0) == 2 and individual_games.get(tp[1].id, 0) <= 2) or \
+                                        (individual_games.get(tp[0].id, 0) <= 2 and individual_games.get(tp[1].id, 0) == 2)):
+                                # valid matchup, extra game for 1 player has been added
+                                extended_teams[idx].append(tp)
+                                individual_games[tp[0].id] = individual_games.get(tp[0].id, 0) + 1
+                                individual_games[tp[1].id] = individual_games.get(tp[1].id, 0) + 1
+                                extra_game_player_selected = True
+                            if len(extended_teams[idx]) == 6:
+                                break
+                if len(extended_teams[0]) == 6 and len(extended_teams[1]) == 6:
+                    break
+                iterations += 1
+            if iterations == 1000:
+                log_exception(f"Reached 1000 iterations while finding team pairs for {teams[i].name} vs {teams[i+1].name}")
+                raise "Could not find team permutations"
+            log_message(f"Found enough matchup pairs for both teams after {iterations} iterations.", "create_2v2_team_matchups")
                 
             # Second step is to shuffle both lists and match 
             # Since we just shuffle, it is possible for the pairings to be invalid. Must check this
@@ -225,10 +243,10 @@ class CreateMatches:
             matchups.append(Matchup(teams[i], teams[i+1]))
             matchups[-1].import_2v2_games_from_pairing_lists(extended_teams)
             
-            log_message(f"{teams[i].name} vs. {teams[i+1].name} ({iterations} iterations)", "create_team_matchups")
+            log_message(f"{teams[i].name} vs. {teams[i+1].name} ({iterations} iterations)", "create_2v2_team_matchups")
             for game in matchups[-1].games:
-                log_message(f"\t{game}", "create_team_matchups")
-            log_message("", "create_team_matchups")
+                log_message(f"\t{game}", "create_2v2_team_matchups")
+            log_message("", "create_2v2_team_matchups")
         return matchups
 
     def is_valid_2v2_matchup(self, team_a: List[Tuple[Player, Player]], team_b: List[Tuple[Player, Player]]) -> bool:
@@ -272,17 +290,19 @@ class CreateMatches:
 
         sheet_data: List[List[str]] = [[]]
         for matchup in matchups:
-            sheet_data.append([matchup.teams[0].name, len(matchup.teams[0].players)-6, "vs.", matchup.teams[1].name, len(matchup.teams[1].players)-6])
+            sheet_data.append([matchup.teams[0].name, len(matchup.teams[0].players)-6, "", "", "vs.", matchup.teams[1].name, len(matchup.teams[1].players)-6, "", "", ""])
             team_results.setdefault(matchup.teams[0].name, TeamResult(matchup.teams[0].name)).init_score(f"R{round}", matchup.teams[1].name, len(matchup.teams[0].players)-6, len(matchup.teams[1].players)-6)
             team_results.setdefault(matchup.teams[1].name, TeamResult(matchup.teams[1].name)).init_score(f"R{round}", matchup.teams[0].name, len(matchup.teams[1].players)-6, len(matchup.teams[0].players)-6)
             for game in matchup.games:
                 sheet_data.append([game.players[0].name, game.players[0].id, game.players[1].name, game.players[1].id, "", game.players[2].name, game.players[2].id, game.players[3].name, game.players[3].id, game.link])
             sheet_data.append([]) # Empty row to divide teams
-        self.sheet.update_rows_raw(f"{sheet_name}!A1:F{len(sheet_data)}", sheet_data)
+        self.sheet.update_rows_raw(f"{sheet_name}!A1:J{len(sheet_data)}", sheet_data)
         log_message(f"Updated google sheets with {len(sheet_data)} new rows", "write_matchups")
 
         pprint(team_results)
         pprint(player_results)
-        with open(f"data/standings.json", "w", encoding="utf-8") as output_file:
-            log_message("JSON version of standings data is stored to 'standings.json'", "write_matchups")
-            json.dump(jsonpickle.encode((team_results, player_results)), output_file)
+        if not self.dryrun:
+            # We do not want to change standings.json if we are doing a dry-run (potentially pollutes the existing matches)
+            with open(f"data/standings.json", "w", encoding="utf-8") as output_file:
+                log_message("JSON version of standings data is stored to 'standings.json'", "write_matchups")
+                json.dump(jsonpickle.encode((team_results, player_results)), output_file)

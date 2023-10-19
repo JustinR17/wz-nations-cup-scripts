@@ -168,22 +168,18 @@ class NationsCupBot(commands.Bot):
                 for game in games:
                     total += 1
                     try:
-                        if game.winner == game.players[0].id:
-                            winner_name, winner_team = game.players[0].name, game.players[0].team
-                            loser_name = game.players[1].name
-                        else:
-                            winner_name, winner_team = game.players[1].name, game.players[1].team
-                            loser_name = game.players[0].name
+                        winners = [x for x in game.players if x.id in game.winner]
+                        losers = [x for x in game.players if x.id not in game.winner]
                         embed = discord.Embed(
-                            title=f"{winner_name} defeats {loser_name}"[0:256],
+                            title=f"{', '.join([p.name for p in winners])} defeats {', '.join([p.name for p in losers])}"[0:256],
                             description=f"[Game Link]({game.link})"[0:4096],
                             colour=ROUND_TO_COLOUR[round[0:2]]
                         )
-                        embed.add_field(name=f"{round[0:2]} {ROUND_TO_TEMPLATE[round[0:2]]}"[0:256], value=f"**{winner_team}** won"[0:1024])
-                        embed.set_footer(text=f"{game.players[0].team} {game.players[0].score} - {game.players[1].team} {game.players[1].score}"[0:2048])
+                        embed.add_field(name=f"{round[0:2]} {ROUND_TO_TEMPLATE[round[0:2]]}"[0:256], value=f"**{winners[0].team}** won"[0:1024])
+                        embed.set_footer(text=f"{winners[0].team} {winners[0].score} - {losers[0].team} {winners[1].score}"[0:2048])
                         sent_embed = await discord_channel.send(embed=embed)
 
-                        if winner_team == "CAN":
+                        if winners[0].team == "CAN":
                             await sent_embed.add_reaction("🇨🇦")
                             await sent_embed.add_reaction("🎉")
                             # await sent_embed.add_reaction("🇨")

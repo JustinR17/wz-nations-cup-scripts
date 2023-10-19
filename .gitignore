@@ -14,3 +14,4 @@ errors/*
 !errors/.*
 
 venv/
+env/
