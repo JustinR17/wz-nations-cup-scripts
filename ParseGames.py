@@ -95,9 +95,13 @@ class ParseGames:
                         else:
                             row[6] = f"Turn {game.round+1}"
 
-                        declined_players = [player for player in game.players if player.outcome == WarzonePlayer.Outcome.DECLINED]
-                        if len(declined_players):
-                            log_message(f"Game at lobby with declined player(s): {', '.join(declined_players)}")
+                        # declined_players = [str(player) for player in game.players if player.outcome == WarzonePlayer.Outcome.DECLINED]
+                        # if len(declined_players):
+                        #     log_message(f"Game at lobby with declined player(s): {', '.join(declined_players)}", 'parseGames.update_new_games')
+                        
+                        # if game.outcome == Game.Outcome.WAITING_FOR_PLAYERS:
+                        #     invited_players = [str(player) for player in game.players if player.outcome == WarzonePlayer.Outcome.INVITED]
+                        #     print(f"{game.link} - nonjoin after: {(game.start_time + timedelta(days=4)).isoformat()} {', '.join(invited_players)}")
 
                         if game.outcome == Game.Outcome.FINISHED:
                             # Game is finished, assign the defeat/loses to label
