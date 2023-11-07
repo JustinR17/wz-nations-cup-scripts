@@ -40,7 +40,7 @@ class API:
 
         players = []
         for player in game_json["players"]:
-            players.append(WarzonePlayer(player["name"], player["id"], player["state"]))
+            players.append(WarzonePlayer(player["name"], player["id"], player["state"], player["team"]))
         
         game = WarzoneGame(
             players,
