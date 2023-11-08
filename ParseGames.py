@@ -79,13 +79,13 @@ class ParseGames:
 
                         if is_2v2:
                             # Separate workflow for 2v2 games that will be extended to any XvX games
-                            log_message(f"Running the 2v2 workflow", "update_new_games")
+                            print(f"Running the 2v2 workflow")
                             newly_finished_games_count += self.score_2v2_game(
                                 game, row, (team_a, team_b), tab, score_row, team_standings,
                                 player_standings, newly_finished_games, games_to_delete
                             )
                             continue
-                        log_message(f"Running the 1v1 workflow", "update_new_games")
+                        print(f"Running the 1v1 workflow")
 
                         if game.players[0].id != row[1].strip():
                             game.players.reverse()

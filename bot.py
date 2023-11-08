@@ -170,13 +170,16 @@ class NationsCupBot(commands.Bot):
                     try:
                         winners = [x for x in game.players if x.id in game.winner]
                         losers = [x for x in game.players if x.id not in game.winner]
+                        log_message(f"GAME: {game}", "post_game_updates_job")
+                        print(winners)
+                        print(losers)
                         embed = discord.Embed(
                             title=f"{', '.join([p.name for p in winners])} defeats {', '.join([p.name for p in losers])}"[0:256],
                             description=f"[Game Link]({game.link})"[0:4096],
                             colour=ROUND_TO_COLOUR[round[0:2]]
                         )
                         embed.add_field(name=f"{round[0:2]} {ROUND_TO_TEMPLATE[round[0:2]]}"[0:256], value=f"**{winners[0].team}** won"[0:1024])
-                        embed.set_footer(text=f"{winners[0].team} {winners[0].score} - {losers[0].team} {winners[1].score}"[0:2048])
+                        embed.set_footer(text=f"{winners[0].team} {winners[0].score} - {losers[0].team} {losers[0].score}"[0:2048])
                         sent_embed = await discord_channel.send(embed=embed)
 
                         if winners[0].team == "CAN":
