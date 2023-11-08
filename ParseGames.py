@@ -240,7 +240,7 @@ class ParseGames:
                     # Left team wins
                     loser = sorted_players[1]
                     row[2*len(sorted_players[0])] = "defeats"
-                    score_row[1] = int(score_row[1]) + 1
+                    score_row[2] = int(score_row[2]) + 1
                     for player in sorted_players[0]:
                         player.score += 1
                     game.winner = [e.id for e in sorted_players[0]]
@@ -250,7 +250,7 @@ class ParseGames:
                     # Right team wins
                     loser = sorted_players[0]
                     row[2*len(sorted_players[0])] = "loses to"
-                    score_row[2*len(sorted_players[0])+2] = int(score_row[2*len(sorted_players[0])+2]) + 1
+                    score_row[2*len(sorted_players[0])+3] = int(score_row[2*len(sorted_players[0])+3]) + 1
                     for player in sorted_players[1]:
                         player.score += 1
                     game.winner = [e.id for e in sorted_players[1]]
@@ -261,7 +261,7 @@ class ParseGames:
                     left_team_won = bool(random.getrandbits(1))
                     loser = sorted_players[int(left_team_won)]
                     row[2*len(sorted_players[0])] = "defeats" if left_team_won else "loses to"
-                    score_row[1 if left_team_won else 2*len(sorted_players[0])+2] = int(score_row[1 if left_team_won else 2*len(sorted_players[0])+2]) + 1
+                    score_row[2 if left_team_won else 2*len(sorted_players[0])+3] = int(score_row[2 if left_team_won else 2*len(sorted_players[0])+3]) + 1
                     for player in sorted_players[0 if left_team_won else 1]:
                         player.score += 1
                     game.winner = [e.id for e in sorted_players[0 if left_team_won else 1]]
@@ -283,7 +283,7 @@ class ParseGames:
                     (all(player.outcome != WarzonePlayer.Outcome.DECLINED for player in sorted_players[0]) and any(player.outcome == WarzonePlayer.Outcome.DECLINED for player in sorted_players[1])):
                     # Left team wins
                     row[2*len(sorted_players[0])] = "defeats"
-                    score_row[1] = int(score_row[1]) + 1
+                    score_row[2] = int(score_row[2]) + 1
                     for player in sorted_players[0]:
                         player.score += 1
                     game.winner = [e.id for e in sorted_players[0]]
@@ -293,7 +293,7 @@ class ParseGames:
                     (all(player.outcome != WarzonePlayer.Outcome.DECLINED for player in sorted_players[1]) and any(player.outcome == WarzonePlayer.Outcome.DECLINED for player in sorted_players[0])):
                     # Right team wins
                     row[2*len(sorted_players[0])] = "loses to"
-                    score_row[2*len(sorted_players[0])+2] = int(score_row[2*len(sorted_players[0])+2]) + 1
+                    score_row[2*len(sorted_players[0])+3] = int(score_row[2*len(sorted_players[0])+3]) + 1
                     for player in sorted_players[1]:
                         player.score += 1
                     game.winner = [e.id for e in sorted_players[1]]
@@ -304,7 +304,7 @@ class ParseGames:
                     # Randomly assign winner
                     left_team_won = bool(random.getrandbits(1))
                     row[2*len(sorted_players[0])] = "defeats" if left_team_won else "loses to"
-                    score_row[1 if left_team_won else 2*len(sorted_players[0])+2] = int(score_row[1 if left_team_won else 2*len(sorted_players[0])+2]) + 1
+                    score_row[2 if left_team_won else 2*len(sorted_players[0])+3] = int(score_row[2 if left_team_won else 2*len(sorted_players[0])+3]) + 1
                     for player in sorted_players[0 if left_team_won else 1]:
                         player.score += 1
                     game.winner = [e.id for e in sorted_players[0 if left_team_won else 1]]

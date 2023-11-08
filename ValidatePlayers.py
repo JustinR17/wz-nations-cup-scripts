@@ -25,7 +25,7 @@ class ValidatePlayers:
     
     def parse_sheet_for_teams(self, sheet_name) -> List[Team]:
         teams: List[Team] = []
-        sheet_rows = self.sheet.get_rows(f"{sheet_name}!A1:B200")
+        sheet_rows = self.sheet.get_rows(f"{sheet_name}!A1:B300")
 
         current_team = None
         for row in sheet_rows:
