@@ -192,6 +192,9 @@ class CreateMatches:
                 # First step is to get the pairs on each team
                 extended_teams: List[List[Tuple[Player, Player]]] = [[], []]
                 for idx, tps in enumerate(team_permutations):
+                    # This is used if team has 5 players
+                    # Top two players get 3 games
+                    top_two_player_ids = [player.id for player in teams[i+idx].players[:2]]
                     if len(teams[i+idx].players) == 3:
                         # There will be duplicates. 3 games each
                         extended_teams[idx] += team_permutations[idx] + team_permutations[idx]
@@ -200,7 +203,6 @@ class CreateMatches:
                         # No duplications, but possibly 3 games
                         # Number of individual games
                         individual_games: Dict[str, int] = {}
-                        extra_game_player_selected = False
                         for tp in copy_tp:
                             if individual_games.get(tp[0].id, 0) < (3 if len(teams[i+idx].players) == 4 else 2) \
                                 and individual_games.get(tp[1].id, 0) < (3 if len(teams[i+idx].players) == 4 else 2):
@@ -208,14 +210,15 @@ class CreateMatches:
                                 extended_teams[idx].append(tp)
                                 individual_games[tp[0].id] = individual_games.get(tp[0].id, 0) + 1
                                 individual_games[tp[1].id] = individual_games.get(tp[1].id, 0) + 1
-                            elif len(teams[i+idx].players) == 5 and not extra_game_player_selected and \
-                                    ((individual_games.get(tp[0].id, 0) == 2 and individual_games.get(tp[1].id, 0) <= 2) or \
-                                        (individual_games.get(tp[0].id, 0) <= 2 and individual_games.get(tp[1].id, 0) == 2)):
+                            elif len(teams[i+idx].players) == 5 and \
+                                    ((tp[0].id in top_two_player_ids and individual_games.get(tp[0].id, 0) == 2 and individual_games.get(tp[1].id, 0) < 2) or \
+                                    (tp[1].id in top_two_player_ids and individual_games.get(tp[0].id, 0) < 2 and individual_games.get(tp[1].id, 0) == 2) or \
+                                    (tp[0].id in top_two_player_ids and tp[1].id in top_two_player_ids and individual_games.get(tp[0].id, 0) == 2 and individual_games.get(tp[1].id, 0) == 2)):
                                 # valid matchup, extra game for 1 player has been added
+                                # players in the first two roster slots are given 3 games
                                 extended_teams[idx].append(tp)
                                 individual_games[tp[0].id] = individual_games.get(tp[0].id, 0) + 1
                                 individual_games[tp[1].id] = individual_games.get(tp[1].id, 0) + 1
-                                extra_game_player_selected = True
                             if len(extended_teams[idx]) == 6:
                                 break
                 if len(extended_teams[0]) == 6 and len(extended_teams[1]) == 6:
@@ -290,7 +293,7 @@ class CreateMatches:
 
         sheet_data: List[List[str]] = [[]]
         for matchup in matchups:
-            sheet_data.append([matchup.teams[0].name, len(matchup.teams[0].players)-6, "", "", "vs.", matchup.teams[1].name, len(matchup.teams[1].players)-6, "", "", ""])
+            sheet_data.append([matchup.teams[0].name, "", len(matchup.teams[0].players)-6, "", "vs.", matchup.teams[1].name, "", len(matchup.teams[1].players)-6, "", ""])
             team_results.setdefault(matchup.teams[0].name, TeamResult(matchup.teams[0].name)).init_score(f"R{round}", matchup.teams[1].name, len(matchup.teams[0].players)-6, len(matchup.teams[1].players)-6)
             team_results.setdefault(matchup.teams[1].name, TeamResult(matchup.teams[1].name)).init_score(f"R{round}", matchup.teams[0].name, len(matchup.teams[1].players)-6, len(matchup.teams[0].players)-6)
             for game in matchup.games:
