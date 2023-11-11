@@ -220,6 +220,12 @@ class ParseGames:
             # Ensure that players (by team) are in correct order of google sheets row
             if sorted_players[0][0].team != teams[0]:
                 sorted_players.reverse()
+            
+            # Initialize the player score for the game (used for the bot if game is done)
+            for lplayer in sorted_players[0]:
+                lplayer.score = int(score_row[2])
+            for rplayer in sorted_players[1]:
+                rplayer.score = int(score_row[7])
 
             # Game is not finished, but we will update the progress (ie round or stage)
             while len(row) < 3+2*len(game.players):
@@ -269,7 +275,7 @@ class ParseGames:
                     self.update_standings_with_2v2_game(team_standings, player_standings, sorted_players[1][0].team, sorted_players[1], tab[0:2], not left_team_won)
                 if any(player.outcome == WarzonePlayer.Outcome.BOOTED for player in loser):
                     row[6] = f"Turn {game.round+1} - Booted"
-            elif game.outcome == Game.Outcome.WAITING_FOR_PLAYERS and datetime.now(timezone.utc) - game.start_time > timedelta(days=1):
+            elif game.outcome == Game.Outcome.WAITING_FOR_PLAYERS and datetime.now(timezone.utc) - game.start_time > timedelta(days=4):
                 # Game has been in the join lobby for too long. Game will be deleted and appropriate winner selected according to algorithm:
                 # 1. Assign win to left player if they have joined, or are invited and the right player declined
                 # 2. Assign win to the right player if they have joined, or are invited and the left player declined
