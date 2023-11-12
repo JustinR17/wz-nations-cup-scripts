@@ -6,6 +6,7 @@ import sys
 from CreateGames import CreateGames
 
 from CreateMatches import CreateMatches
+from GetFunStats import GetFunStats
 from ParseGames import ParseGames
 from ParsePlayers import ParsePlayers
 from ValidatePlayers import ValidatePlayers
@@ -52,6 +53,8 @@ bot = subparsers.add_parser("bot", help="Initializes the discord bot and hourly 
 validate = subparsers.add_parser("validate", help="Validates that players on teams can be invited to games on templates")
 validate.add_argument("templates", default="", help="Comma separated lists of templates")
 validate.add_argument("sheet", help="Input sheet tab name to read from")
+
+funstats = subparsers.add_parser("funstats", help="aggregates all games and outputs stats to a file")
 
 parser.add_argument("-e", "--email", help="Warzone email used for commands requiring the API. Not required for `setup`, `cmatches` and `pplayers`. Refer to `setup` for generating a config file.")
 parser.add_argument("-t", "--token", help="Warzone API token (https://www.warzone.com/wiki/Get_API_Token_API) used for commands requiring the API. Not required for `setup`, `cmatches` and `pplayers`. Refer to `setup` for generating a config file.")
@@ -113,6 +116,9 @@ elif args.cmd == "bot":
 elif args.cmd == "validate":
     validate_players = ValidatePlayers(config)
     validate_players.run(args.templates.split(","), args.sheet)
+elif args.cmd == "funstats":
+    fun_stats = GetFunStats(config)
+    fun_stats.run()
 else:
     # Should not occur due to argparse library
     raise f"Unknown command supplied: '{args.cmd}'"

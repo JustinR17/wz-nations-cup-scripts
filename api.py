@@ -34,7 +34,7 @@ class API:
         Returns the result of the game (in-progress or completed).
         """
         game_json = requests.post(
-            f"{API.QUERY_GAME_ENDPOINT}?GameID={game_id}",
+            f"{API.QUERY_GAME_ENDPOINT}?GameID={game_id}&GetChat=true",
             {"Email": self.config["email"], "APIToken": self.config["token"]},
         ).json()
 
