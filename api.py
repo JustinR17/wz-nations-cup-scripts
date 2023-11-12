@@ -52,6 +52,19 @@ class API:
 
         return game
 
+    def get_game_chat(self, game_id: str) -> List[str]:
+        """
+        Checks the progress and results of a game using the WZ API.
+
+        Returns the result of the game (in-progress or completed).
+        """
+        game_json = requests.post(
+            f"{API.QUERY_GAME_ENDPOINT}?GameID={game_id}&GetChat=true",
+            {"Email": self.config["email"], "APIToken": self.config["token"]},
+        ).json()
+
+        return game_json["chat"]
+
     def create_game(self, players: List[Tuple[str, str]], template: str, name: str, description: str) -> str:
         """
         Creates a game using the WZ API with the specified players, template, and game name/description.
