@@ -34,7 +34,7 @@ class API:
         Returns the result of the game (in-progress or completed).
         """
         game_json = requests.post(
-            f"{API.QUERY_GAME_ENDPOINT}?GameID={game_id}&GetChat=true",
+            f"{API.QUERY_GAME_ENDPOINT}?GameID={game_id}",
             {"Email": self.config["email"], "APIToken": self.config["token"]},
         ).json()
 
@@ -63,7 +63,7 @@ class API:
             {"Email": self.config["email"], "APIToken": self.config["token"]},
         ).json()
 
-        return game_json["chat"]
+        return game_json["chat"] if "chat" in game_json else []
 
     def create_game(self, players: List[Tuple[str, str]], template: str, name: str, description: str) -> str:
         """

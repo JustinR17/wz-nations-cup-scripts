@@ -35,11 +35,13 @@ class GetFunStats:
         for tab in self.get_game_tabs():
             print(f"checking the following tab: {tab}")
             is_2v2 = "2v2" in tab
-            tab_rows = self.sheet.get_rows(f"{tab}!A1:{'J' if is_2v2 else'F'}300")
+            tab_rows = self.sheet.get_rows(f"{tab}!A2:{'J' if is_2v2 else'F'}300")
             games_with_chat[tab] = []
             for row in tab_rows:
-                if row and self.api.get_game_chat(self.convert_wz_game_link_to_id(row[-1])):
-                    games_with_chat[tab].append(row)
+                if row and len(row) == (10 if is_2v2 else 6):
+                    chat = self.api.get_game_chat(self.convert_wz_game_link_to_id(row[-1]))
+                    if chat:
+                        games_with_chat[tab].append((row+chat))
             print(f"found {len(games_with_chat[tab])} games in {tab}\n")
         with open("data/games_with_chat.json", "w", encoding="utf-8") as output_file:
             json.dump(games_with_chat, output_file)
