@@ -49,16 +49,6 @@ class ValidateResults:
         for tab in self.get_game_tabs():
             is_2v2 = "2v2" in tab
             tab_rows = self.sheet.get_rows(f"{tab}!A1:{'K' if is_2v2 else'G'}300")
-            if (
-                not len(tab_rows)
-                or not len(tab_rows[0])
-                or "in-progress" not in tab_rows[0][0]
-            ):
-                log_message(
-                    f"Skipping the game log tab '{tab}' due to missing 'in-progress' tag",
-                    "update_new_games",
-                )
-                continue
             log_message(f"Checking games in game log tab '{tab}'", "update_new_games")
 
             team_a, team_b = "", ""
@@ -72,12 +62,16 @@ class ValidateResults:
                     if not team_a and not team_b:
                         # New teams to add
                         team_a, team_b = row[0].strip(), row[5 if is_2v2 else 3].strip()
+                        team_standings.setdefault(team_a, TeamResult(team_a))
+                        team_standings[team_a].games_result[tab[0:2]] = GameResult(team_b, int(row[2 if is_2v2 else 1]), int(row[7 if is_2v2 else 4]))
+                        team_standings.setdefault(team_b, TeamResult(team_b))
+                        team_standings[team_b].games_result[tab[0:2]] = GameResult(team_a, int(row[7 if is_2v2 else 4]), int(row[2 if is_2v2 else 1]))
                         if team_a:
                             log_message(
                                 f"Checking games for {tab} - {team_a} vs {team_b}",
                                 "update_new_games",
                             )
-                    elif not row[4 if is_2v2 else 2]:
+                    else:
                         # Game to check
                         # 2v2 requires more advanced logic that is separated out for now
                         try:
@@ -151,7 +145,7 @@ class ValidateResults:
                         if is_2v2:
                             # Separate workflow for 2v2 games that will be extended to any XvX games
                             print(f"Running the 2v2 workflow")
-                            newly_finished_games_count += self.score_2v2_game(
+                            self.score_2v2_game(
                                 game,
                                 (team_a, team_b),
                                 tab,
@@ -233,7 +227,7 @@ class ValidateResults:
                                     not left_team_won,
                                 )
             log_message(
-                f"Finished updating games in {tab}. Newly finished games: {newly_finished_games_count}; games to delete: {len(games_to_delete)}",
+                f"Finished scoring games in {tab}",
                 "update_new_games",
             )
 
@@ -253,7 +247,8 @@ class ValidateResults:
         players_by_team: Dict[str, List[WarzonePlayer]] = {teams[0]: [], teams[1]: []}
         for player in game.players:
             # Change player team from the Warzone integer into the actual team name (ex "4" -> "CAN")
-            player.team = TEAM_NAME_TO_API_VALUE.inverse[player.team]
+            if player.team.isnumeric():
+                player.team = TEAM_NAME_TO_API_VALUE.inverse[player.team]
             players_by_team[player.team].append(player)
         sorted_players: List[List[WarzonePlayer]] = list(
             map(lambda e: sorted(e), players_by_team.values())
@@ -358,12 +353,12 @@ class ValidateResults:
         is_won: bool,
     ):
         if is_won:
-            team_standings[team].add_win(round)
+            team_standings.setdefault(team, TeamResult(team)).add_win(round)
             player_standings.setdefault(
                 player_id, PlayerResult(player_name, player_id, team)
             ).wins += 1
         else:
-            team_standings[team].add_loss(round)
+            team_standings.setdefault(team, TeamResult(team)).add_loss(round)
             player_standings.setdefault(
                 player_id, PlayerResult(player_name, player_id, team)
             ).losses += 1
@@ -378,13 +373,13 @@ class ValidateResults:
         is_won: bool,
     ):
         if is_won:
-            team_standings[team].add_win(round)
+            team_standings.setdefault(team, TeamResult(team)).add_win(round)
             for player in players:
                 player_standings.setdefault(
                     player.id, PlayerResult(player.name, player.id, team)
                 ).wins += 1
         else:
-            team_standings[team].add_loss(round)
+            team_standings.setdefault(team, TeamResult(team)).add_loss(round)
             for player in players:
                 player_standings.setdefault(
                     player.id, PlayerResult(player.name, player.id, team)

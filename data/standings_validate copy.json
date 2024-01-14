@@ -1,0 +1,3391 @@
+{
+    "py/tuple": [
+        {
+            "GB B": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "GB B",
+                "players": [],
+                "round_wins": 2,
+                "round_losses": 2,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "CAN",
+                        "pts_for": 10,
+                        "pts_against": 14,
+                        "wins": 5,
+                        "losses": 7,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "POL C",
+                        "pts_for": 18,
+                        "pts_against": 6,
+                        "wins": 9,
+                        "losses": 3,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "FR B",
+                        "pts_for": 14,
+                        "pts_against": 10,
+                        "wins": 7,
+                        "losses": 5,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "US A",
+                        "pts_for": 4,
+                        "pts_against": 20,
+                        "wins": 2,
+                        "losses": 10,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "US C",
+                        "pts_for": 6,
+                        "pts_against": 6,
+                        "wins": 3,
+                        "losses": 3,
+                        "total": 6
+                    }
+                }
+            },
+            "CAN": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "CAN",
+                "players": [],
+                "round_wins": 3,
+                "round_losses": 1,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GB B",
+                        "pts_for": 14,
+                        "pts_against": 10,
+                        "wins": 7,
+                        "losses": 5,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "HEL A",
+                        "pts_for": 6,
+                        "pts_against": 18,
+                        "wins": 3,
+                        "losses": 9,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GER B",
+                        "pts_for": 14,
+                        "pts_against": 10,
+                        "wins": 7,
+                        "losses": 5,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GER C",
+                        "pts_for": 14,
+                        "pts_against": 10,
+                        "wins": 7,
+                        "losses": 5,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "US B",
+                        "pts_for": 2,
+                        "pts_against": 10,
+                        "wins": 1,
+                        "losses": 5,
+                        "total": 6
+                    }
+                }
+            },
+            "ITA A": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "ITA A",
+                "players": [],
+                "round_wins": 2,
+                "round_losses": 2,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "FR C",
+                        "pts_for": 24,
+                        "pts_against": 0,
+                        "wins": 12,
+                        "losses": 0,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "HIS",
+                        "pts_for": 14,
+                        "pts_against": 10,
+                        "wins": 7,
+                        "losses": 5,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "HEL A",
+                        "pts_for": 10,
+                        "pts_against": 14,
+                        "wins": 5,
+                        "losses": 7,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "EAS",
+                        "pts_for": 10,
+                        "pts_against": 14,
+                        "wins": 5,
+                        "losses": 7,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "CZE",
+                        "pts_for": 12,
+                        "pts_against": 0,
+                        "wins": 6,
+                        "losses": 0,
+                        "total": 6
+                    }
+                }
+            },
+            "FR C": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "FR C",
+                "players": [],
+                "round_wins": 2.25,
+                "round_losses": 1.75,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ITA A",
+                        "pts_for": 0,
+                        "pts_against": 24,
+                        "wins": 0,
+                        "losses": 12,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "US D",
+                        "pts_for": 11,
+                        "pts_against": 12,
+                        "wins": 6,
+                        "losses": 6,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ITA E",
+                        "pts_for": 13,
+                        "pts_against": 10,
+                        "wins": 7,
+                        "losses": 5,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ITA D",
+                        "pts_for": 19,
+                        "pts_against": 4,
+                        "wins": 10,
+                        "losses": 2,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "NL",
+                        "pts_for": -1,
+                        "pts_against": 12,
+                        "wins": 0,
+                        "losses": 6,
+                        "total": 6
+                    }
+                }
+            },
+            "US A": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "US A",
+                "players": [],
+                "round_wins": 2.5,
+                "round_losses": 1.5,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "POL C",
+                        "pts_for": 24,
+                        "pts_against": 0,
+                        "wins": 12,
+                        "losses": 0,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "FR A",
+                        "pts_for": 12,
+                        "pts_against": 12,
+                        "wins": 6,
+                        "losses": 6,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GB A",
+                        "pts_for": 10,
+                        "pts_against": 14,
+                        "wins": 5,
+                        "losses": 7,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GB B",
+                        "pts_for": 20,
+                        "pts_against": 4,
+                        "wins": 10,
+                        "losses": 2,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "EAS",
+                        "pts_for": 10,
+                        "pts_against": 2,
+                        "wins": 5,
+                        "losses": 1,
+                        "total": 6
+                    }
+                }
+            },
+            "POL C": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "POL C",
+                "players": [],
+                "round_wins": 0,
+                "round_losses": 3,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "US A",
+                        "pts_for": 0,
+                        "pts_against": 24,
+                        "wins": 0,
+                        "losses": 12,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GB B",
+                        "pts_for": 6,
+                        "pts_against": 18,
+                        "wins": 3,
+                        "losses": 9,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "HEL B",
+                        "pts_for": 10,
+                        "pts_against": 14,
+                        "wins": 5,
+                        "losses": 7,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ITA B",
+                        "pts_for": 2,
+                        "pts_against": 9,
+                        "wins": 1,
+                        "losses": 5,
+                        "total": 6
+                    }
+                }
+            },
+            "FR A": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "FR A",
+                "players": [],
+                "round_wins": 3.5,
+                "round_losses": 0.5,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "HEL B",
+                        "pts_for": 24,
+                        "pts_against": 0,
+                        "wins": 12,
+                        "losses": 0,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "US A",
+                        "pts_for": 12,
+                        "pts_against": 12,
+                        "wins": 6,
+                        "losses": 6,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "CZE",
+                        "pts_for": 22,
+                        "pts_against": 2,
+                        "wins": 11,
+                        "losses": 1,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "HIS",
+                        "pts_for": 22,
+                        "pts_against": 2,
+                        "wins": 11,
+                        "losses": 1,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ANZ A",
+                        "pts_for": 12,
+                        "pts_against": 0,
+                        "wins": 6,
+                        "losses": 0,
+                        "total": 6
+                    }
+                }
+            },
+            "HEL B": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "HEL B",
+                "players": [],
+                "round_wins": 2,
+                "round_losses": 1,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "FR A",
+                        "pts_for": 0,
+                        "pts_against": 24,
+                        "wins": 0,
+                        "losses": 12,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "POL C",
+                        "pts_for": 14,
+                        "pts_against": 10,
+                        "wins": 7,
+                        "losses": 5,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ITA C",
+                        "pts_for": 14,
+                        "pts_against": 9,
+                        "wins": 7,
+                        "losses": 5,
+                        "total": 12
+                    }
+                }
+            },
+            "POL A": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "POL A",
+                "players": [],
+                "round_wins": 2.5,
+                "round_losses": 1.5,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ITA B",
+                        "pts_for": 14,
+                        "pts_against": 10,
+                        "wins": 7,
+                        "losses": 5,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GER C",
+                        "pts_for": 14,
+                        "pts_against": 10,
+                        "wins": 7,
+                        "losses": 5,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ANZ A",
+                        "pts_for": 8,
+                        "pts_against": 16,
+                        "wins": 4,
+                        "losses": 8,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "US B",
+                        "pts_for": 12,
+                        "pts_against": 12,
+                        "wins": 6,
+                        "losses": 6,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "HIS",
+                        "pts_for": 8,
+                        "pts_against": 4,
+                        "wins": 4,
+                        "losses": 2,
+                        "total": 6
+                    }
+                }
+            },
+            "ITA B": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "ITA B",
+                "players": [],
+                "round_wins": 1,
+                "round_losses": 2,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "POL A",
+                        "pts_for": 10,
+                        "pts_against": 14,
+                        "wins": 5,
+                        "losses": 7,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GER B",
+                        "pts_for": 8,
+                        "pts_against": 16,
+                        "wins": 4,
+                        "losses": 8,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "BEL",
+                        "pts_for": 13,
+                        "pts_against": 10,
+                        "wins": 7,
+                        "losses": 5,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "POL C",
+                        "pts_for": 9,
+                        "pts_against": 2,
+                        "wins": 5,
+                        "losses": 1,
+                        "total": 6
+                    }
+                }
+            },
+            "GER C": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "GER C",
+                "players": [],
+                "round_wins": 2,
+                "round_losses": 2,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "POL B",
+                        "pts_for": 14,
+                        "pts_against": 10,
+                        "wins": 7,
+                        "losses": 5,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "POL A",
+                        "pts_for": 10,
+                        "pts_against": 14,
+                        "wins": 5,
+                        "losses": 7,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "HEL C",
+                        "pts_for": 14,
+                        "pts_against": 10,
+                        "wins": 7,
+                        "losses": 5,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "CAN",
+                        "pts_for": 10,
+                        "pts_against": 14,
+                        "wins": 5,
+                        "losses": 7,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "US D",
+                        "pts_for": 12,
+                        "pts_against": 0,
+                        "wins": 6,
+                        "losses": 0,
+                        "total": 6
+                    }
+                }
+            },
+            "POL B": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "POL B",
+                "players": [],
+                "round_wins": 1,
+                "round_losses": 3,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GER C",
+                        "pts_for": 10,
+                        "pts_against": 14,
+                        "wins": 5,
+                        "losses": 7,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "BEL",
+                        "pts_for": 16,
+                        "pts_against": 8,
+                        "wins": 8,
+                        "losses": 4,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "HIS",
+                        "pts_for": 8,
+                        "pts_against": 16,
+                        "wins": 4,
+                        "losses": 8,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "FR B",
+                        "pts_for": 4,
+                        "pts_against": 20,
+                        "wins": 2,
+                        "losses": 10,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ANZ B",
+                        "pts_for": 10,
+                        "pts_against": 2,
+                        "wins": 5,
+                        "losses": 1,
+                        "total": 6
+                    }
+                }
+            },
+            "ITA E": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "ITA E",
+                "players": [],
+                "round_wins": 1,
+                "round_losses": 3,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GB C",
+                        "pts_for": 12,
+                        "pts_against": 12,
+                        "wins": 6,
+                        "losses": 6,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "CZE",
+                        "pts_for": 4,
+                        "pts_against": 20,
+                        "wins": 2,
+                        "losses": 10,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "FR C",
+                        "pts_for": 10,
+                        "pts_against": 13,
+                        "wins": 5,
+                        "losses": 7,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "US D",
+                        "pts_for": 12,
+                        "pts_against": 12,
+                        "wins": 6,
+                        "losses": 6,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "HEL C",
+                        "pts_for": 9,
+                        "pts_against": 2,
+                        "wins": 5,
+                        "losses": 1,
+                        "total": 6
+                    }
+                }
+            },
+            "GB C": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "GB C",
+                "players": [],
+                "round_wins": 1,
+                "round_losses": 3,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ITA E",
+                        "pts_for": 12,
+                        "pts_against": 12,
+                        "wins": 6,
+                        "losses": 6,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ITA C",
+                        "pts_for": 11,
+                        "pts_against": 12,
+                        "wins": 6,
+                        "losses": 6,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "US D",
+                        "pts_for": 11,
+                        "pts_against": 12,
+                        "wins": 6,
+                        "losses": 6,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "CZE",
+                        "pts_for": 8,
+                        "pts_against": 16,
+                        "wins": 4,
+                        "losses": 8,
+                        "total": 12
+                    }
+                }
+            },
+            "HEL C": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "HEL C",
+                "players": [],
+                "round_wins": 1,
+                "round_losses": 3,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "BEL",
+                        "pts_for": 14,
+                        "pts_against": 10,
+                        "wins": 7,
+                        "losses": 5,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ANZ A",
+                        "pts_for": 4,
+                        "pts_against": 20,
+                        "wins": 2,
+                        "losses": 10,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GER C",
+                        "pts_for": 10,
+                        "pts_against": 14,
+                        "wins": 5,
+                        "losses": 7,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "SUI",
+                        "pts_for": 2,
+                        "pts_against": 22,
+                        "wins": 1,
+                        "losses": 11,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ITA E",
+                        "pts_for": 2,
+                        "pts_against": 9,
+                        "wins": 1,
+                        "losses": 5,
+                        "total": 6
+                    }
+                }
+            },
+            "BEL": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "BEL",
+                "players": [],
+                "round_wins": 0,
+                "round_losses": 4,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "HEL C",
+                        "pts_for": 10,
+                        "pts_against": 14,
+                        "wins": 5,
+                        "losses": 7,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "POL B",
+                        "pts_for": 8,
+                        "pts_against": 16,
+                        "wins": 4,
+                        "losses": 8,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "SUI",
+                        "pts_for": 2,
+                        "pts_against": 22,
+                        "wins": 1,
+                        "losses": 11,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ITA B",
+                        "pts_for": 10,
+                        "pts_against": 13,
+                        "wins": 5,
+                        "losses": 7,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ITA D",
+                        "pts_for": 9,
+                        "pts_against": 1,
+                        "wins": 5,
+                        "losses": 1,
+                        "total": 6
+                    }
+                }
+            },
+            "ANZ A": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "ANZ A",
+                "players": [],
+                "round_wins": 3,
+                "round_losses": 1,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ITA C",
+                        "pts_for": 18,
+                        "pts_against": 6,
+                        "wins": 9,
+                        "losses": 3,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "HEL C",
+                        "pts_for": 20,
+                        "pts_against": 4,
+                        "wins": 10,
+                        "losses": 2,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "POL A",
+                        "pts_for": 16,
+                        "pts_against": 8,
+                        "wins": 8,
+                        "losses": 4,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GB A",
+                        "pts_for": 6,
+                        "pts_against": 18,
+                        "wins": 3,
+                        "losses": 9,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "FR A",
+                        "pts_for": 0,
+                        "pts_against": 12,
+                        "wins": 0,
+                        "losses": 6,
+                        "total": 6
+                    }
+                }
+            },
+            "ITA C": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "ITA C",
+                "players": [],
+                "round_wins": 1.25,
+                "round_losses": 2.75,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ANZ A",
+                        "pts_for": 6,
+                        "pts_against": 18,
+                        "wins": 3,
+                        "losses": 9,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GB C",
+                        "pts_for": 12,
+                        "pts_against": 11,
+                        "wins": 6,
+                        "losses": 6,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ANZ B",
+                        "pts_for": 12,
+                        "pts_against": 12,
+                        "wins": 6,
+                        "losses": 6,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "HEL B",
+                        "pts_for": 9,
+                        "pts_against": 14,
+                        "wins": 5,
+                        "losses": 7,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GER B",
+                        "pts_for": -1,
+                        "pts_against": 12,
+                        "wins": 0,
+                        "losses": 6,
+                        "total": 6
+                    }
+                }
+            },
+            "EAS": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "EAS",
+                "players": [],
+                "round_wins": 3,
+                "round_losses": 1,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "FR B",
+                        "pts_for": 10,
+                        "pts_against": 14,
+                        "wins": 5,
+                        "losses": 7,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "SUI",
+                        "pts_for": 16,
+                        "pts_against": 8,
+                        "wins": 8,
+                        "losses": 4,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "US C",
+                        "pts_for": 18,
+                        "pts_against": 6,
+                        "wins": 9,
+                        "losses": 3,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ITA A",
+                        "pts_for": 14,
+                        "pts_against": 10,
+                        "wins": 7,
+                        "losses": 5,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "US A",
+                        "pts_for": 2,
+                        "pts_against": 10,
+                        "wins": 1,
+                        "losses": 5,
+                        "total": 6
+                    }
+                }
+            },
+            "FR B": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "FR B",
+                "players": [],
+                "round_wins": 2,
+                "round_losses": 2,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "EAS",
+                        "pts_for": 14,
+                        "pts_against": 10,
+                        "wins": 7,
+                        "losses": 5,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GER A",
+                        "pts_for": 10,
+                        "pts_against": 14,
+                        "wins": 5,
+                        "losses": 7,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GB B",
+                        "pts_for": 10,
+                        "pts_against": 14,
+                        "wins": 5,
+                        "losses": 7,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "POL B",
+                        "pts_for": 20,
+                        "pts_against": 4,
+                        "wins": 10,
+                        "losses": 2,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "SUI",
+                        "pts_for": 8,
+                        "pts_against": 4,
+                        "wins": 4,
+                        "losses": 2,
+                        "total": 6
+                    }
+                }
+            },
+            "GER A": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "GER A",
+                "players": [],
+                "round_wins": 3.5,
+                "round_losses": 0.5,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "NL",
+                        "pts_for": 16,
+                        "pts_against": 8,
+                        "wins": 8,
+                        "losses": 4,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "FR B",
+                        "pts_for": 14,
+                        "pts_against": 10,
+                        "wins": 7,
+                        "losses": 5,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "US B",
+                        "pts_for": 14,
+                        "pts_against": 10,
+                        "wins": 7,
+                        "losses": 5,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "HEL A",
+                        "pts_for": 12,
+                        "pts_against": 12,
+                        "wins": 6,
+                        "losses": 6,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GB A",
+                        "pts_for": 4,
+                        "pts_against": 6,
+                        "wins": 2,
+                        "losses": 3,
+                        "total": 5
+                    }
+                }
+            },
+            "NL": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "NL",
+                "players": [],
+                "round_wins": 2,
+                "round_losses": 2,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GER A",
+                        "pts_for": 8,
+                        "pts_against": 16,
+                        "wins": 4,
+                        "losses": 8,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GB A",
+                        "pts_for": 4,
+                        "pts_against": 20,
+                        "wins": 2,
+                        "losses": 10,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ITA D",
+                        "pts_for": 24,
+                        "pts_against": 0,
+                        "wins": 12,
+                        "losses": 0,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GER B",
+                        "pts_for": 16,
+                        "pts_against": 8,
+                        "wins": 8,
+                        "losses": 4,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "FR C",
+                        "pts_for": 12,
+                        "pts_against": -1,
+                        "wins": 6,
+                        "losses": 0,
+                        "total": 6
+                    }
+                }
+            },
+            "US C": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "US C",
+                "players": [],
+                "round_wins": 2,
+                "round_losses": 2,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "HEL A",
+                        "pts_for": 4,
+                        "pts_against": 20,
+                        "wins": 2,
+                        "losses": 10,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ITA D",
+                        "pts_for": 20,
+                        "pts_against": 4,
+                        "wins": 10,
+                        "losses": 2,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "EAS",
+                        "pts_for": 6,
+                        "pts_against": 18,
+                        "wins": 3,
+                        "losses": 9,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ANZ B",
+                        "pts_for": 18,
+                        "pts_against": 6,
+                        "wins": 9,
+                        "losses": 3,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GB B",
+                        "pts_for": 6,
+                        "pts_against": 6,
+                        "wins": 3,
+                        "losses": 3,
+                        "total": 6
+                    }
+                }
+            },
+            "HEL A": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "HEL A",
+                "players": [],
+                "round_wins": 3.5,
+                "round_losses": 0.5,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "US C",
+                        "pts_for": 20,
+                        "pts_against": 4,
+                        "wins": 10,
+                        "losses": 2,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "CAN",
+                        "pts_for": 18,
+                        "pts_against": 6,
+                        "wins": 9,
+                        "losses": 3,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ITA A",
+                        "pts_for": 14,
+                        "pts_against": 10,
+                        "wins": 7,
+                        "losses": 5,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GER A",
+                        "pts_for": 12,
+                        "pts_against": 12,
+                        "wins": 6,
+                        "losses": 6,
+                        "total": 12
+                    }
+                }
+            },
+            "SUI": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "SUI",
+                "players": [],
+                "round_wins": 2,
+                "round_losses": 2,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GB A",
+                        "pts_for": 10,
+                        "pts_against": 14,
+                        "wins": 5,
+                        "losses": 7,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "EAS",
+                        "pts_for": 8,
+                        "pts_against": 16,
+                        "wins": 4,
+                        "losses": 8,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "BEL",
+                        "pts_for": 22,
+                        "pts_against": 2,
+                        "wins": 11,
+                        "losses": 1,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "HEL C",
+                        "pts_for": 22,
+                        "pts_against": 2,
+                        "wins": 11,
+                        "losses": 1,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "FR B",
+                        "pts_for": 4,
+                        "pts_against": 8,
+                        "wins": 2,
+                        "losses": 4,
+                        "total": 6
+                    }
+                }
+            },
+            "GB A": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "GB A",
+                "players": [],
+                "round_wins": 4,
+                "round_losses": 0,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "SUI",
+                        "pts_for": 14,
+                        "pts_against": 10,
+                        "wins": 7,
+                        "losses": 5,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "NL",
+                        "pts_for": 20,
+                        "pts_against": 4,
+                        "wins": 10,
+                        "losses": 2,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "US A",
+                        "pts_for": 14,
+                        "pts_against": 10,
+                        "wins": 7,
+                        "losses": 5,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ANZ A",
+                        "pts_for": 18,
+                        "pts_against": 6,
+                        "wins": 9,
+                        "losses": 3,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GER A",
+                        "pts_for": 6,
+                        "pts_against": 4,
+                        "wins": 3,
+                        "losses": 2,
+                        "total": 5
+                    }
+                }
+            },
+            "US B": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "US B",
+                "players": [],
+                "round_wins": 2.5,
+                "round_losses": 1.5,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GER B",
+                        "pts_for": 22,
+                        "pts_against": 2,
+                        "wins": 11,
+                        "losses": 1,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ANZ B",
+                        "pts_for": 18,
+                        "pts_against": 6,
+                        "wins": 9,
+                        "losses": 3,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GER A",
+                        "pts_for": 10,
+                        "pts_against": 14,
+                        "wins": 5,
+                        "losses": 7,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "POL A",
+                        "pts_for": 12,
+                        "pts_against": 12,
+                        "wins": 6,
+                        "losses": 6,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "CAN",
+                        "pts_for": 10,
+                        "pts_against": 2,
+                        "wins": 5,
+                        "losses": 1,
+                        "total": 6
+                    }
+                }
+            },
+            "GER B": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "GER B",
+                "players": [],
+                "round_wins": 1,
+                "round_losses": 3,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "US B",
+                        "pts_for": 2,
+                        "pts_against": 22,
+                        "wins": 1,
+                        "losses": 11,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ITA B",
+                        "pts_for": 16,
+                        "pts_against": 8,
+                        "wins": 8,
+                        "losses": 4,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "CAN",
+                        "pts_for": 10,
+                        "pts_against": 14,
+                        "wins": 5,
+                        "losses": 7,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "NL",
+                        "pts_for": 8,
+                        "pts_against": 16,
+                        "wins": 4,
+                        "losses": 8,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ITA C",
+                        "pts_for": 12,
+                        "pts_against": -1,
+                        "wins": 6,
+                        "losses": 0,
+                        "total": 6
+                    }
+                }
+            },
+            "HIS": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "HIS",
+                "players": [],
+                "round_wins": 2,
+                "round_losses": 2,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "US D",
+                        "pts_for": 22,
+                        "pts_against": 2,
+                        "wins": 11,
+                        "losses": 1,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ITA A",
+                        "pts_for": 10,
+                        "pts_against": 14,
+                        "wins": 5,
+                        "losses": 7,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "POL B",
+                        "pts_for": 16,
+                        "pts_against": 8,
+                        "wins": 8,
+                        "losses": 4,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "FR A",
+                        "pts_for": 2,
+                        "pts_against": 22,
+                        "wins": 1,
+                        "losses": 11,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "POL A",
+                        "pts_for": 4,
+                        "pts_against": 8,
+                        "wins": 2,
+                        "losses": 4,
+                        "total": 6
+                    }
+                }
+            },
+            "US D": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "US D",
+                "players": [],
+                "round_wins": 2,
+                "round_losses": 2,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "HIS",
+                        "pts_for": 2,
+                        "pts_against": 22,
+                        "wins": 1,
+                        "losses": 11,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "FR C",
+                        "pts_for": 12,
+                        "pts_against": 11,
+                        "wins": 6,
+                        "losses": 6,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GB C",
+                        "pts_for": 12,
+                        "pts_against": 11,
+                        "wins": 6,
+                        "losses": 6,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ITA E",
+                        "pts_for": 12,
+                        "pts_against": 12,
+                        "wins": 6,
+                        "losses": 6,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GER C",
+                        "pts_for": 0,
+                        "pts_against": 12,
+                        "wins": 0,
+                        "losses": 6,
+                        "total": 6
+                    }
+                }
+            },
+            "ANZ B": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "ANZ B",
+                "players": [],
+                "round_wins": 1,
+                "round_losses": 3,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "CZE",
+                        "pts_for": 12,
+                        "pts_against": 12,
+                        "wins": 6,
+                        "losses": 6,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "US B",
+                        "pts_for": 6,
+                        "pts_against": 18,
+                        "wins": 3,
+                        "losses": 9,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ITA C",
+                        "pts_for": 12,
+                        "pts_against": 12,
+                        "wins": 6,
+                        "losses": 6,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "US C",
+                        "pts_for": 6,
+                        "pts_against": 18,
+                        "wins": 3,
+                        "losses": 9,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "POL B",
+                        "pts_for": 2,
+                        "pts_against": 10,
+                        "wins": 1,
+                        "losses": 5,
+                        "total": 6
+                    }
+                }
+            },
+            "CZE": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "CZE",
+                "players": [],
+                "round_wins": 2.5,
+                "round_losses": 1.5,
+                "games_result": {
+                    "R1": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ANZ B",
+                        "pts_for": 12,
+                        "pts_against": 12,
+                        "wins": 6,
+                        "losses": 6,
+                        "total": 12
+                    },
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ITA E",
+                        "pts_for": 20,
+                        "pts_against": 4,
+                        "wins": 10,
+                        "losses": 2,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "FR A",
+                        "pts_for": 2,
+                        "pts_against": 22,
+                        "wins": 1,
+                        "losses": 11,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "GB C",
+                        "pts_for": 16,
+                        "pts_against": 8,
+                        "wins": 8,
+                        "losses": 4,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "ITA A",
+                        "pts_for": 0,
+                        "pts_against": 12,
+                        "wins": 0,
+                        "losses": 6,
+                        "total": 6
+                    }
+                }
+            },
+            "ITA D": {
+                "py/object": "NCTypes.TeamResult",
+                "name": "ITA D",
+                "players": [],
+                "round_wins": 0,
+                "round_losses": 3,
+                "games_result": {
+                    "R2": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "US C",
+                        "pts_for": 4,
+                        "pts_against": 20,
+                        "wins": 2,
+                        "losses": 10,
+                        "total": 12
+                    },
+                    "R3": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "NL",
+                        "pts_for": 0,
+                        "pts_against": 24,
+                        "wins": 0,
+                        "losses": 12,
+                        "total": 12
+                    },
+                    "R4": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "FR C",
+                        "pts_for": 4,
+                        "pts_against": 19,
+                        "wins": 2,
+                        "losses": 10,
+                        "total": 12
+                    },
+                    "R5": {
+                        "py/object": "NCTypes.GameResult",
+                        "opp": "BEL",
+                        "pts_for": 1,
+                        "pts_against": 9,
+                        "wins": 1,
+                        "losses": 5,
+                        "total": 6
+                    }
+                }
+            }
+        },
+        {
+            "82622046": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "DarrenDieHard",
+                "id": "82622046",
+                "wins": 2,
+                "losses": 8,
+                "team": "CAN"
+            },
+            "113887151": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Dziku",
+                "id": "113887151",
+                "wins": 4,
+                "losses": 6,
+                "team": "POL B"
+            },
+            "141966197": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Semper Fidelis",
+                "id": "141966197",
+                "wins": 3,
+                "losses": 7,
+                "team": "POL B"
+            },
+            "159073547": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Bamboo (CZ-SK)",
+                "id": "159073547",
+                "wins": 3,
+                "losses": 3,
+                "team": "CZE"
+            },
+            "181818605": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "tartan1314",
+                "id": "181818605",
+                "wins": 3,
+                "losses": 7,
+                "team": "GB B"
+            },
+            "253091943": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Math Wolf",
+                "id": "253091943",
+                "wins": 8,
+                "losses": 3,
+                "team": "BEL"
+            },
+            "257509174": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "malakkan",
+                "id": "257509174",
+                "wins": 6,
+                "losses": 4,
+                "team": "FR B"
+            },
+            "269930540": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Rento",
+                "id": "269930540",
+                "wins": 6,
+                "losses": 4,
+                "team": "POL A"
+            },
+            "314032996": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Beren Erchamion",
+                "id": "314032996",
+                "wins": 5,
+                "losses": 5,
+                "team": "US A"
+            },
+            "349328937": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "skandalo",
+                "id": "349328937",
+                "wins": 3,
+                "losses": 9,
+                "team": "ITA C"
+            },
+            "434971872": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "chessgamer",
+                "id": "434971872",
+                "wins": 0,
+                "losses": 2,
+                "team": "FR C"
+            },
+            "538068105": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Min34",
+                "id": "538068105",
+                "wins": 7,
+                "losses": 3,
+                "team": "NL"
+            },
+            "542081256": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Helmut Zdobywca",
+                "id": "542081256",
+                "wins": 3,
+                "losses": 5,
+                "team": "POL C"
+            },
+            "561506329": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Wini",
+                "id": "561506329",
+                "wins": 4,
+                "losses": 6,
+                "team": "POL A"
+            },
+            "614292116": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Spike",
+                "id": "614292116",
+                "wins": 0,
+                "losses": 8,
+                "team": "POL C"
+            },
+            "678943315": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Alexandergat",
+                "id": "678943315",
+                "wins": 3,
+                "losses": 9,
+                "team": "ITA C"
+            },
+            "686142235": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "hedja",
+                "id": "686142235",
+                "wins": 6,
+                "losses": 3,
+                "team": "GB B"
+            },
+            "743315871": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "max",
+                "id": "743315871",
+                "wins": 5,
+                "losses": 4,
+                "team": "ITA B"
+            },
+            "798256841": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "[V.I.W] recruiting time! Join us !",
+                "id": "798256841",
+                "wins": 5,
+                "losses": 5,
+                "team": "ITA A"
+            },
+            "816809922": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Timinator u2022 apex",
+                "id": "816809922",
+                "wins": 7,
+                "losses": 2,
+                "team": "GER A"
+            },
+            "1019645121": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Kicker",
+                "id": "1019645121",
+                "wins": 6,
+                "losses": 4,
+                "team": "GER B"
+            },
+            "1399337688": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Lord_Bendtner",
+                "id": "1399337688",
+                "wins": 3,
+                "losses": 7,
+                "team": "SUI"
+            },
+            "1521241902": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Skapis9999",
+                "id": "1521241902",
+                "wins": 2,
+                "losses": 8,
+                "team": "HEL C"
+            },
+            "1546153813": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "sb",
+                "id": "1546153813",
+                "wins": 4,
+                "losses": 6,
+                "team": "US C"
+            },
+            "1658656882": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Suschel",
+                "id": "1658656882",
+                "wins": 3,
+                "losses": 7,
+                "team": "GER A"
+            },
+            "1669010010": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "IRiseYouFall",
+                "id": "1669010010",
+                "wins": 5,
+                "losses": 3,
+                "team": "ITA B"
+            },
+            "1716659446": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "PurpleAnxiety",
+                "id": "1716659446",
+                "wins": 3,
+                "losses": 7,
+                "team": "ANZ A"
+            },
+            "1842167298": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "blobblob",
+                "id": "1842167298",
+                "wins": 6,
+                "losses": 4,
+                "team": "EAS"
+            },
+            "2070769204": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "DH",
+                "id": "2070769204",
+                "wins": 5,
+                "losses": 5,
+                "team": "US C"
+            },
+            "2211733141": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Muli",
+                "id": "2211733141",
+                "wins": 7,
+                "losses": 3,
+                "team": "SUI"
+            },
+            "2214950915": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "master of desaster",
+                "id": "2214950915",
+                "wins": 9,
+                "losses": 1,
+                "team": "SUI"
+            },
+            "2614500448": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "nikrek",
+                "id": "2614500448",
+                "wins": 2,
+                "losses": 4,
+                "team": "HEL B"
+            },
+            "2616469284": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Paulie",
+                "id": "2616469284",
+                "wins": 2,
+                "losses": 4,
+                "team": "CZE"
+            },
+            "2715085443": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Dom365",
+                "id": "2715085443",
+                "wins": 6,
+                "losses": 4,
+                "team": "GB A"
+            },
+            "2731867411": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "u03a6u03b9u03bbu03ceu03c4u03b1u03c2",
+                "id": "2731867411",
+                "wins": 3,
+                "losses": 5,
+                "team": "HEL A"
+            },
+            "2799621248": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "MoriOri",
+                "id": "2799621248",
+                "wins": 7,
+                "losses": 3,
+                "team": "ANZ A"
+            },
+            "2848139625": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "(u0e07ufe21'-'ufe20)u0e07 let's fight!!",
+                "id": "2848139625",
+                "wins": 5,
+                "losses": 4,
+                "team": "GER A"
+            },
+            "2886040961": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Mathematician",
+                "id": "2886040961",
+                "wins": 8,
+                "losses": 2,
+                "team": "EAS"
+            },
+            "2913512012": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Terenig",
+                "id": "2913512012",
+                "wins": 3,
+                "losses": 7,
+                "team": "FR C"
+            },
+            "3062174051": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Octane",
+                "id": "3062174051",
+                "wins": 9,
+                "losses": 1,
+                "team": "US A"
+            },
+            "3118658669": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Legend of the Phoenix",
+                "id": "3118658669",
+                "wins": 3,
+                "losses": 5,
+                "team": "GB C"
+            },
+            "3121640550": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Tof",
+                "id": "3121640550",
+                "wins": 7,
+                "losses": 3,
+                "team": "FR B"
+            },
+            "3140647064": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Lepanto31",
+                "id": "3140647064",
+                "wins": 9,
+                "losses": 1,
+                "team": "ITA A"
+            },
+            "3262000156": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Xenophon",
+                "id": "3262000156",
+                "wins": 7,
+                "losses": 3,
+                "team": "ANZ A"
+            },
+            "3330212221": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "blue_stream",
+                "id": "3330212221",
+                "wins": 2,
+                "losses": 4,
+                "team": "HEL B"
+            },
+            "3346775331": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Gatsu12",
+                "id": "3346775331",
+                "wins": 7,
+                "losses": 3,
+                "team": "HIS"
+            },
+            "3392931486": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Defeking94",
+                "id": "3392931486",
+                "wins": 5,
+                "losses": 5,
+                "team": "ITA C"
+            },
+            "3465741652": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Gunk",
+                "id": "3465741652",
+                "wins": 7,
+                "losses": 3,
+                "team": "CAN"
+            },
+            "3474057656": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "CraZy",
+                "id": "3474057656",
+                "wins": 6,
+                "losses": 4,
+                "team": "EAS"
+            },
+            "3510836362": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Sebus Maximus",
+                "id": "3510836362",
+                "wins": 3,
+                "losses": 7,
+                "team": "POL A"
+            },
+            "3537816875": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "andrtych",
+                "id": "3537816875",
+                "wins": 4,
+                "losses": 6,
+                "team": "HEL C"
+            },
+            "3688916946": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Denriev",
+                "id": "3688916946",
+                "wins": 3,
+                "losses": 3,
+                "team": "CZE"
+            },
+            "3699300319": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Martino",
+                "id": "3699300319",
+                "wins": 3,
+                "losses": 5,
+                "team": "GER C"
+            },
+            "3722628568": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "exe",
+                "id": "3722628568",
+                "wins": 2,
+                "losses": 8,
+                "team": "GER C"
+            },
+            "3748059257": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "mslasm",
+                "id": "3748059257",
+                "wins": 6,
+                "losses": 4,
+                "team": "CAN"
+            },
+            "3814611503": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "The Gunslinger",
+                "id": "3814611503",
+                "wins": 7,
+                "losses": 3,
+                "team": "POL A"
+            },
+            "3856225911": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Glardhamionud83dudc09",
+                "id": "3856225911",
+                "wins": 7,
+                "losses": 3,
+                "team": "POL B"
+            },
+            "3970925856": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Corn Man",
+                "id": "3970925856",
+                "wins": 8,
+                "losses": 2,
+                "team": "GB A"
+            },
+            "4090173830": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "LND",
+                "id": "4090173830",
+                "wins": 4,
+                "losses": 6,
+                "team": "ANZ B"
+            },
+            "4292240496": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Noctophilia",
+                "id": "4292240496",
+                "wins": 6,
+                "losses": 4,
+                "team": "SUI"
+            },
+            "52112071095": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "allusernamesaretaken12",
+                "id": "52112071095",
+                "wins": 6,
+                "losses": 4,
+                "team": "GB B"
+            },
+            "40148362442": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Mylo-vadu00e1sz",
+                "id": "40148362442",
+                "wins": 6,
+                "losses": 4,
+                "team": "GB B"
+            },
+            "6924468706": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "AJordy_",
+                "id": "6924468706",
+                "wins": 2,
+                "losses": 8,
+                "team": "GB B"
+            },
+            "5345602099": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "The Shots",
+                "id": "5345602099",
+                "wins": 7,
+                "losses": 3,
+                "team": "CAN"
+            },
+            "79105823914": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "krinid",
+                "id": "79105823914",
+                "wins": 3,
+                "losses": 7,
+                "team": "CAN"
+            },
+            "7617058940": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Matt431",
+                "id": "7617058940",
+                "wins": 6,
+                "losses": 4,
+                "team": "GB B"
+            },
+            "9150576307": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Baer",
+                "id": "9150576307",
+                "wins": 1,
+                "losses": 9,
+                "team": "CAN"
+            },
+            "27114810294": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "sanguis",
+                "id": "27114810294",
+                "wins": 4,
+                "losses": 6,
+                "team": "FR C"
+            },
+            "74103877461": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Rodrigo",
+                "id": "74103877461",
+                "wins": 5,
+                "losses": 5,
+                "team": "ITA A"
+            },
+            "61144753118": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Solar",
+                "id": "61144753118",
+                "wins": 3,
+                "losses": 3,
+                "team": "ITA A"
+            },
+            "88117804962": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Guu00e9ridon Canard",
+                "id": "88117804962",
+                "wins": 3,
+                "losses": 7,
+                "team": "FR C"
+            },
+            "49119746138": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Corsaro93",
+                "id": "49119746138",
+                "wins": 8,
+                "losses": 2,
+                "team": "ITA A"
+            },
+            "9657701436": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "edou",
+                "id": "9657701436",
+                "wins": 7,
+                "losses": 7,
+                "team": "FR C"
+            },
+            "26107744951": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "John",
+                "id": "26107744951",
+                "wins": 8,
+                "losses": 2,
+                "team": "ITA A"
+            },
+            "4646283434": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "rgk",
+                "id": "4646283434",
+                "wins": 6,
+                "losses": 8,
+                "team": "FR C"
+            },
+            "5654719779": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Bonsai",
+                "id": "5654719779",
+                "wins": 6,
+                "losses": 4,
+                "team": "US A"
+            },
+            "6273028167": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Imbirowski",
+                "id": "6273028167",
+                "wins": 2,
+                "losses": 6,
+                "team": "POL C"
+            },
+            "4817205946": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "almosttricky",
+                "id": "4817205946",
+                "wins": 7,
+                "losses": 3,
+                "team": "US A"
+            },
+            "9362276825": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Bazyli",
+                "id": "9362276825",
+                "wins": 1,
+                "losses": 7,
+                "team": "POL C"
+            },
+            "5776785350": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Zorros",
+                "id": "5776785350",
+                "wins": 3,
+                "losses": 5,
+                "team": "POL C"
+            },
+            "16115893762": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Jacou00fe thu03b5 Restleu00a7u00b0u207fu00b3",
+                "id": "16115893762",
+                "wins": 8,
+                "losses": 2,
+                "team": "US A"
+            },
+            "6862295334": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Motoki",
+                "id": "6862295334",
+                "wins": 8,
+                "losses": 2,
+                "team": "US A"
+            },
+            "70126118353": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Adam Skalski",
+                "id": "70126118353",
+                "wins": 1,
+                "losses": 7,
+                "team": "POL C"
+            },
+            "7438863626": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Bbraw",
+                "id": "7438863626",
+                "wins": 9,
+                "losses": 1,
+                "team": "FR A"
+            },
+            "23119721635": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Stathis",
+                "id": "23119721635",
+                "wins": 3,
+                "losses": 3,
+                "team": "HEL B"
+            },
+            "8136895102": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "rakleader",
+                "id": "8136895102",
+                "wins": 9,
+                "losses": 1,
+                "team": "FR A"
+            },
+            "5493038094": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "FALSTAFF",
+                "id": "5493038094",
+                "wins": 8,
+                "losses": 2,
+                "team": "FR A"
+            },
+            "7510748853": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Phaeril",
+                "id": "7510748853",
+                "wins": 10,
+                "losses": 0,
+                "team": "FR A"
+            },
+            "11103235507": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "jache",
+                "id": "11103235507",
+                "wins": 8,
+                "losses": 2,
+                "team": "FR A"
+            },
+            "30129519861": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Cruyff",
+                "id": "30129519861",
+                "wins": 1,
+                "losses": 5,
+                "team": "HEL B"
+            },
+            "5116797174": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Bill Green",
+                "id": "5116797174",
+                "wins": 2,
+                "losses": 4,
+                "team": "HEL B"
+            },
+            "9871258066": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "PNat",
+                "id": "9871258066",
+                "wins": 4,
+                "losses": 2,
+                "team": "HEL B"
+            },
+            "6879438250": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Fan",
+                "id": "6879438250",
+                "wins": 8,
+                "losses": 2,
+                "team": "FR A"
+            },
+            "69116859707": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Smoking",
+                "id": "69116859707",
+                "wins": 4,
+                "losses": 4,
+                "team": "ITA B"
+            },
+            "80121142792": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "simone",
+                "id": "80121142792",
+                "wins": 5,
+                "losses": 5,
+                "team": "ITA B"
+            },
+            "55145349537": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Castel Gandolfo",
+                "id": "55145349537",
+                "wins": 9,
+                "losses": 1,
+                "team": "POL A"
+            },
+            "34116723089": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Guglielmo Melvolti",
+                "id": "34116723089",
+                "wins": 0,
+                "losses": 2,
+                "team": "ITA B"
+            },
+            "50135888788": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Coenquistatore",
+                "id": "50135888788",
+                "wins": 5,
+                "losses": 3,
+                "team": "ITA B"
+            },
+            "8916311526": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "lineal2012",
+                "id": "8916311526",
+                "wins": 5,
+                "losses": 5,
+                "team": "POL A"
+            },
+            "73115566465": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "spejsonopp",
+                "id": "73115566465",
+                "wins": 2,
+                "losses": 8,
+                "team": "POL B"
+            },
+            "7291307061": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Chackyjo",
+                "id": "7291307061",
+                "wins": 10,
+                "losses": 0,
+                "team": "GER C"
+            },
+            "53141941858": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Sapk",
+                "id": "53141941858",
+                "wins": 7,
+                "losses": 1,
+                "team": "GER C"
+            },
+            "84143567121": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Poldi",
+                "id": "84143567121",
+                "wins": 9,
+                "losses": 1,
+                "team": "GER C"
+            },
+            "9930995314": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "FC Bayern",
+                "id": "9930995314",
+                "wins": 3,
+                "losses": 7,
+                "team": "GER C"
+            },
+            "5615955413": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "vojta",
+                "id": "5615955413",
+                "wins": 4,
+                "losses": 6,
+                "team": "POL B"
+            },
+            "7549591317": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Prince-Vinc",
+                "id": "7549591317",
+                "wins": 0,
+                "losses": 2,
+                "team": "GER C"
+            },
+            "89118975925": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "NoePL",
+                "id": "89118975925",
+                "wins": 7,
+                "losses": 3,
+                "team": "POL B"
+            },
+            "35118422654": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "stefano36000",
+                "id": "35118422654",
+                "wins": 9,
+                "losses": 2,
+                "team": "ITA E"
+            },
+            "7050576099": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Killmouse vs Killmouse",
+                "id": "7050576099",
+                "wins": 1,
+                "losses": 7,
+                "team": "GB C"
+            },
+            "98142718724": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "GUALANDI",
+                "id": "98142718724",
+                "wins": 3,
+                "losses": 7,
+                "team": "ITA E"
+            },
+            "59142832407": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Bodski",
+                "id": "59142832407",
+                "wins": 5,
+                "losses": 5,
+                "team": "GB C"
+            },
+            "83144490998": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Pablito",
+                "id": "83144490998",
+                "wins": 8,
+                "losses": 3,
+                "team": "ITA E"
+            },
+            "41127159010": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Lord Toby",
+                "id": "41127159010",
+                "wins": 3,
+                "losses": 5,
+                "team": "GB C"
+            },
+            "9522268564": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "DanWL",
+                "id": "9522268564",
+                "wins": 2,
+                "losses": 0,
+                "team": "GB C"
+            },
+            "11147306772": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "EternalQ",
+                "id": "11147306772",
+                "wins": 3,
+                "losses": 5,
+                "team": "ITA E"
+            },
+            "11141027080": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Karlstadt",
+                "id": "11141027080",
+                "wins": 2,
+                "losses": 8,
+                "team": "ITA E"
+            },
+            "36108055912": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "SilentWarrior",
+                "id": "36108055912",
+                "wins": 7,
+                "losses": 3,
+                "team": "GB C"
+            },
+            "27123475841": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Zenz",
+                "id": "27123475841",
+                "wins": 4,
+                "losses": 6,
+                "team": "ITA E"
+            },
+            "9453864663": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "ssot",
+                "id": "9453864663",
+                "wins": 3,
+                "losses": 7,
+                "team": "HEL C"
+            },
+            "79105362142": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Kristof Tieghem",
+                "id": "79105362142",
+                "wins": 1,
+                "losses": 7,
+                "team": "BEL"
+            },
+            "62143771847": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "diavolakos",
+                "id": "62143771847",
+                "wins": 1,
+                "losses": 9,
+                "team": "HEL C"
+            },
+            "93123139452": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Leia - Princess of Coinwheels",
+                "id": "93123139452",
+                "wins": 2,
+                "losses": 8,
+                "team": "BEL"
+            },
+            "7338525530": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Fawkes",
+                "id": "7338525530",
+                "wins": 1,
+                "losses": 9,
+                "team": "BEL"
+            },
+            "7480489636": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Dr Love",
+                "id": "7480489636",
+                "wins": 3,
+                "losses": 7,
+                "team": "HEL C"
+            },
+            "42113010814": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "TheBelgian",
+                "id": "42113010814",
+                "wins": 10,
+                "losses": 1,
+                "team": "BEL"
+            },
+            "94134568246": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Herscher",
+                "id": "94134568246",
+                "wins": 3,
+                "losses": 7,
+                "team": "BEL"
+            },
+            "28117620507": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "K1rk",
+                "id": "28117620507",
+                "wins": 4,
+                "losses": 6,
+                "team": "HEL C"
+            },
+            "82138120737": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Texx",
+                "id": "82138120737",
+                "wins": 6,
+                "losses": 4,
+                "team": "ANZ A"
+            },
+            "9750369641": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "mappino",
+                "id": "9750369641",
+                "wins": 4,
+                "losses": 6,
+                "team": "ITA C"
+            },
+            "85112068757": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Fralex",
+                "id": "85112068757",
+                "wins": 4,
+                "losses": 6,
+                "team": "ITA C"
+            },
+            "9478609357": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Mathmagician",
+                "id": "9478609357",
+                "wins": 5,
+                "losses": 5,
+                "team": "ANZ A"
+            },
+            "5231434833": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Kerratul",
+                "id": "5231434833",
+                "wins": 5,
+                "losses": 5,
+                "team": "ANZ A"
+            },
+            "48120576102": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Roch",
+                "id": "48120576102",
+                "wins": 1,
+                "losses": 5,
+                "team": "ITA C"
+            },
+            "58117225775": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Arsene Wenger",
+                "id": "58117225775",
+                "wins": 5,
+                "losses": 5,
+                "team": "EAS"
+            },
+            "6015552050": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Zev",
+                "id": "6015552050",
+                "wins": 9,
+                "losses": 1,
+                "team": "FR B"
+            },
+            "25146073022": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "tsunami",
+                "id": "25146073022",
+                "wins": 2,
+                "losses": 8,
+                "team": "EAS"
+            },
+            "42146243919": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "npc",
+                "id": "42146243919",
+                "wins": 4,
+                "losses": 6,
+                "team": "EAS"
+            },
+            "7395289189": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "WxD",
+                "id": "7395289189",
+                "wins": 8,
+                "losses": 2,
+                "team": "FR B"
+            },
+            "85117771735": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Etienne",
+                "id": "85117771735",
+                "wins": 4,
+                "losses": 6,
+                "team": "FR B"
+            },
+            "9377231212": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Legui",
+                "id": "9377231212",
+                "wins": 1,
+                "losses": 9,
+                "team": "FR B"
+            },
+            "7296500493": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "ADHDnl",
+                "id": "7296500493",
+                "wins": 8,
+                "losses": 2,
+                "team": "NL"
+            },
+            "8070854578": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Roi Joleil",
+                "id": "8070854578",
+                "wins": 3,
+                "losses": 5,
+                "team": "GER A"
+            },
+            "6580217405": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Nature",
+                "id": "6580217405",
+                "wins": 6,
+                "losses": 4,
+                "team": "NL"
+            },
+            "4732747463": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "GuestNWHSzY",
+                "id": "4732747463",
+                "wins": 6,
+                "losses": 4,
+                "team": "GER A"
+            },
+            "59117429318": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Vaups",
+                "id": "59117429318",
+                "wins": 5,
+                "losses": 5,
+                "team": "NL"
+            },
+            "86109768529": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "JW",
+                "id": "86109768529",
+                "wins": 6,
+                "losses": 4,
+                "team": "NL"
+            },
+            "7733320768": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "alexclusive",
+                "id": "7733320768",
+                "wins": 7,
+                "losses": 3,
+                "team": "GER A"
+            },
+            "8060657337": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Mr.Carpenter",
+                "id": "8060657337",
+                "wins": 6,
+                "losses": 4,
+                "team": "NL"
+            },
+            "17149558015": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Old Nick",
+                "id": "17149558015",
+                "wins": 5,
+                "losses": 5,
+                "team": "US C"
+            },
+            "4571217678": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "IMMORTAL",
+                "id": "4571217678",
+                "wins": 4,
+                "losses": 4,
+                "team": "HEL A"
+            },
+            "83140509121": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Realtor",
+                "id": "83140509121",
+                "wins": 3,
+                "losses": 7,
+                "team": "US C"
+            },
+            "39111685973": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "6th D. Kage",
+                "id": "39111685973",
+                "wins": 6,
+                "losses": 2,
+                "team": "HEL A"
+            },
+            "9733643221": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Tac(ky)tical",
+                "id": "9733643221",
+                "wins": 5,
+                "losses": 5,
+                "team": "US C"
+            },
+            "58108844448": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "For Fun",
+                "id": "58108844448",
+                "wins": 4,
+                "losses": 4,
+                "team": "HEL A"
+            },
+            "7017875632": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "vicnus",
+                "id": "7017875632",
+                "wins": 6,
+                "losses": 4,
+                "team": "US C"
+            },
+            "92120047365": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Forsaken",
+                "id": "92120047365",
+                "wins": 8,
+                "losses": 0,
+                "team": "HEL A"
+            },
+            "55107551726": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Samwise",
+                "id": "55107551726",
+                "wins": 7,
+                "losses": 1,
+                "team": "HEL A"
+            },
+            "81112586401": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Marcus Aurelius",
+                "id": "81112586401",
+                "wins": 4,
+                "losses": 2,
+                "team": "GB A"
+            },
+            "9155219717": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Terence Kill",
+                "id": "9155219717",
+                "wins": 5,
+                "losses": 5,
+                "team": "SUI"
+            },
+            "33146680727": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Platinum",
+                "id": "33146680727",
+                "wins": 8,
+                "losses": 2,
+                "team": "GB A"
+            },
+            "4419488318": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "dry-clean-only",
+                "id": "4419488318",
+                "wins": 6,
+                "losses": 3,
+                "team": "GB A"
+            },
+            "8039234532": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Buns157",
+                "id": "8039234532",
+                "wins": 6,
+                "losses": 4,
+                "team": "GB A"
+            },
+            "5588426976": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Tango",
+                "id": "5588426976",
+                "wins": 5,
+                "losses": 5,
+                "team": "SUI"
+            },
+            "7252844100": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Stales78",
+                "id": "7252844100",
+                "wins": 2,
+                "losses": 4,
+                "team": "US B"
+            },
+            "19110102113": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Sepp",
+                "id": "19110102113",
+                "wins": 4,
+                "losses": 6,
+                "team": "GER B"
+            },
+            "6319040229": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Jefferspin",
+                "id": "6319040229",
+                "wins": 7,
+                "losses": 3,
+                "team": "US B"
+            },
+            "71108524851": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Ares",
+                "id": "71108524851",
+                "wins": 8,
+                "losses": 2,
+                "team": "US B"
+            },
+            "80110346167": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Blindigo",
+                "id": "80110346167",
+                "wins": 4,
+                "losses": 6,
+                "team": "GER B"
+            },
+            "93117384898": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "nickpugs3",
+                "id": "93117384898",
+                "wins": 5,
+                "losses": 5,
+                "team": "US B"
+            },
+            "24108085858": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Thorben",
+                "id": "24108085858",
+                "wins": 7,
+                "losses": 3,
+                "team": "GER B"
+            },
+            "65148711768": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Orcus",
+                "id": "65148711768",
+                "wins": 9,
+                "losses": 1,
+                "team": "US B"
+            },
+            "63101971205": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "koso",
+                "id": "63101971205",
+                "wins": 5,
+                "losses": 5,
+                "team": "GER B"
+            },
+            "5018188112": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "mtt",
+                "id": "5018188112",
+                "wins": 4,
+                "losses": 6,
+                "team": "GER B"
+            },
+            "6511512218": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "ACL Tears",
+                "id": "6511512218",
+                "wins": 8,
+                "losses": 2,
+                "team": "US B"
+            },
+            "61127077723": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Torsten",
+                "id": "61127077723",
+                "wins": 2,
+                "losses": 8,
+                "team": "US D"
+            },
+            "5718352209": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Son of Gib",
+                "id": "5718352209",
+                "wins": 2,
+                "losses": 8,
+                "team": "US D"
+            },
+            "51124502996": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Cicero_",
+                "id": "51124502996",
+                "wins": 4,
+                "losses": 6,
+                "team": "HIS"
+            },
+            "5066537078": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "NoName 2.1",
+                "id": "5066537078",
+                "wins": 1,
+                "losses": 5,
+                "team": "HIS"
+            },
+            "98126406995": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Trump 45 47",
+                "id": "98126406995",
+                "wins": 4,
+                "losses": 6,
+                "team": "US D"
+            },
+            "6649400248": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Juan",
+                "id": "6649400248",
+                "wins": 7,
+                "losses": 3,
+                "team": "HIS"
+            },
+            "4459142673": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Gincompetent",
+                "id": "4459142673",
+                "wins": 8,
+                "losses": 2,
+                "team": "US D"
+            },
+            "69128459741": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "PackMan97",
+                "id": "69128459741",
+                "wins": 3,
+                "losses": 7,
+                "team": "US D"
+            },
+            "5942868549": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Tukuro",
+                "id": "5942868549",
+                "wins": 6,
+                "losses": 4,
+                "team": "HIS"
+            },
+            "5619988369": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Pavluski",
+                "id": "5619988369",
+                "wins": 4,
+                "losses": 6,
+                "team": "HIS"
+            },
+            "65140417899": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Frank Iacobazzi",
+                "id": "65140417899",
+                "wins": 3,
+                "losses": 7,
+                "team": "US D"
+            },
+            "4771983896": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Winter Midnight",
+                "id": "4771983896",
+                "wins": 2,
+                "losses": 8,
+                "team": "ANZ B"
+            },
+            "71101072950": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "SkweerookL",
+                "id": "71101072950",
+                "wins": 3,
+                "losses": 5,
+                "team": "CZE"
+            },
+            "94122838290": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "stretch88",
+                "id": "94122838290",
+                "wins": 0,
+                "losses": 6,
+                "team": "ANZ B"
+            },
+            "5190249422": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Brakud83dude21",
+                "id": "5190249422",
+                "wins": 6,
+                "losses": 2,
+                "team": "CZE"
+            },
+            "6160706346": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Chris",
+                "id": "6160706346",
+                "wins": 2,
+                "losses": 8,
+                "team": "ANZ B"
+            },
+            "5056337626": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "psykkoman",
+                "id": "5056337626",
+                "wins": 3,
+                "losses": 7,
+                "team": "CZE"
+            },
+            "4690262550": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "BMT216A",
+                "id": "4690262550",
+                "wins": 2,
+                "losses": 8,
+                "team": "ANZ B"
+            },
+            "51131559866": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "u03bau03b1u03bbu03bbu03b9u03c3u03c4u03b7u03b9",
+                "id": "51131559866",
+                "wins": 3,
+                "losses": 7,
+                "team": "CZE"
+            },
+            "36114488901": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "M1ckDaD1ck",
+                "id": "36114488901",
+                "wins": 6,
+                "losses": 4,
+                "team": "ANZ B"
+            },
+            "33137418189": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "NikiNaki",
+                "id": "33137418189",
+                "wins": 1,
+                "losses": 7,
+                "team": "ITA D"
+            },
+            "35125245176": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Franco Battiato",
+                "id": "35125245176",
+                "wins": 1,
+                "losses": 7,
+                "team": "ITA D"
+            },
+            "12107626437": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Carolus",
+                "id": "12107626437",
+                "wins": 1,
+                "losses": 8,
+                "team": "ITA D"
+            },
+            "54129441292": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Vicente Feola",
+                "id": "54129441292",
+                "wins": 2,
+                "losses": 6,
+                "team": "ITA D"
+            },
+            "92133258032": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Barbaruss",
+                "id": "92133258032",
+                "wins": 0,
+                "losses": 9,
+                "team": "ITA D"
+            },
+            "71131641397": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Trinity",
+                "id": "71131641397",
+                "wins": 1,
+                "losses": 5,
+                "team": "ITA D"
+            },
+            "79119822999": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Zoad",
+                "id": "79119822999",
+                "wins": 5,
+                "losses": 2,
+                "team": "ITA B"
+            },
+            "5271364445": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "bliss machine",
+                "id": "5271364445",
+                "wins": 2,
+                "losses": 4,
+                "team": "GB A"
+            },
+            "51128259178": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "RDW",
+                "id": "51128259178",
+                "wins": 2,
+                "losses": 4,
+                "team": "CZE"
+            },
+            "87118576683": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Asurados",
+                "id": "87118576683",
+                "wins": 0,
+                "losses": 4,
+                "team": "HIS"
+            },
+            "89149088539": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "yeahboi37",
+                "id": "89149088539",
+                "wins": 1,
+                "losses": 3,
+                "team": "US D"
+            },
+            "79121924220": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Danny Haveatea",
+                "id": "79121924220",
+                "wins": 1,
+                "losses": 3,
+                "team": "ANZ B"
+            },
+            "6561482549": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Beep Beep I'm A Jeep",
+                "id": "6561482549",
+                "wins": 1,
+                "losses": 1,
+                "team": "GER A"
+            },
+            "15131149380": {
+                "py/object": "NCTypes.PlayerResult",
+                "name": "Dirkules",
+                "id": "15131149380",
+                "wins": 2,
+                "losses": 0,
+                "team": "GER C"
+            }
+        }
+    ]
+}
