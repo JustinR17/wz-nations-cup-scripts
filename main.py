@@ -10,6 +10,7 @@ from GetFunStats import GetFunStats
 from ParseGames import ParseGames
 from ParsePlayers import ParsePlayers
 from ValidatePlayers import ValidatePlayers
+from ValidateResults import ValidateResults
 from bot import NationsCupBot
 from sheet import GoogleSheet
 
@@ -46,6 +47,7 @@ cgames.add_argument("template", type=int, help="Template ID")
 cgames.add_argument("players", type=int, help="Integer value specifying the number of players per team")
 
 pgames = subparsers.add_parser("pgames", help="Parse games and update google sheets")
+validate_results = subparsers.add_parser("validate_results", help="Validates player/team scores by parsing games again")
 pplayers = subparsers.add_parser("pplayers", help="Parse player stats and update google sheets")
 setup = subparsers.add_parser("setup", help="Create a setup config to avoid common parameters")
 bot = subparsers.add_parser("bot", help="Initializes the discord bot and hourly job to post new game updates")
@@ -116,6 +118,9 @@ elif args.cmd == "bot":
 elif args.cmd == "validate":
     validate_players = ValidatePlayers(config)
     validate_players.run(args.templates.split(","), args.sheet)
+elif args.cmd == "validate_results":
+    validate_results = ValidateResults(config)
+    validate_results.run()
 elif args.cmd == "funstats":
     fun_stats = GetFunStats(config)
     fun_stats.run()
