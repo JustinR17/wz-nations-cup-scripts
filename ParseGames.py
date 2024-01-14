@@ -373,9 +373,9 @@ class ParseGames:
         with open("data/standings.json", "r", encoding="utf-8") as input_file:
             _, player_standings = jsonpickle.decode(json.load(input_file))
         
-        current_data = self.sheet.get_rows("Player_Stats!A1:E300")
+        current_data = self.sheet.get_rows("Player_Stats!A2:E300")
         for row in current_data:
-            if row and row[0] != "Name":
+            if row:
                 row[3] = player_standings[row[1]].wins
                 row[4] = player_standings[row[1]].losses
                 player_standings.pop(row[1])
@@ -383,7 +383,7 @@ class ParseGames:
             current_data.append([ps.name, ps.id, ps.team, ps.wins, ps.losses])
         
         log_message(f"Updated player stats with a total {len(current_data)} rows", "write_standings")
-        self.sheet.update_rows_raw(f"Player_Stats!A1:E{len(current_data)}", current_data)
+        self.sheet.update_rows_raw("Player_Stats!A2:E300", current_data)
     
     def write_team_standings(self):
         team_standings: Dict[str, TeamResult] = {}
