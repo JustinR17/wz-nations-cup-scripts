@@ -3,14 +3,18 @@ import argparse
 import os
 import json
 import sys
+
+import jsonpickle
 from CreateGames import CreateGames
 
-from CreateMatches import CreateMatches
-from GetFunStats import GetFunStats
+# from CreateMatches import CreateMatches
+# from GetFunStats import GetFunStats
 from ParseGames import ParseGames
-from ParsePlayers import ParsePlayers
+
+# from ParsePlayers import ParsePlayers
 from ValidatePlayers import ValidatePlayers
-from ValidateResults import ValidateResults
+
+# from ValidateResults import ValidateResults
 from bot import NationsCupBot
 from sheet import GoogleSheet
 
@@ -20,11 +24,13 @@ if os.path.isfile("config.json"):
     config = json.load(config_file)
     config_file.close()
 
+jsonpickle.set_encoder_options("json", indent=4)
+
 
 parser = argparse.ArgumentParser(
     description="Tool for running Nations Cup. Supports creating matchups for countries, starting & monitoring games through the WZ API and writing player results.",
     allow_abbrev=True,
-    epilog="Created by JustinR17"
+    epilog="Created by JustinR17",
 )
 parser.add_argument(
     "-r",
@@ -38,30 +44,59 @@ cmatches = subparsers.add_parser("cmatches", help="Create matches between teams"
 cmatches.add_argument("input", help="Input sheet tab name to read from")
 cmatches.add_argument("output", help="Output sheet tab name")
 cmatches.add_argument("round", help="Integer value specifying the round number")
-cmatches.add_argument("players", type=int, help="Integer value specifying the number of players per team")
+cmatches.add_argument(
+    "players", type=int, help="Integer value specifying the number of players per team"
+)
 
 cgames = subparsers.add_parser("cgames", help="Create Warzone games from matchups")
 cgames.add_argument("sheet", help="Input sheet tab name to read from")
 cgames.add_argument("round", type=int, help="Round number")
 cgames.add_argument("template", type=int, help="Template ID")
-cgames.add_argument("players", type=int, help="Integer value specifying the number of players per team")
+cgames.add_argument(
+    "players", type=int, help="Integer value specifying the number of players per team"
+)
 
 pgames = subparsers.add_parser("pgames", help="Parse games and update google sheets")
-validate_results = subparsers.add_parser("validate_results", help="Validates player/team scores by parsing games again")
-pplayers = subparsers.add_parser("pplayers", help="Parse player stats and update google sheets")
-setup = subparsers.add_parser("setup", help="Create a setup config to avoid common parameters")
-bot = subparsers.add_parser("bot", help="Initializes the discord bot and hourly job to post new game updates")
+validate_results = subparsers.add_parser(
+    "validate_results", help="Validates player/team scores by parsing games again"
+)
+pplayers = subparsers.add_parser(
+    "pplayers", help="Parse player stats and update google sheets"
+)
+setup = subparsers.add_parser(
+    "setup", help="Create a setup config to avoid common parameters"
+)
+bot = subparsers.add_parser(
+    "bot", help="Initializes the discord bot and hourly job to post new game updates"
+)
 
-validate = subparsers.add_parser("validate", help="Validates that players on teams can be invited to games on templates")
-validate.add_argument("templates", default="", help="Comma separated lists of templates")
-validate.add_argument("sheet", help="Input sheet tab name to read from")
+validate = subparsers.add_parser(
+    "validate",
+    help="Validates that players on teams can be invited to games on templates",
+)
 
-funstats = subparsers.add_parser("funstats", help="aggregates all games and outputs stats to a file")
+funstats = subparsers.add_parser(
+    "funstats", help="aggregates all games and outputs stats to a file"
+)
 
-parser.add_argument("-e", "--email", help="Warzone email used for commands requiring the API. Not required for `setup`, `cmatches` and `pplayers`. Refer to `setup` for generating a config file.")
-parser.add_argument("-t", "--token", help="Warzone API token (https://www.warzone.com/wiki/Get_API_Token_API) used for commands requiring the API. Not required for `setup`, `cmatches` and `pplayers`. Refer to `setup` for generating a config file.")
-parser.add_argument("-s", "--spreadsheet_id", help="Google Sheets Spreadsheet ID. This is the ID in the URL for the sheet.")
-parser.add_argument("-d", "--dryrun", action='store_true', help="run dry-run without creasting games")
+parser.add_argument(
+    "-e",
+    "--email",
+    help="Warzone email used for commands requiring the API. Not required for `setup`, `cmatches` and `pplayers`. Refer to `setup` for generating a config file.",
+)
+parser.add_argument(
+    "-t",
+    "--token",
+    help="Warzone API token (https://www.warzone.com/wiki/Get_API_Token_API) used for commands requiring the API. Not required for `setup`, `cmatches` and `pplayers`. Refer to `setup` for generating a config file.",
+)
+parser.add_argument(
+    "-s",
+    "--spreadsheet_id",
+    help="Google Sheets Spreadsheet ID. This is the ID in the URL for the sheet.",
+)
+parser.add_argument(
+    "-d", "--dryrun", action="store_true", help="run dry-run without creasting games"
+)
 args = parser.parse_args()
 print(args)
 
@@ -75,7 +110,12 @@ if config["email"] is None and args.cmd in ["cgames", "pgames"]:
     parser.error("-e/--email is required if no config is present")
 if config["token"] is None and args.cmd in ["cgames", "pgames"]:
     parser.error("-t/--token is required if no config is present")
-if config["spreadsheet_id"] is None and args.cmd in ["cmatches", "cgames", "pgames", "pplayers"]:
+if config["spreadsheet_id"] is None and args.cmd in [
+    "cmatches",
+    "cgames",
+    "pgames",
+    "pplayers",
+]:
     parser.error("-s/--spreadsheet_id is required if no config is present")
 
 config["run"] = args.run
@@ -117,7 +157,7 @@ elif args.cmd == "bot":
     bot.run(config["discord_token"])
 elif args.cmd == "validate":
     validate_players = ValidatePlayers(config)
-    validate_players.run(args.templates.split(","), args.sheet)
+    validate_players.run()
 elif args.cmd == "validate_results":
     validate_results = ValidateResults(config)
     validate_results.run()

@@ -1,7 +1,6 @@
+from datetime import datetime
 import re
-from typing import List
 
-from NCTypes import Player, Team
 from api import API
 from sheet import GoogleSheet
 
@@ -14,50 +13,65 @@ class ValidatePlayers:
         self.config = config
         self.sheet = GoogleSheet(config)
         self.api = API(config)
-    
-    def run(self, templates: List[str], sheet: str):
+
+    def run(self):
         """
         Reads the google sheets games and updates finished games. Newly finished games are stored in a buffer file for the discord bot to read
         """
-        log_message("Running ParseGames", "ParseGames.run")
-        teams_to_validate = self.parse_sheet_for_teams(sheet)
-        self.validate_players_on_template(teams_to_validate, templates)
-    
-    def parse_sheet_for_teams(self, sheet_name) -> List[Team]:
-        teams: List[Team] = []
-        sheet_rows = self.sheet.get_rows(f"{sheet_name}!A1:B300")
+        log_message("Running ValidatePlayers", "ValidatePlayers.run")
+        self.validate_players_on_templates()
 
-        current_team = None
-        for row in sheet_rows:
-            if not row:
+    def validate_players_on_templates(self):
+        sheet_rows = self.sheet.get_rows("Rosters!C3:S500")
+        status_cells = self.sheet.get_rows("Rosters!D1:E1")
+        templates = []
+
+        for i, row in enumerate(sheet_rows):
+            if i == 0:
+                # first header row, parse templates
+                for col in row[4:]:
+                    templates.append(
+                        re.search(r"^.*TemplateID=(\d*)$", col.strip()).group(1)
+                    )
+            elif not row:
                 # Empty row (denotes the end of a team)
-                current_team = None
-            elif not current_team and row:
-                # New team to add
-                current_team = Team(row[0])
-                teams.append(current_team)
+                print()
             elif row:
-                # New player to add to team
-                current_team.players.append(Player(row[0], int(re.search(r'^.*?p=(\d*).*$', row[1]).group(1)), current_team))
-        return teams
-
-    def validate_players_on_template(self, teams: List[Team], templates: List[str]):
-        for team in teams:
-            print(f"Validating players for team {team.name}")
-            for player in team.players:
+                # New player to check
+                if row[0]:
+                    print(f"Checking new team: {row[0].strip()}")
+                row.extend("" for _ in range(17 - len(row)))
                 try:
-                    validate_response = self.api.validate_player_template_access(player.id, templates)
+                    validate_response = self.api.validate_player_template_access(
+                        int(re.search(r"^.*?p=(\d*).*$", row[2]).group(1)), templates
+                    )
 
                     if not validate_response[0]:
-                        print(f"\t✖  {player.name.encode()} ({player.id}) - Likely blacklisted")
+                        print(
+                            f"\t❌  {row[1].encode()} ({row[2]}) - Likely blacklisted"
+                        )
                     elif validate_response[1]:
-                        print(f"\t✅ {player.name.encode()} ({player.id})")
+                        print(f"\t✅ {row[1].encode()} ({row[2]})")
                     else:
                         invalid_templates = []
                         for i, valid in enumerate(validate_response[2]):
-                            if not valid:
+                            if valid:
+                                row[i + 4] = "✅"
+                            else:
                                 invalid_templates.append(templates[i])
-                        print(f"\t✖  {player.name.encode()} ({player.id}) - Invalid: {', '.join(invalid_templates)}")
+                                row[i + 4] = "❌"
+                        print(
+                            f"\t❌  {row[1].encode()} ({row[2]}) - Invalid: {', '.join(invalid_templates)}"
+                        )
+                    for i, valid in enumerate(validate_response[2]):
+                        if valid:
+                            row[i + 4] = "✅"
+                        else:
+                            row[i + 4] = "❌"
                 except Exception as e:
-                    log_exception(f"Error while handling {player.name.encode()} ({player.id})\n{e}")
-            print()
+                    log_exception(
+                        f"Error while handling {row[1].encode()} ({row[2]})\n{e}"
+                    )
+        self.sheet.update_rows_raw("Rosters!C3:S500", sheet_rows)
+        status_cells[0][1] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.sheet.update_rows_raw("Rosters!D1:E1", status_cells)
