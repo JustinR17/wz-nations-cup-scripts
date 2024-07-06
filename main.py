@@ -121,17 +121,12 @@ config["run"] = args.run
 # print(ns.get_rows("Player_Stats!A1:E200"))
 # sys.exit(0)
 
-if args.cmd == "cmatches":
-    create_matches = CreateMatches(config)
-    create_matches.run(args.input, args.output, args.round, args.players)
-elif args.cmd == "cgames":
+if args.cmd == "cgames":
     create_games = CreateGames(config)
     create_games.run()
 elif args.cmd == "pgames":
     parse_games = ParseGames(config)
     parse_games.run()
-elif args.cmd == "pplayers":
-    parse_players = ParsePlayers(config)
 elif args.cmd == "setup":
     print(
         f"Running setup to create a config.json file locally. This will allow you to run commands without needing to input the warzone email and API token every time. Note that everything is stored locally and no data is sent anywhere."

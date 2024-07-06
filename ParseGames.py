@@ -7,13 +7,15 @@ from typing import Dict, List, Tuple
 import jsonpickle
 from NCTypes import (
     Game,
-    GameResult,
+    RoundResult,
     PlayerResult,
+    TableTeamResult,
     TeamResult,
     WarzoneGame,
     WarzonePlayer,
 )
 from api import API
+from data import TAB_TO_GAME_RANGE_MAPPING, TAB_TO_TABLE_RANGE_MAPPING
 from sheet import GoogleSheet
 import re
 
@@ -21,14 +23,6 @@ from utils import log_exception, log_message
 
 
 class ParseGames:
-
-    TAB_TO_GAME_RANGE_MAPPING = {
-        "_Finals": "K2:R105",
-        "_Main": "I3:P169",
-        "_Qualifiers": "",
-    }
-
-    TAB_TO_TABLE_RANGE_MAPPING = {"_Finals": None, "_Main": "B3:G37", "_Qualifiers": ""}
 
     def __init__(self, config):
         self.config = config
@@ -41,17 +35,22 @@ class ParseGames:
         """
         try:
             log_message("Running ParseGames", "ParseGames.run")
-            newly_finished_games, games_to_delete = self.update_new_games()
-            self.delete_unstarted_games(games_to_delete)
+            newly_finished_games, games_to_delete, team_results = (
+                self.update_new_games()
+            )
+            print(f"\n\n=================\nGames to delete:\n{games_to_delete}")
+            # self.delete_unstarted_games(games_to_delete)
             self.write_newly_finished_games(newly_finished_games)
             self.write_player_standings()
-            self.write_team_standings()
+            self.write_team_standings(team_results)
         except Exception as e:
             log_exception(e)
 
     def update_new_games(
         self,
-    ) -> Tuple[Dict[str, List[WarzoneGame]], List[WarzoneGame]]:
+    ) -> Tuple[
+        Dict[str, List[WarzoneGame]], List[WarzoneGame], Dict[str, TableTeamResult]
+    ]:
         """
         Checks all game tabs for games that have newly finished. Writes the new results in the tab.
 
@@ -64,24 +63,24 @@ class ParseGames:
 
         """
 
-        team_standings: Dict[str, Dict[str, TeamResult]] = {}
-        player_standings: Dict[str, Dict[str, GameResult]] = {}
+        _: Dict[str, TeamResult] = {}
+        player_standings: Dict[str, RoundResult] = {}
         with open("data/standings.json", "r", encoding="utf-8") as input_file:
-            team_standings, player_standings = jsonpickle.decode(json.load(input_file))
+            _, player_standings = jsonpickle.decode(json.load(input_file))
 
         newly_finished_games: Dict[str, Dict[str, List[WarzoneGame]]] = {}
         newly_finished_games_count = 0
         games_to_delete = []
-        for tab in self.get_game_tabs():
+        team_table_results: Dict[str, TableTeamResult] = {}
+        for tab in self.sheet.get_tabs_by_status(GoogleSheet.TabStatus.IN_PROGRESS):
             tab_phase = re.search("^(_\w+)", tab).group(1)
             tab_status = self.sheet.get_rows(f"{tab}!A1:B1")
-            game_range = ParseGames.TAB_TO_GAME_RANGE_MAPPING[tab_phase]
-            table_range = ParseGames.TAB_TO_TABLE_RANGE_MAPPING[tab_phase]
+            game_range = TAB_TO_GAME_RANGE_MAPPING[tab_phase]
+            table_range = TAB_TO_TABLE_RANGE_MAPPING[tab_phase]
             round = tab[1:]
 
-            tab_rows = self.sheet.get_rows(f"{tab}!{game_range}")
-            tab_rows_formulas = self.sheet.get_rows_formulas(f"{tab}!{game_range}")
-            table_rows = (
+            tab_rows_values = self.sheet.get_rows(f"{tab}!{game_range}")
+            table_rows_values = (
                 self.sheet.get_rows(f"{tab}!{table_range}") if table_range else None
             )
             table_rows_formulas = (
@@ -89,22 +88,36 @@ class ParseGames:
                 if table_range
                 else None
             )
-            if (
-                not len(tab_rows)
-                or not len(tab_rows[0])
-                or "in-progress" not in tab_status[0][0]
-            ):
-                log_message(
-                    f"Skipping the game log tab '{tab}' due to missing 'in-progress' tag",
-                    "update_new_games",
-                )
-                continue
+
             log_message(f"Checking games in game log tab '{tab}'", "update_new_games")
 
-            # TODO: update the score_row
+            #######################
+            ##### Parse Table #####
+            #######################
+            if table_rows_values:
+                group = ""
+                for i, row in enumerate(table_rows_values):
+                    row.extend("" for _ in range(7 - len(row)))
+                    if not row[0] and not row[1]:
+                        group = ""
+                    elif not group:
+                        # group section
+                        group = row[0]
+                    else:
+                        # Parse team results
+                        team_table_results[f"{round}-{group}-{row[1]}"] = (
+                            TableTeamResult(
+                                round, group, row[1], row[2], row[3], row[4]
+                            )
+                        )
+
+            #######################
+            ##### Parse Games #####
+            #######################
             group, team_a, team_b, score_row = "", "", "", []
-            for i, row in enumerate(tab_rows):
-                if not row:
+            for row in tab_rows_values:
+                row.extend("" for _ in range(9 - len(row)))
+                if not row[0] and not row[1]:
                     # Finished the previous matchup
                     team_a, team_b, score_row = "", "", []
                 else:
@@ -112,7 +125,7 @@ class ParseGames:
                         # update the current round/group
                         group = row[0]
 
-                    if not team_a and not team_b:
+                    if not team_a and not team_b and row[1]:
                         # New teams to add
                         team_a, team_b, score_row = (
                             row[1].strip(),
@@ -129,23 +142,27 @@ class ParseGames:
                         game = self.api.check_game(
                             self.convert_wz_game_link_to_id(row[6].strip())
                         )
-                        if game.players[0].id != row[1].strip():
+                        if game.players[0].id != int(
+                            re.search(r"^.*?p=(\d*).*$", row[2]).group(1)
+                        ):
                             game.players.reverse()
                         game.players[0].team, game.players[1].team = team_a, team_b
                         game.players[0].score, game.players[1].score = (
-                            int(score_row[2]),
-                            int(score_row[5]),
+                            team_table_results[
+                                f"{round}-{group}-{team_a}"
+                            ].wins_adjusted,
+                            team_table_results[
+                                f"{round}-{group}-{team_b}"
+                            ].wins_adjusted,
                         )
 
                         # Game is not finished, but we will update the progress (ie round or stage)
-                        while len(tab_rows_formulas[i]) < 8:
-                            tab_rows_formulas[i].append("")
                         if game.outcome == Game.Outcome.WAITING_FOR_PLAYERS:
-                            tab_rows_formulas[i][7] = "Lobby"
+                            row[7] = "Lobby"
                         elif game.outcome == Game.Outcome.DISTRIBUTING_TERRITORIES:
-                            tab_rows_formulas[i][8] = "Picks"
+                            row[7] = "Picks"
                         else:
-                            tab_rows_formulas[i][8] = f"Turn {game.round}"
+                            row[7] = f"Turn {game.round}"
 
                         # declined_players = [str(player) for player in game.players if player.outcome == WarzonePlayer.Outcome.DECLINED]
                         # if len(declined_players):
@@ -161,92 +178,104 @@ class ParseGames:
                                 f"New game finished with the following outcome: {game.players[0].name.encode()} {game.players[0].outcome} v {game.players[1].name.encode()} {game.players[1].outcome} ({game.link})",
                                 "update_new_games",
                             )
-                            newly_finished_games.setdefault(round, {}).setdefault(
-                                group, []
+                            newly_finished_games.setdefault(
+                                f"{round}-{group}", []
                             ).append(game)
                             newly_finished_games_count += 1
                             if game.players[0].outcome == WarzonePlayer.Outcome.WON:
                                 # Left team wins
                                 loser = game.players[1]
-                                tab_rows_formulas[i][3] = "defeats"
+                                row[3] = "defeats"
                                 game.players[0].score += 1
+                                score_row[2] = int(score_row[2]) + 1
                                 game.winner = [game.players[0].id]
-                                # TODO: update this function and arguments
+                                self.update_team_table_results(
+                                    team_table_results[f"{round}-{group}-{team_a}"],
+                                    True,
+                                )
+                                self.update_team_table_results(
+                                    team_table_results[f"{round}-{group}-{team_b}"],
+                                    False,
+                                )
                                 self.update_standings_with_game(
-                                    team_standings,
                                     player_standings,
                                     team_a,
                                     game.players[0].name,
                                     game.players[0].id,
-                                    tab[0:2],
                                     True,
                                 )
                                 self.update_standings_with_game(
-                                    team_standings,
                                     player_standings,
                                     team_b,
                                     game.players[1].name,
                                     game.players[1].id,
-                                    tab[0:2],
                                     False,
                                 )
                             elif game.players[1].outcome == WarzonePlayer.Outcome.WON:
                                 # Right team wins
                                 loser = game.players[0]
-                                tab_rows_formulas[i][3] = "loses to"
+                                row[3] = "loses to"
                                 game.players[1].score += 1
+                                score_row[5] = int(score_row[5]) + 1
                                 game.winner = [game.players[1].id]
-                                # TODO: update this function and arguments
+                                self.update_team_table_results(
+                                    team_table_results[f"{round}-{group}-{team_a}"],
+                                    False,
+                                )
+                                self.update_team_table_results(
+                                    team_table_results[f"{round}-{group}-{team_b}"],
+                                    True,
+                                )
                                 self.update_standings_with_game(
-                                    team_standings,
                                     player_standings,
                                     team_a,
                                     game.players[0].name,
                                     game.players[0].id,
-                                    tab[0:2],
                                     False,
                                 )
                                 self.update_standings_with_game(
-                                    team_standings,
                                     player_standings,
                                     team_b,
                                     game.players[1].name,
                                     game.players[1].id,
-                                    tab[0:2],
                                     True,
                                 )
                             else:
                                 # Randomly assign win (probably because they voted to end)
                                 left_team_won = bool(random.getrandbits(1))
                                 loser = game.players[int(left_team_won)]
-                                tab_rows_formulas[i][3] = (
-                                    "defeats" if left_team_won else "loses to"
-                                )
+                                row[3] = "defeats" if left_team_won else "loses to"
                                 game.players[0 if left_team_won else 1].score += 1
+                                score_row[2 if left_team_won else 5] = (
+                                    int(score_row[2 if left_team_won else 5]) + 1
+                                )
                                 game.winner = [
                                     game.players[0 if left_team_won else 1].id
                                 ]
-                                # TODO: update this function and arguments
+                                self.update_team_table_results(
+                                    team_table_results[f"{round}-{group}-{team_a}"],
+                                    left_team_won,
+                                )
+                                self.update_team_table_results(
+                                    team_table_results[f"{round}-{group}-{team_b}"],
+                                    not left_team_won,
+                                )
                                 self.update_standings_with_game(
-                                    team_standings,
                                     player_standings,
                                     team_a,
                                     game.players[0].name,
                                     game.players[0].id,
-                                    tab[0:2],
                                     left_team_won,
                                 )
                                 self.update_standings_with_game(
-                                    team_standings,
                                     player_standings,
                                     team_b,
                                     game.players[1].name,
                                     game.players[1].id,
-                                    tab[0:2],
                                     not left_team_won,
                                 )
                             if loser.outcome == WarzonePlayer.Outcome.BOOTED:
-                                tab_rows_formulas[i][7] = f"Turn {game.round} - Booted"
+                                row[7] = f"Turn {game.round} - Booted"
 
                         elif (
                             game.outcome == Game.Outcome.WAITING_FOR_PLAYERS
@@ -262,9 +291,11 @@ class ParseGames:
                                 "update_new_games",
                             )
                             log_message(f"Storing end response: {game}")
-                            newly_finished_games.setdefault(tab, []).append(game)
+                            newly_finished_games.setdefault(
+                                f"{round}-{group}", []
+                            ).append(game)
                             newly_finished_games_count += 1
-                            tab_rows_formulas[i][7] = "Deleted"
+                            row[7] = "Deleted"
                             if game.players[
                                 0
                             ].outcome == WarzonePlayer.Outcome.PLAYING or (
@@ -273,26 +304,30 @@ class ParseGames:
                                 == WarzonePlayer.Outcome.DECLINED
                             ):
                                 # Left team wins
-                                tab_rows_formulas[i][3] = "defeats"
+                                row[3] = "defeats"
                                 game.players[0].score += 1
+                                score_row[2] = int(score_row[2]) + 1
                                 game.winner = [game.players[0].id]
-                                # TODO: update this function and arguments
+                                self.update_team_table_results(
+                                    team_table_results[f"{round}-{group}-{team_a}"],
+                                    True,
+                                )
+                                self.update_team_table_results(
+                                    team_table_results[f"{round}-{group}-{team_b}"],
+                                    False,
+                                )
                                 self.update_standings_with_game(
-                                    team_standings,
                                     player_standings,
                                     team_a,
                                     game.players[0].name,
                                     game.players[0].id,
-                                    tab[0:2],
                                     True,
                                 )
                                 self.update_standings_with_game(
-                                    team_standings,
                                     player_standings,
                                     team_b,
                                     game.players[1].name,
                                     game.players[1].id,
-                                    tab[0:2],
                                     False,
                                 )
                             elif game.players[
@@ -303,97 +338,99 @@ class ParseGames:
                                 == WarzonePlayer.Outcome.DECLINED
                             ):
                                 # Right team wins
-                                tab_rows_formulas[i][3] = "loses to"
+                                row[3] = "loses to"
                                 game.players[1].score += 1
+                                score_row[5] = int(score_row[5]) + 1
                                 game.winner = [game.players[1].id]
-                                # TODO: update this function and arguments
+                                self.update_team_table_results(
+                                    team_table_results[f"{round}-{group}-{team_a}"],
+                                    False,
+                                )
+                                self.update_team_table_results(
+                                    team_table_results[f"{round}-{group}-{team_b}"],
+                                    True,
+                                )
                                 self.update_standings_with_game(
-                                    team_standings,
                                     player_standings,
                                     team_a,
                                     game.players[0].name,
                                     game.players[0].id,
-                                    tab[0:2],
                                     False,
                                 )
                                 self.update_standings_with_game(
-                                    team_standings,
                                     player_standings,
                                     team_b,
                                     game.players[1].name,
                                     game.players[1].id,
-                                    tab[0:2],
                                     True,
                                 )
                             else:
                                 # Some weird combo where neither player accepted
                                 # Randomly assign winner
                                 left_team_won = bool(random.getrandbits(1))
-                                tab_rows_formulas[i][3] = (
-                                    "defeats" if left_team_won else "loses to"
-                                )
+                                row[3] = "defeats" if left_team_won else "loses to"
                                 game.players[0 if left_team_won else 1].score += 1
                                 game.winner = [
                                     game.players[0 if left_team_won else 1].id
                                 ]
-                                # TODO: update this function and arguments
+                                score_row[2 if left_team_won else 5] = (
+                                    int(score_row[2 if left_team_won else 5]) + 1
+                                )
+                                self.update_team_table_results(
+                                    team_table_results[f"{round}-{group}-{team_a}"],
+                                    left_team_won,
+                                )
+                                self.update_team_table_results(
+                                    team_table_results[f"{round}-{group}-{team_b}"],
+                                    not left_team_won,
+                                )
                                 self.update_standings_with_game(
-                                    team_standings,
                                     player_standings,
                                     team_a,
                                     game.players[0].name,
                                     game.players[0].id,
-                                    tab[0:2],
                                     left_team_won,
                                 )
                                 self.update_standings_with_game(
-                                    team_standings,
                                     player_standings,
                                     team_b,
                                     game.players[1].name,
                                     game.players[1].id,
-                                    tab[0:2],
                                     not left_team_won,
                                 )
 
                             games_to_delete.append(game)
 
-            # TODO: update data tables
-            if table_rows:
+            #######################
+            ##### Parse Table #####
+            #######################
+            if table_rows_values:
                 group = ""
-                for i, row in enumerate(table_rows):
-                    if not row:
+                for i, row in enumerate(table_rows_values):
+                    row.extend("" for _ in range(7 - len(row)))
+                    if not row[0] and not row[1]:
                         group = ""
                     elif not group:
                         # group section
                         group = row[0]
-                    elif row[1] == "Wins Adjusted":
-                        # table headings row... ignore
-                        continue
                     else:
                         # Parse team results
-                        if row[0].strip() in team_standings:
-                            row[2] = (
-                                team_standings[row[0].strip()]
-                                .games_result[f"{round}-{group}"]
-                                .wins
-                            )
-                            row[3] = (
-                                team_standings[row[0].strip()]
-                                .games_result[f"{round}-{group}"]
-                                .losses
-                            )
-                self.sheet.update_rows_raw(f"{tab}!{table_range}", table_rows)
+                        table_rows_formulas[i][3] = team_table_results[
+                            f"{round}-{group}-{row[1]}"
+                        ].wins
+                        table_rows_formulas[i][4] = team_table_results[
+                            f"{round}-{group}-{row[1]}"
+                        ].losses
+                self.sheet.update_rows_raw(f"{tab}!{table_range}", table_rows_formulas)
 
             # Add the last updated time to the sheet so people know when it is broken
             if len(tab_status[0]) < 2:
-                # Likely only 5 elements then
                 tab_status[0].append(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             else:
                 # Overwrite previous value
                 tab_status[0][1] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            self.sheet.update_rows_raw(f"{tab}!A1:B1", tab_rows)
-            self.sheet.update_rows_raw(f"{tab}!{game_range}", tab_rows)
+            self.sheet.update_rows_raw(f"{tab}!A1:B1", tab_status)
+            self.sheet.update_rows_raw(f"{tab}!{game_range}", tab_rows_values)
             log_message(
                 f"Finished updating games in {tab}. Newly finished games: {newly_finished_games_count}; games to delete: {len(games_to_delete)}",
                 "update_new_games",
@@ -401,35 +438,15 @@ class ParseGames:
 
         # Raw file that is used by scripts
         with open("data/standings.json", "w", encoding="utf-8") as output_file:
-            json.dump(
-                jsonpickle.encode((team_standings, player_standings)), output_file
-            )
-        # Prettified version in case manual changes are needed
-        with open("data/standings_pretty.json", "w", encoding="utf-8") as output_file:
-            json.dump((team_standings, player_standings), output_file, indent=4)
+            json.dump(jsonpickle.encode((_, player_standings)), output_file)
 
-        return newly_finished_games, games_to_delete
-
-    def get_game_tabs(self) -> List[str]:
-        """
-        Returns a list of the google sheets tabs containing games.
-        """
-        game_tabs = []
-        sheets = self.sheet.get_sheet_tabs_data()
-        for tab in sheets:
-            # Get the tabs that we should parse
-            # Should be any tab that starts with "_"
-            if re.search("^_", tab["properties"]["title"]):
-                game_tabs.append(tab["properties"]["title"])
-        return game_tabs
-
-    def convert_wz_game_link_to_id(self, game_link: str):
-        return game_link[43:]
+        return newly_finished_games, games_to_delete, team_table_results
 
     def delete_unstarted_games(self, games_to_delete: List[WarzoneGame]):
         """
         Deletes a list of warzone games that have not begun yet through the WZ API.
         """
+        return
         failed_to_delete_games = []
         for game in games_to_delete:
             log_message(
@@ -443,24 +460,30 @@ class ParseGames:
 
     def update_standings_with_game(
         self,
-        team_standings: Dict[str, TeamResult],
         player_standings: Dict[str, PlayerResult],
         team: str,
         player_name: str,
         player_id: int,
-        round: str,
         is_won: bool,
     ):
         if is_won:
-            team_standings[team].add_win(round)
             player_standings.setdefault(
                 player_id, PlayerResult(player_name, player_id, team)
             ).wins += 1
         else:
-            team_standings[team].add_loss(round)
             player_standings.setdefault(
                 player_id, PlayerResult(player_name, player_id, team)
             ).losses += 1
+
+    def update_team_table_results(self, team_result: TableTeamResult, is_won: bool):
+        if is_won:
+            team_result.wins_adjusted += 1
+            team_result.wins += 1
+        else:
+            team_result.losses += 1
+
+    def convert_wz_game_link_to_id(self, game_link: str):
+        return game_link[43:]
 
     def write_player_standings(self):
         _: Dict[str, TeamResult] = {}
@@ -468,7 +491,7 @@ class ParseGames:
         with open("data/standings.json", "r", encoding="utf-8") as input_file:
             _, player_standings = jsonpickle.decode(json.load(input_file))
 
-        current_data = self.sheet.get_rows("Player_Stats!A2:E300")
+        current_data = self.sheet.get_rows("Player Standings!A2:E300")
         for row in current_data:
             if row:
                 row[3] = player_standings[row[1]].wins
@@ -481,45 +504,44 @@ class ParseGames:
             f"Updated player stats with a total {len(current_data)} rows",
             "write_standings",
         )
-        self.sheet.update_rows_raw("Player_Stats!A2:E300", current_data)
+        self.sheet.update_rows_raw("Player Standings!A2:E300", current_data)
 
-    def write_team_standings(self):
-        team_standings: Dict[str, TeamResult] = {}
-        _: Dict[str, PlayerResult] = {}
-        with open("data/standings.json", "r", encoding="utf-8") as input_file:
-            team_standings, _ = jsonpickle.decode(json.load(input_file))
-
-        current_data = self.sheet.get_rows("Country_Stats!A1:E50")
+    def write_team_standings(self, team_results: Dict[str, TableTeamResult]):
+        current_data = self.sheet.get_rows("Team Standings!A1:E50")
+        seen_countries = set()
         for row in current_data:
             if row and row[0] != "Country":
-                row[1] = team_standings[row[0]].round_wins
-                row[2] = team_standings[row[0]].round_losses
-                row[3] = sum(
-                    map(lambda e: e.wins, team_standings[row[0]].games_result.values())
+                row[1] = sum(
+                    [
+                        result[1].wins
+                        for result in team_results.items()
+                        if row[0] in result[0]
+                    ]
                 )
-                row[4] = sum(
-                    map(
-                        lambda e: e.losses, team_standings[row[0]].games_result.values()
-                    )
+                row[2] = sum(
+                    [
+                        result[1].losses
+                        for result in team_results.items()
+                        if row[0] in result[0]
+                    ]
                 )
-                team_standings.pop(row[0])
-        for _, ts in team_standings.items():
-            current_data.append(
-                [
-                    ts.name,
-                    ts.round_wins,
-                    ts.round_losses,
-                    sum(map(lambda e: e.wins, ts.games_result.values())),
-                    sum(map(lambda e: e.losses, ts.games_result.values())),
-                ]
-            )
+                seen_countries.add(row[0])
+        for key, ts in team_results.items():
+            if key.split("-")[2] not in seen_countries:
+                current_data.append(
+                    [
+                        ts.team,
+                        ts.wins,
+                        ts.losses,
+                    ]
+                )
 
         log_message(
             f"Updated team stats with a total {len(current_data)} rows",
             "write_standings",
         )
         self.sheet.update_rows_raw(
-            f"Country_Stats!A1:E{len(current_data)}", current_data
+            f"Team Standings!A1:E{len(current_data)}", current_data
         )
 
     def write_newly_finished_games(

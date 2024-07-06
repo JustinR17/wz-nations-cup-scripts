@@ -253,3 +253,22 @@ class PlayerResult:
         self.wins: int = 0
         self.losses: int = 0
         self.team: str = team
+
+
+class TableTeamResult:
+
+    def __init__(
+        self,
+        round: str,
+        group: str,
+        team: str,
+        wins_adjusted: str,
+        wins: str,
+        losses: str,
+    ):
+        self.round = round
+        self.group = group
+        self.team = team
+        self.wins_adjusted = float(wins_adjusted)
+        self.wins = int(wins)
+        self.losses = int(losses)
