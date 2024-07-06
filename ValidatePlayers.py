@@ -22,7 +22,7 @@ class ValidatePlayers:
         self.validate_players_on_templates()
 
     def validate_players_on_templates(self):
-        sheet_rows = self.sheet.get_rows("Rosters!C3:S500")
+        sheet_rows = self.sheet.get_rows("Rosters!C3:M500")
         status_cells = self.sheet.get_rows("Rosters!D1:E1")
         templates = []
 
@@ -40,7 +40,7 @@ class ValidatePlayers:
                 # New player to check
                 if row[0]:
                     print(f"Checking new team: {row[0].strip()}")
-                row.extend("" for _ in range(17 - len(row)))
+                row.extend("" for _ in range(11 - len(row)))
                 try:
                     validate_response = self.api.validate_player_template_access(
                         int(re.search(r"^.*?p=(\d*).*$", row[2]).group(1)), templates
@@ -50,6 +50,8 @@ class ValidatePlayers:
                         print(
                             f"\t❌  {row[1].encode()} ({row[2]}) - Likely blacklisted"
                         )
+                        for i in range(7):
+                            row[i + 4] = "❌"
                     elif validate_response[1]:
                         print(f"\t✅ {row[1].encode()} ({row[2]})")
                     else:
@@ -72,6 +74,6 @@ class ValidatePlayers:
                     log_exception(
                         f"Error while handling {row[1].encode()} ({row[2]})\n{e}"
                     )
-        self.sheet.update_rows_raw("Rosters!C3:S500", sheet_rows)
+        self.sheet.update_rows_raw("Rosters!C3:M500", sheet_rows)
         status_cells[0][1] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.sheet.update_rows_raw("Rosters!D1:E1", status_cells)

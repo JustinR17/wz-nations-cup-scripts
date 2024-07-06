@@ -162,40 +162,43 @@ class WarzoneGame:
 
 TEAM_NAME_TO_API_VALUE = bidict(
     {
-        "ANZ A": "1",
-        "ANZ B": "2",
-        "BEL": "3",
-        "CAN": "4",
-        "CZE": "5",
-        "EAS": "6",
-        "FR A": "7",
-        "FR B": "8",
-        "FR C": "9",
-        "GB A": "10",
-        "GB B": "11",
-        "GB C": "12",
-        "GER A": "13",
-        "GER B": "14",
-        "GER C": "15",
-        "HEL A": "16",
-        "HEL B": "17",
-        "HEL C": "18",
-        "HIS": "19",
-        "ITA A": "20",
-        "ITA B": "21",
-        "ITA C": "22",
-        "ITA D": "23",
-        "ITA E": "24",
-        "NL": "25",
-        "POL A": "26",
-        "POL B": "27",
-        "POL C": "28",
-        "SUI": "29",
-        "SWZ": "34",  # In case marcus does anything weird
-        "US A": "30",
-        "US B": "31",
-        "US C": "32",
-        "US D": "33",
+        "POL A": "1",
+        "POL B": "2",
+        "POL C": "3",
+        "POL D": "4",
+        "GER A": "5",
+        "GER B": "6",
+        "GER C": "7",
+        "GER D": "8",
+        "ITA A": "9",
+        "ITA B": "10",
+        "ITA C": "11",
+        "ITA D": "12",
+        "USA A": "13",
+        "USA B": "14",
+        "USA C": "15",
+        "UK A": "16",
+        "UK B": "17",
+        "UK C": "18",
+        "ANZ A": "19",
+        "ANZ B": "20",
+        "ANZ C": "21",
+        "FRA A": "22",
+        "FRA B": "23",
+        "NL A": "24",
+        "NL B": "25",
+        "CAN A": "26",
+        "CAN B": "27",
+        "CZE": "28",
+        "EAS": "29",
+        "FIN": "30",
+        "BEL": "31",
+        "SWI": "32",
+        "IRL": "33",
+        "NOR A": "34",
+        "NOR B": "35",
+        "NOR C": "36",
+        "USA D": "37",
     }
 )
 
@@ -207,12 +210,12 @@ class TeamResult:
         self.players: List[PlayerResult] = []
         self.round_wins: float = 0
         self.round_losses: float = 0
-        self.games_result: Dict[str, GameResult] = {}
+        self.games_result: Dict[str, RoundResult] = {}
 
     def init_score(self, round: str, opp: str, pts_for: int, pts_against: int):
         if round in self.games_result:
             self.games_result.pop(round)
-        self.games_result[round] = GameResult(opp, pts_for, pts_against)
+        self.games_result[round] = RoundResult(opp, pts_for, pts_against)
 
     def add_win(self, round: str):
         self.games_result[round].add_win()
@@ -221,7 +224,7 @@ class TeamResult:
         self.games_result[round].add_loss()
 
 
-class GameResult:
+class RoundResult:
 
     def __init__(self, opp: str, starting_pts_for=0, starting_pts_against=0) -> None:
         self.opp = opp

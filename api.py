@@ -2,6 +2,7 @@
 from datetime import datetime, timezone
 from typing import List, Tuple
 import requests
+import urllib.parse
 
 from NCTypes import TEAM_NAME_TO_API_VALUE, Game, WarzoneGame, WarzonePlayer
 from utils import log_message
@@ -11,9 +12,7 @@ class API:
     CREATE_GAME_ENDPOINT = "https://www.warzone.com/API/CreateGame"
     DELETE_GAME_ENDPOINT = "https://www.warzone.com/API/DeleteLobbyGame"
     QUERY_GAME_ENDPOINT = "https://www.warzone.com/API/GameFeed"
-    VALIDATE_INVITE_TOKEN_ENDPOINT = (
-        "https://www.warzone.com/API/ValidateInviteToken"
-    )
+    VALIDATE_INVITE_TOKEN_ENDPOINT = "https://www.warzone.com/API/ValidateInviteToken"
     GAME_URL = "https://www.warzone.com/MultiPlayer?GameID="
 
     class GameCreationException(Exception):
@@ -21,7 +20,6 @@ class API:
 
     class GameDeletionException(Exception):
         pass
-
 
     def __init__(self, config):
         self.config = config
@@ -40,14 +38,20 @@ class API:
 
         players = []
         for player in game_json["players"]:
-            players.append(WarzonePlayer(player["name"], player["id"], player["state"], player["team"]))
-        
+            players.append(
+                WarzonePlayer(
+                    player["name"], player["id"], player["state"], player["team"]
+                )
+            )
+
         game = WarzoneGame(
             players,
             Game.Outcome(game_json["state"]),
             f"{API.GAME_URL}{game_json['id']}",
-            datetime.strptime(game_json["created"], "%m/%d/%Y %H:%M:%S").replace(tzinfo=timezone.utc),
-            int(game_json["numberOfTurns"])
+            datetime.strptime(game_json["created"], "%m/%d/%Y %H:%M:%S").replace(
+                tzinfo=timezone.utc
+            ),
+            int(game_json["numberOfTurns"]),
         )
 
         return game
@@ -65,7 +69,9 @@ class API:
 
         return game_json["chat"] if "chat" in game_json else []
 
-    def create_game(self, players: List[Tuple[str, str]], template: str, name: str, description: str) -> str:
+    def create_game(
+        self, players: List[Tuple[str, str]], template: str, name: str, description: str
+    ) -> str:
         """
         Creates a game using the WZ API with the specified players, template, and game name/description.
 
@@ -77,33 +83,48 @@ class API:
         # }
 
         data = {
-                "hostEmail": self.config["email"], "hostAPIToken": self.config["token"],
-                "templateID": int(template), "gameName": name, "personalMessage": description,
-                "players": list(map(lambda e: {"token": e[0], "team": TEAM_NAME_TO_API_VALUE[e[1]]}, players))
-            }
-        print(f"Creating game with following specs:\n{data}")
-
+            "hostEmail": self.config["email"],
+            "hostAPIToken": self.config["token"],
+            "templateID": int(template),
+            "gameName": name,
+            "personalMessage": description,
+            "players": list(
+                map(
+                    lambda e: {"token": e[0], "team": TEAM_NAME_TO_API_VALUE[e[1]]},
+                    players,
+                )
+            ),
+        }
         if self.dryrun:
             print("Running dryrun on game creation")
-            game_response = { "gameID": 25876586 }
+            game_response = {"gameID": 25876586}
+            print(f"{name}\n{description}\n\n")
         else:
             game_response = requests.post(
                 API.CREATE_GAME_ENDPOINT,
                 json={
-                    "hostEmail": self.config["email"], "hostAPIToken": self.config["token"],
-                    "templateID": int(template), "gameName": name, "personalMessage": description,
-                    "players": list(map(lambda e: {"token": str(e[0]), "team": TEAM_NAME_TO_API_VALUE[e[1]]}, players))
+                    "hostEmail": self.config["email"],
+                    "hostAPIToken": self.config["token"],
+                    "templateID": int(template),
+                    "gameName": name,
+                    "personalMessage": description,
+                    "players": list(
+                        map(
+                            lambda e: {
+                                "token": str(e[0]),
+                                "team": TEAM_NAME_TO_API_VALUE[e[1]],
+                            },
+                            players,
+                        )
+                    ),
                 },
             ).json()
-
-        print(game_response)
-        print()
 
         if "error" in game_response:
             raise API.GameCreationException(game_response["error"])
         else:
             return game_response["gameID"]
-        
+
     def delete_game(self, game_id: int):
         """
         Deletes a warzone game if a player did not join in time.
@@ -117,7 +138,9 @@ class API:
             game_response = requests.post(
                 API.DELETE_GAME_ENDPOINT,
                 json={
-                    "Email": self.config["email"], "APIToken": self.config["token"], "gameID": game_id
+                    "Email": self.config["email"],
+                    "APIToken": self.config["token"],
+                    "gameID": game_id,
                 },
             ).json()
 
@@ -134,7 +157,7 @@ class API:
         """
         validate_response = requests.post(
             f"{API.VALIDATE_INVITE_TOKEN_ENDPOINT}?Token={player_id}&TemplateIDs={','.join(templates)}",
-            data=f"Email={self.config['email']}&APIToken={self.config['token']}",
+            {"Email": self.config["email"], "APIToken": self.config["token"]},
         ).json()
 
         if "error" in validate_response:
@@ -143,7 +166,13 @@ class API:
         has_access_to_all_templates = True
         template_access = []
         for template in templates:
-            has_access_to_all_templates = has_access_to_all_templates and "CanUseTemplate" in validate_response[f"template{template}"]["result"]
-            template_access.append("CanUseTemplate" in validate_response[f"template{template}"]["result"])
-        
+            has_access_to_all_templates = (
+                has_access_to_all_templates
+                and "CanUseTemplate"
+                in validate_response[f"template{template}"]["result"]
+            )
+            template_access.append(
+                "CanUseTemplate" in validate_response[f"template{template}"]["result"]
+            )
+
         return True, has_access_to_all_templates, template_access

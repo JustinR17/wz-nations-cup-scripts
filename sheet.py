@@ -1,6 +1,8 @@
 from __future__ import print_function
 
+from enum import Enum
 import os.path
+import re
 from typing import List
 
 from google.oauth2.service_account import Credentials
@@ -11,6 +13,24 @@ SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
 
 class GoogleSheet:
+
+    class TabStatus(Enum):
+        FINISHED = "finished"
+        IN_PROGRESS = "in-progress"
+        GAME_CREATION = "game creation"
+        NOT_STARTED = "not started"
+
+        @staticmethod
+        def from_string(s: str):
+            match s:
+                case "finished":
+                    return GoogleSheet.TabStatus.FINISHED
+                case "in-progress":
+                    return GoogleSheet.TabStatus.IN_PROGRESS
+                case "game creation":
+                    return GoogleSheet.TabStatus.GAME_CREATION
+                case _:
+                    return GoogleSheet.TabStatus.NOT_STARTED
 
     def __init__(self, config):
         self.dryrun = "dryrun" in config and config["dryrun"]
@@ -75,3 +95,28 @@ class GoogleSheet:
 
     def get_sheet_tabs_data(self):
         return self.sheet.get(spreadsheetId=self.spreadsheet_id).execute().get("sheets")
+
+    def get_game_tabs(self) -> List[str]:
+        """
+        Returns a list of the google sheets tabs containing games.
+        """
+        game_tabs = []
+        sheets = self.get_sheet_tabs_data()
+        for tab in sheets:
+            # Get the tabs that we should parse
+            # Should be any tab that starts with "_"
+            if re.search("^_", tab["properties"]["title"]):
+                game_tabs.append(tab["properties"]["title"])
+        return game_tabs
+
+    def get_tab_status(self, tab: str) -> TabStatus:
+        tab_status = self.get_rows(f"{tab}!A1")
+
+        try:
+            return GoogleSheet.TabStatus.from_string(tab_status[0][0])
+        except IndexError:
+            return GoogleSheet.TabStatus.NOT_STARTED
+
+    def get_tabs_by_status(self, status: "GoogleSheet.TabStatus") -> List[str]:
+        tabs = self.get_game_tabs()
+        return [tab for tab in tabs if self.get_tab_status(tab) == status]

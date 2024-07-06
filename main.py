@@ -17,6 +17,7 @@ from ValidatePlayers import ValidatePlayers
 # from ValidateResults import ValidateResults
 from bot import NationsCupBot
 from sheet import GoogleSheet
+from test import TestCommand
 
 config = {"email": None, "token": None, "spreadsheet_id": None}
 if os.path.isfile("config.json"):
@@ -40,6 +41,7 @@ parser.add_argument(
 )
 subparsers = parser.add_subparsers(help="Command to run", dest="cmd")
 
+test = subparsers.add_parser("test", help="Testing ground for new commands")
 cmatches = subparsers.add_parser("cmatches", help="Create matches between teams")
 cmatches.add_argument("input", help="Input sheet tab name to read from")
 cmatches.add_argument("output", help="Output sheet tab name")
@@ -49,12 +51,6 @@ cmatches.add_argument(
 )
 
 cgames = subparsers.add_parser("cgames", help="Create Warzone games from matchups")
-cgames.add_argument("sheet", help="Input sheet tab name to read from")
-cgames.add_argument("round", type=int, help="Round number")
-cgames.add_argument("template", type=int, help="Template ID")
-cgames.add_argument(
-    "players", type=int, help="Integer value specifying the number of players per team"
-)
 
 pgames = subparsers.add_parser("pgames", help="Parse games and update google sheets")
 validate_results = subparsers.add_parser(
@@ -130,7 +126,7 @@ if args.cmd == "cmatches":
     create_matches.run(args.input, args.output, args.round, args.players)
 elif args.cmd == "cgames":
     create_games = CreateGames(config)
-    create_games.run(args.sheet, args.round, args.template, args.players)
+    create_games.run()
 elif args.cmd == "pgames":
     parse_games = ParseGames(config)
     parse_games.run()
@@ -164,6 +160,9 @@ elif args.cmd == "validate_results":
 elif args.cmd == "funstats":
     fun_stats = GetFunStats(config)
     fun_stats.run()
+elif args.cmd == "test":
+    test = TestCommand(config)
+    test.run()
 else:
     # Should not occur due to argparse library
     raise f"Unknown command supplied: '{args.cmd}'"
