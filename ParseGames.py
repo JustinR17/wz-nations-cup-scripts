@@ -39,7 +39,7 @@ class ParseGames:
                 self.update_new_games()
             )
             print(f"\n\n=================\nGames to delete:\n{games_to_delete}")
-            # self.delete_unstarted_games(games_to_delete)
+            self.delete_unstarted_games(games_to_delete)
             self.write_newly_finished_games(newly_finished_games)
             self.write_player_standings()
             self.write_team_standings(team_results)
@@ -446,7 +446,6 @@ class ParseGames:
         """
         Deletes a list of warzone games that have not begun yet through the WZ API.
         """
-        return
         failed_to_delete_games = []
         for game in games_to_delete:
             log_message(
