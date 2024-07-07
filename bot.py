@@ -181,7 +181,7 @@ class NationsCupBot(commands.Bot):
                             value=f"**{winners[0].team}** won"[0:1024],
                         )
                         embed.set_footer(
-                            text=f"{winners[0].team} {winners[0].score} - {losers[0].team} {losers[0].score}"[
+                            text=f"{winners[0].team} {winners[0].score:g} - {losers[0].team} {losers[0].score:g}"[
                                 0:2048
                             ]
                         )
