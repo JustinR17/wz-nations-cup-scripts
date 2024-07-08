@@ -111,12 +111,11 @@ class NCComands(commands.Cog):
 
     @app_commands.command(name="kill", description="justin only command")
     async def kill(self, interaction: discord.Interaction):
-        if interaction.user.id == 162968893177069568:
+        if interaction.user.id == 162968893177069568 or interaction.user.id == 281740561885691904: # my id + rento
             await interaction.response.send_message("Killing the bot")
-            await self.bot.close()
+            os.system("sudo shutdown -h now")
         else:
             await interaction.response.send_message("Only Justin can use this command")
-            await self.bot.close()
 
     @commands.command(name="sync")
     async def sync(self, ctx):
@@ -160,6 +159,7 @@ class NationsCupBot(commands.Bot):
             discord_channel = self.get_channel(int(self.config["game_log_channel"]))
             successfully_posted, total = 0, 0
             for key, games in buffer_newly_finished_games.items():
+                print(f"{len(games)} games in {key} to post")
                 round, group = key.split("-")
                 for game in games:
                     total += 1
@@ -196,7 +196,6 @@ class NationsCupBot(commands.Bot):
                             # await sent_embed.add_reaction("🍁")
                             # await sent_embed.add_reaction("🦫")
                         successfully_posted += 1
-                        sleep(2)
                     except Exception as e:
                         log_exception(f"Error while handling game {game.link}: {e}")
         log_message(

@@ -506,7 +506,7 @@ class ParseGames:
         self.sheet.update_rows_raw("Player Standings!A2:E300", current_data)
 
     def write_team_standings(self, team_results: Dict[str, TableTeamResult]):
-        current_data = self.sheet.get_rows("Team Standings!A1:E50")
+        current_data = self.sheet.get_rows("Team Standings!A1:C50")
         seen_countries = set()
         for row in current_data:
             if row and row[0] != "Country":
@@ -540,7 +540,7 @@ class ParseGames:
             "write_standings",
         )
         self.sheet.update_rows_raw(
-            f"Team Standings!A1:E{len(current_data)}", current_data
+            f"Team Standings!A1:C{len(current_data)}", current_data
         )
 
     def write_newly_finished_games(
