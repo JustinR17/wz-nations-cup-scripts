@@ -92,34 +92,15 @@ class CreateGames:
                 "CreateGames.run",
             )
 
-            team_standings: Dict[str, TeamResult] = {}
-            player_standings: Dict[str, RoundResult] = {}
-            if os.path.isfile("data/standings.json"):
-                with open("data/standings.json", "r", encoding="utf-8") as input_file:
-                    team_standings, player_standings = jsonpickle.decode(
-                        json.load(input_file)
-                    )
-
             # Create games for each row missing links
             for tab in tabs:
-                self.initialize_game_matchups(tab, team_standings)
-
-            # Save team & player standings (player standings are unchanged)
-            with open(f"data/standings.json", "w", encoding="utf-8") as output_file:
-                log_message(
-                    "JSON version of standings data is stored to 'standings.json'",
-                    "CreateGames.run",
-                )
-                json.dump(
-                    jsonpickle.encode((team_standings, player_standings)), output_file
-                )
+                self.initialize_game_matchups(tab)
         except Exception as e:
             log_exception(e)
 
     def initialize_game_matchups(
         self,
         tab: str,
-        team_standings: Dict[str, TeamResult],
     ):
         tab_phase = re.search("^(_\w+)", tab).group(1)
         tab_status = self.sheet.get_rows(f"{tab}!A1:B1")
@@ -156,18 +137,6 @@ class CreateGames:
                 if row[6] != "done":
                     row.extend("" for _ in range(7 - len(row)))
                     row[6] = "done"
-                    team_standings.setdefault(team_a, TeamResult(team_a)).init_score(
-                        f"{round}-{group}-{team_b}",
-                        team_b,
-                        team_modifiers[f"{round}-{group}-{team_a}"],
-                        team_modifiers[f"{round}-{group}-{team_b}"],
-                    )
-                    team_standings.setdefault(team_b, TeamResult(team_b)).init_score(
-                        f"{round}-{group}-{team_b}",
-                        team_a,
-                        team_modifiers[f"{round}-{group}-{team_b}"],
-                        team_modifiers[f"{round}-{group}-{team_a}"],
-                    )
                 log_message(
                     f"Checking games for {round}-{group}-{team_b}: {team_a} vs. {team_b}",
                     "initialize_game_matchups",

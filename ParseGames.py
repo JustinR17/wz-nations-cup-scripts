@@ -7,7 +7,6 @@ from typing import Dict, List, Tuple
 import jsonpickle
 from NCTypes import (
     Game,
-    RoundResult,
     PlayerResult,
     TableTeamResult,
     TeamResult,
@@ -35,13 +34,13 @@ class ParseGames:
         """
         try:
             log_message("Running ParseGames", "ParseGames.run")
-            newly_finished_games, games_to_delete, team_results = (
+            newly_finished_games, games_to_delete, team_results, player_results = (
                 self.update_new_games()
             )
             print(f"\n\n=================\nGames to delete:\n{games_to_delete}")
             self.delete_unstarted_games(games_to_delete)
             self.write_newly_finished_games(newly_finished_games)
-            self.write_player_standings()
+            self.write_player_standings(player_results)
             self.write_team_standings(team_results)
         except Exception as e:
             log_exception(e)
@@ -63,15 +62,11 @@ class ParseGames:
 
         """
 
-        _: Dict[str, TeamResult] = {}
-        player_standings: Dict[str, RoundResult] = {}
-        with open("data/standings.json", "r", encoding="utf-8") as input_file:
-            _, player_standings = jsonpickle.decode(json.load(input_file))
-
         newly_finished_games: Dict[str, Dict[str, List[WarzoneGame]]] = {}
         newly_finished_games_count = 0
         games_to_delete = []
         team_table_results: Dict[str, TableTeamResult] = {}
+        player_results: Dict[int, PlayerResult] = {}
         for tab in self.sheet.get_tabs_by_status(GoogleSheet.TabStatus.IN_PROGRESS):
             tab_phase = re.search("^(_\w+)", tab).group(1)
             tab_status = self.sheet.get_rows(f"{tab}!A1:B1")
@@ -198,14 +193,14 @@ class ParseGames:
                                     False,
                                 )
                                 self.update_standings_with_game(
-                                    player_standings,
+                                    player_results,
                                     team_a,
                                     game.players[0].name,
                                     game.players[0].id,
                                     True,
                                 )
                                 self.update_standings_with_game(
-                                    player_standings,
+                                    player_results,
                                     team_b,
                                     game.players[1].name,
                                     game.players[1].id,
@@ -227,14 +222,14 @@ class ParseGames:
                                     True,
                                 )
                                 self.update_standings_with_game(
-                                    player_standings,
+                                    player_results,
                                     team_a,
                                     game.players[0].name,
                                     game.players[0].id,
                                     False,
                                 )
                                 self.update_standings_with_game(
-                                    player_standings,
+                                    player_results,
                                     team_b,
                                     game.players[1].name,
                                     game.players[1].id,
@@ -261,14 +256,14 @@ class ParseGames:
                                     not left_team_won,
                                 )
                                 self.update_standings_with_game(
-                                    player_standings,
+                                    player_results,
                                     team_a,
                                     game.players[0].name,
                                     game.players[0].id,
                                     left_team_won,
                                 )
                                 self.update_standings_with_game(
-                                    player_standings,
+                                    player_results,
                                     team_b,
                                     game.players[1].name,
                                     game.players[1].id,
@@ -317,14 +312,14 @@ class ParseGames:
                                     False,
                                 )
                                 self.update_standings_with_game(
-                                    player_standings,
+                                    player_results,
                                     team_a,
                                     game.players[0].name,
                                     game.players[0].id,
                                     True,
                                 )
                                 self.update_standings_with_game(
-                                    player_standings,
+                                    player_results,
                                     team_b,
                                     game.players[1].name,
                                     game.players[1].id,
@@ -351,14 +346,14 @@ class ParseGames:
                                     True,
                                 )
                                 self.update_standings_with_game(
-                                    player_standings,
+                                    player_results,
                                     team_a,
                                     game.players[0].name,
                                     game.players[0].id,
                                     False,
                                 )
                                 self.update_standings_with_game(
-                                    player_standings,
+                                    player_results,
                                     team_b,
                                     game.players[1].name,
                                     game.players[1].id,
@@ -385,14 +380,14 @@ class ParseGames:
                                     not left_team_won,
                                 )
                                 self.update_standings_with_game(
-                                    player_standings,
+                                    player_results,
                                     team_a,
                                     game.players[0].name,
                                     game.players[0].id,
                                     left_team_won,
                                 )
                                 self.update_standings_with_game(
-                                    player_standings,
+                                    player_results,
                                     team_b,
                                     game.players[1].name,
                                     game.players[1].id,
@@ -400,6 +395,51 @@ class ParseGames:
                                 )
 
                             games_to_delete.append(game)
+                    else:
+                        # Game is already done, but add the win to player standings
+                        left_player_id = int(
+                            re.search(r"^.*?p=(\d*).*$", row[2]).group(1)
+                        )
+                        right_player_id = int(
+                            re.search(r"^.*?p=(\d*).*$", row[5]).group(1)
+                        )
+                        is_left_player_winner = row[3] == "defeats"
+
+                        # winner
+                        player_results.setdefault(
+                            (
+                                left_player_id
+                                if is_left_player_winner
+                                else right_player_id
+                            ),
+                            PlayerResult(
+                                row[1] if is_left_player_winner else row[4],
+                                (
+                                    left_player_id
+                                    if is_left_player_winner
+                                    else right_player_id
+                                ),
+                                team_a if is_left_player_winner else team_b,
+                            ),
+                        ).wins += 1
+
+                        # loser
+                        player_results.setdefault(
+                            (
+                                left_player_id
+                                if is_left_player_winner
+                                else right_player_id
+                            ),
+                            PlayerResult(
+                                row[1] if not is_left_player_winner else row[4],
+                                (
+                                    left_player_id
+                                    if not is_left_player_winner
+                                    else right_player_id
+                                ),
+                                team_a if not is_left_player_winner else team_b,
+                            ),
+                        ).losses += 1
 
             #######################
             ##### Parse Table #####
@@ -436,11 +476,7 @@ class ParseGames:
                 "update_new_games",
             )
 
-        # Raw file that is used by scripts
-        with open("data/standings.json", "w", encoding="utf-8") as output_file:
-            json.dump(jsonpickle.encode((_, player_standings)), output_file)
-
-        return newly_finished_games, games_to_delete, team_table_results
+        return newly_finished_games, games_to_delete, team_table_results, player_results
 
     def delete_unstarted_games(self, games_to_delete: List[WarzoneGame]):
         """
@@ -459,7 +495,7 @@ class ParseGames:
 
     def update_standings_with_game(
         self,
-        player_standings: Dict[str, PlayerResult],
+        player_standings: Dict[int, PlayerResult],
         team: str,
         player_name: str,
         player_id: int,
@@ -484,19 +520,14 @@ class ParseGames:
     def convert_wz_game_link_to_id(self, game_link: str):
         return game_link[43:]
 
-    def write_player_standings(self):
-        _: Dict[str, TeamResult] = {}
-        player_standings: Dict[str, PlayerResult] = {}
-        with open("data/standings.json", "r", encoding="utf-8") as input_file:
-            _, player_standings = jsonpickle.decode(json.load(input_file))
-
+    def write_player_standings(self, player_results: Dict[int, PlayerResult]):
         current_data = self.sheet.get_rows("Player Standings!A2:E300")
         for row in current_data:
             if row:
-                row[3] = player_standings[row[1]].wins
-                row[4] = player_standings[row[1]].losses
-                player_standings.pop(row[1])
-        for _, ps in player_standings.items():
+                row[3] = player_results[int(row[1])].wins
+                row[4] = player_results[int(row[1])].losses
+                player_results.pop(int(row[1]))
+        for _, ps in player_results.items():
             current_data.append([ps.name, ps.id, ps.team, ps.wins, ps.losses])
 
         log_message(
