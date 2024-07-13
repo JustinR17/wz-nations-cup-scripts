@@ -254,6 +254,9 @@ class PlayerResult:
         self.losses: int = 0
         self.team: str = team
 
+    def __repr__(self) -> str:
+        return f"[{self.name} - {self.id} - {self.team}]"
+
 
 class TableTeamResult:
 

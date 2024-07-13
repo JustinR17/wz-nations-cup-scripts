@@ -427,7 +427,7 @@ class ParseGames:
                         player_results.setdefault(
                             (
                                 left_player_id
-                                if is_left_player_winner
+                                if not is_left_player_winner
                                 else right_player_id
                             ),
                             PlayerResult(
