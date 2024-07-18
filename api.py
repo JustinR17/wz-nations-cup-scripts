@@ -98,7 +98,7 @@ class API:
         if self.dryrun:
             print("Running dryrun on game creation")
             game_response = {"gameID": 25876586}
-            print(f"{name}\n{description}\n\n")
+            print(f"{name}\n{description}\n{data['players']}\n\n")
         else:
             game_response = requests.post(
                 API.CREATE_GAME_ENDPOINT,
