@@ -34,8 +34,16 @@ class ParseGames:
         """
         try:
             log_message("Running ParseGames", "ParseGames.run")
+            tabs_to_update = self.sheet.get_tabs_by_status(
+                GoogleSheet.TabStatus.IN_PROGRESS
+            )
+            log_message(
+                f"The following tabs are in-progress: '{tabs_to_update}'",
+                "ParseGames.run",
+            )
+            team_table_results = self.parse_team_table_results(tabs_to_update)
             newly_finished_games, games_to_delete, team_results, player_results = (
-                self.update_new_games()
+                self.update_new_games(team_table_results, tabs_to_update)
             )
             print(f"\n\n=================\nGames to delete:\n{games_to_delete}")
             self.delete_unstarted_games(games_to_delete)
@@ -45,8 +53,60 @@ class ParseGames:
         except Exception as e:
             log_exception(e)
 
-    def update_new_games(
+    def parse_team_table_results(self, tabs: List[str]) -> Dict[str, TableTeamResult]:
+        team_table_results: Dict[str, TableTeamResult] = {}
+        for tab in tabs:
+            tab_phase = re.search("^(_\w+)", tab).group(1)
+            table_range = TAB_TO_TABLE_RANGE_MAPPING[tab_phase]
+            round = tab[1:]
+
+            table_rows_values = (
+                self.sheet.get_rows(f"{tab}!{table_range}") if table_range else None
+            )
+
+            log_message(f"Checking games in game log tab '{tab}'", "update_new_games")
+
+            #######################
+            ##### Parse Table #####
+            #######################
+            if table_rows_values:
+                group = ""
+                for row in table_rows_values:
+                    row.extend("" for _ in range(7 - len(row)))
+                    if not row[0] and not row[1]:
+                        group = ""
+                    elif not group:
+                        # group section
+                        group = row[0]
+                    else:
+                        # Parse team results
+                        team_table_results[f"{round}-{group}-{row[1]}"] = (
+                            TableTeamResult(
+                                round, group, row[1], row[2], row[3], row[4]
+                            )
+                        )
+        return team_table_results
+
+    def sum_team_standings_in_phase(
         self,
+        team_table_results: Dict[str, TableTeamResult],
+        phase: str,
+        group: str,
+        team: str,
+    ) -> Tuple[int, int, int]:
+        matched_elements = [
+            e[1]
+            for e in team_table_results.items()
+            if phase in e[0] and f"{group}-{team}" in e[0]
+        ]
+        return (
+            sum([e.wins for e in matched_elements]),
+            sum([e.wins_adjusted for e in matched_elements]),
+            sum([e.losses for e in matched_elements]),
+        )
+
+    def update_new_games(
+        self, team_table_results: Dict[str, TableTeamResult], tabs: List[str]
     ) -> Tuple[
         Dict[str, List[WarzoneGame]], List[WarzoneGame], Dict[str, TableTeamResult]
     ]:
@@ -65,9 +125,8 @@ class ParseGames:
         newly_finished_games: Dict[str, Dict[str, List[WarzoneGame]]] = {}
         newly_finished_games_count = 0
         games_to_delete = []
-        team_table_results: Dict[str, TableTeamResult] = {}
         player_results: Dict[int, PlayerResult] = {}
-        for tab in self.sheet.get_tabs_by_status(GoogleSheet.TabStatus.IN_PROGRESS):
+        for tab in tabs:
             tab_phase = re.search("^(_\w+)", tab).group(1)
             tab_status = self.sheet.get_rows(f"{tab}!A1:B1")
             game_range = TAB_TO_GAME_RANGE_MAPPING[tab_phase]
@@ -85,27 +144,6 @@ class ParseGames:
             )
 
             log_message(f"Checking games in game log tab '{tab}'", "update_new_games")
-
-            #######################
-            ##### Parse Table #####
-            #######################
-            if table_rows_values:
-                group = ""
-                for i, row in enumerate(table_rows_values):
-                    row.extend("" for _ in range(7 - len(row)))
-                    if not row[0] and not row[1]:
-                        group = ""
-                    elif not group:
-                        # group section
-                        group = row[0]
-                    else:
-                        # Parse team results
-                        team_table_results[f"{round}-{group}-{row[1]}"] = (
-                            TableTeamResult(
-                                round, group, row[1], row[2], row[3], row[4]
-                            )
-                        )
-
             #######################
             ##### Parse Games #####
             #######################
@@ -143,12 +181,12 @@ class ParseGames:
                             game.players.reverse()
                         game.players[0].team, game.players[1].team = team_a, team_b
                         game.players[0].score, game.players[1].score = (
-                            team_table_results[
-                                f"{round}-{group}-{team_a}"
-                            ].wins_adjusted,
-                            team_table_results[
-                                f"{round}-{group}-{team_b}"
-                            ].wins_adjusted,
+                            self.sum_team_standings_in_phase(
+                                team_table_results, tab_phase[1:], group, team_a
+                            )[1],
+                            self.sum_team_standings_in_phase(
+                                team_table_results, tab_phase[1:], group, team_b
+                            )[1],
                         )
 
                         # Game is not finished, but we will update the progress (ie round or stage)
