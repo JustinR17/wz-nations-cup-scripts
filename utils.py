@@ -8,7 +8,7 @@ def log_message(msg: str, type="FIXME"):
     with open("./logs/{}.txt".format(datetime.now().isoformat()[:10]), 'a') as log_writer:
         log_writer.write(f"{output_msg}\n")
 
-def log_exception(msg: Exception):
+def log_exception(msg: Exception | str):
     time_str = "[" + datetime.now().isoformat() + "] {}: ".format(type)
     print("{}{}\n{}\n".format(time_str, repr(msg).encode(), traceback.format_exc()))
     with open("./logs/{}.txt".format(datetime.now().isoformat()[:10]), 'a') as log_writer:

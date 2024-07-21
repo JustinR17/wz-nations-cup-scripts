@@ -88,7 +88,7 @@ class Game:
         return players_by_team
 
     def get_players_by_team(self):
-        players_by_team: Dict[str, List[str]] = {}
+        players_by_team: Dict[str, List[Player]] = {}
         for player in self.players:
             players_by_team.get(player.team.name, []).append(player)
 
@@ -116,7 +116,7 @@ class WarzonePlayer:
         self.name: str = name
         self.id: int = id
         self.team: str = team
-        self.score: int = 0
+        self.score: float = 0.0
 
         if outcome == "":
             self.outcome = WarzonePlayer.Outcome.UNDEFINED

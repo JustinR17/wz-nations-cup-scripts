@@ -45,7 +45,7 @@ class GoogleSheet:
             service: Resource = build("sheets", "v4", credentials=creds)
 
             # Call the Sheets API
-            self.sheet: Resource = service.spreadsheets()
+            self.sheet: Resource = service.spreadsheets() # type: ignore
             self.spreadsheet_id = config["spreadsheet_id"]
             # result = self.sheet.values().get(spreadsheetId=config["spreadsheet_id"],
             #                         range="Summary!A1:O128").execute()
@@ -57,7 +57,7 @@ class GoogleSheet:
     def get_rows(self, range) -> List[List[str]]:
         try:
             return (
-                self.sheet.values()
+                self.sheet.values() # type: ignore
                 .get(spreadsheetId=self.spreadsheet_id, range=range)
                 .execute()["values"]
             )
@@ -67,7 +67,7 @@ class GoogleSheet:
     def get_rows_formulas(self, range) -> List[List[str]]:
         try:
             return (
-                self.sheet.values()
+                self.sheet.values() # type: ignore
                 .get(
                     spreadsheetId=self.spreadsheet_id,
                     range=range,
@@ -83,7 +83,7 @@ class GoogleSheet:
             print("Running dryun on update_rows_raw and not updating sheet")
         else:
             return (
-                self.sheet.values()
+                self.sheet.values() # type: ignore
                 .update(
                     spreadsheetId=self.spreadsheet_id,
                     range=range,
@@ -94,7 +94,7 @@ class GoogleSheet:
             )
 
     def get_sheet_tabs_data(self):
-        return self.sheet.get(spreadsheetId=self.spreadsheet_id).execute().get("sheets")
+        return self.sheet.get(spreadsheetId=self.spreadsheet_id).execute().get("sheets") # type: ignore
 
     def get_game_tabs(self) -> List[str]:
         """

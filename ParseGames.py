@@ -9,7 +9,6 @@ from NCTypes import (
     Game,
     PlayerResult,
     TableTeamResult,
-    TeamResult,
     WarzoneGame,
     WarzonePlayer,
 )
@@ -64,8 +63,6 @@ class ParseGames:
                 self.sheet.get_rows(f"{tab}!{table_range}") if table_range else None
             )
 
-            log_message(f"Checking games in game log tab '{tab}'", "update_new_games")
-
             #######################
             ##### Parse Table #####
             #######################
@@ -93,7 +90,7 @@ class ParseGames:
         phase: str,
         group: str,
         team: str,
-    ) -> Tuple[int, int, int]:
+    ) -> Tuple[int, float, int]:
         matched_elements = [
             e[1]
             for e in team_table_results.items()
@@ -107,9 +104,7 @@ class ParseGames:
 
     def update_new_games(
         self, team_table_results: Dict[str, TableTeamResult], tabs: List[str]
-    ) -> Tuple[
-        Dict[str, List[WarzoneGame]], List[WarzoneGame], Dict[str, TableTeamResult]
-    ]:
+    ):
         """
         Checks all game tabs for games that have newly finished. Writes the new results in the tab.
 
@@ -122,9 +117,9 @@ class ParseGames:
 
         """
 
-        newly_finished_games: Dict[str, Dict[str, List[WarzoneGame]]] = {}
+        newly_finished_games: Dict[str, List[WarzoneGame]] = {}
         newly_finished_games_count = 0
-        games_to_delete = []
+        games_to_delete: List[WarzoneGame] = []
         player_results: Dict[int, PlayerResult] = {}
         for tab in tabs:
             tab_phase = re.search("^(_\w+)", tab).group(1)
