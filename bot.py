@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 from time import sleep
 from typing import Any, Dict, List
@@ -10,7 +11,7 @@ from apscheduler.triggers.cron import CronTrigger
 from discord import app_commands
 import os
 
-from NCTypes import PlayerResult, TeamResult, WarzoneGame
+from NCTypes import PlayerResult, TableTeamResult, TeamResult, WarzoneGame
 from utils import log_exception, log_message
 
 intents = discord.Intents.default()
@@ -32,8 +33,10 @@ ROUND_TO_TEMPLATE = {
 
 # Reverse ROY G BIV; Finals is all gold
 ROUND_TO_COLOUR = {
+    "Qualifiers": discord.Colour.from_rgb(148, 9, 211),
     "Qualifiers R1": discord.Colour.from_rgb(148, 9, 211),
     "Qualifiers R2": discord.Colour.from_rgb(75, 0, 130),
+    "Main": discord.Colour.from_rgb(0, 0, 255),
     "Main R1": discord.Colour.from_rgb(0, 0, 255),
     "Main R2": discord.Colour.from_rgb(0, 255, 0),
     "Main R3": discord.Colour.from_rgb(255, 255, 0),
@@ -42,66 +45,72 @@ ROUND_TO_COLOUR = {
     "Finals": discord.Colour.gold(),
 }
 
+ROUND_TO_EMBED = {
+    "Qualifiers": 0,
+    "Main": 0,
+    "Finals": 0,
+}
+
 
 class NCComands(commands.Cog):
 
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
-    @app_commands.command(name="pstats", description="returns a player's statistics")
-    @app_commands.describe(player_id="the player ID to search for")
-    async def pstats(self, interaction: discord.Interaction, player_id: str):
-        team_standings: Dict[str, TeamResult] = {}
-        player_standings: Dict[str, PlayerResult] = {}
-        if not os.path.isfile("data/standings.json"):
-            await interaction.response.send_message("No standings file exists yet")
-            return
-        with open("data/standings.json", "r", encoding="utf-8") as input_file:
-            team_standings, player_standings = jsonpickle.decode(json.load(input_file))
-
-        if player_id in player_standings:
-            await interaction.response.send_message(
-                f"**{player_standings[player_id].name}** ({player_standings[player_id].team}): {player_standings[player_id].wins}-{player_standings[player_id].losses}"
-            )
-        else:
-            await interaction.response.send_message(
-                f"Unable to find player with ID '{player_id}'"
-            )
-
     @app_commands.command(
-        name="pnstats", description="returns a player's statistics by name"
+        name="create_embeds", description="creates new embed posts for phase scores"
     )
-    @app_commands.describe(player_name="the player name to search for")
-    async def pnstats(self, interaction: discord.Interaction, player_name: str):
-        team_standings: Dict[str, TeamResult] = {}
-        player_standings: Dict[str, PlayerResult] = {}
-        if not os.path.isfile("data/standings.json"):
-            await interaction.response.send_message("No standings file exists yet")
+    async def create_embeds(self, interaction: discord.Interaction):
+        if interaction.user.id != 162968893177069568:
+            await interaction.response.send_message("Only Justin can use this command")
             return
-        with open("data/standings.json", "r", encoding="utf-8") as input_file:
-            team_standings, player_standings = jsonpickle.decode(json.load(input_file))
 
-        found_matches: List[PlayerResult] = []
-        for _, player in player_standings.items():
-            if player_name.lower() in player.name.lower():
-                found_matches.append(player)
-        if len(found_matches) > 1:
-            player_str = "\n\t".join(
-                map(
-                    lambda e: f"**{e.name}** ({e.team}): {e.wins}-{e.losses}",
-                    found_matches,
-                )
+        if not os.path.isfile("data/team_standings.json"):
+            await interaction.response.send_message("No team standings file exists yet")
+            return
+
+        with open("data/team_standings.json", "r", encoding="utf-8") as input_file:
+            team_standings: Dict[str, TableTeamResult] = jsonpickle.decode(
+                json.load(input_file)
             )
-            output_str = f"{len(found_matches)} matches found:\n\t{player_str}"
-            await interaction.response.send_message(output_str)
-        elif len(found_matches) == 1:
-            await interaction.response.send_message(
-                f"**{found_matches[0].name}** ({found_matches[0].team}): {found_matches[0].wins}-{found_matches[0].losses}"
-            )
-        else:
-            await interaction.response.send_message(
-                f"Unable to find player with name '{player_name}'"
-            )
+
+        discord_channel = self.get_channel(int(self.config["score_channel"]))
+        for phase, id in ROUND_TO_EMBED.items():
+            if id == 0:
+                # Need to create embed if standings exist:
+                phase_standings = [
+                    ps for ps in team_standings.items() if phase in ps[0]
+                ]
+
+                if len(phase_standings):
+                    group_standings: Dict[str, List[TableTeamResult]] = {}
+                    for key, team_result in phase_standings:
+                        group_standings.setdefault(key.split("-")[1], []).append(
+                            team_result
+                        )
+
+                    # new embed
+                    embed = discord.Embed(
+                        title=phase,
+                        colour=ROUND_TO_COLOUR[phase],
+                    )
+                    for group, team_results in group_standings.items():
+                        team_results.sort(
+                            key=lambda e: (e.wins_adjusted, -e.losses), reverse=True
+                        )
+
+                        embed.add_field(
+                            name=group,
+                            value="\n".join(
+                                [
+                                    f"{e.team:5} | {e.wins_adjusted:4g} | {e.wins:2d} | {e.losses:2d}"
+                                    for e in team_results
+                                ]
+                            )[0:1024],
+                            inline=True,
+                        )
+                        embed.timestamp = datetime.now()
+                    sent_embed = await discord_channel.send(embed=embed)
 
     @app_commands.command(name="link", description="returns the google sheets link")
     async def link(self, interaction: discord.Interaction):
@@ -111,7 +120,10 @@ class NCComands(commands.Cog):
 
     @app_commands.command(name="kill", description="justin only command")
     async def kill(self, interaction: discord.Interaction):
-        if interaction.user.id == 162968893177069568 or interaction.user.id == 281740561885691904: # my id + rento
+        if (
+            interaction.user.id == 162968893177069568
+            or interaction.user.id == 281740561885691904
+        ):  # my id + rento
             await interaction.response.send_message("Killing the bot")
             os.system("sudo shutdown -h now")
         else:
