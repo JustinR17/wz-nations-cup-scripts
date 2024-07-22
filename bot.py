@@ -258,7 +258,7 @@ class NationsCupBot(commands.Bot):
 
                         team_results_str = "\n".join(
                                 [
-                                    f"{e[0]:5} | {e[1]:4g}| {e[4]:2d}"
+                                    f"{e[0]:5} | {e[1]:4g} | {e[4]:2d}"
                                     for e in team_scores_list
                                 ]
                             )
