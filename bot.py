@@ -54,7 +54,7 @@ ROUND_TO_EMBED = {
 
 class NCComands(commands.Cog):
 
-    def __init__(self, bot: commands.Bot) -> None:
+    def __init__(self, bot: 'NationsCupBot') -> None:
         self.bot = bot
 
     @app_commands.command(
@@ -74,7 +74,7 @@ class NCComands(commands.Cog):
                 json.load(input_file)
             )
 
-        discord_channel = self.get_channel(int(self.config["score_channel"]))
+        discord_channel = self.bot.get_channel(int(self.bot.config["score_channel"]))
         for phase, id in ROUND_TO_EMBED.items():
             if id == 0:
                 # Need to create embed if standings exist:

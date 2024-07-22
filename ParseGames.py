@@ -49,7 +49,6 @@ class ParseGames:
             self.write_newly_finished_games(newly_finished_games)
             self.write_player_standings(player_results)
             self.write_team_standings(team_results)
-            self.write_team_standings(team_results)
         except Exception as e:
             log_exception(e)
 
@@ -607,6 +606,12 @@ class ParseGames:
         self.sheet.update_rows_raw(
             f"Team Standings!A1:C{len(current_data)}", current_data
         )
+        with open("data/team_standings.json", "w", encoding="utf-8") as output_file:
+            log_message(
+                "JSON version of newly finished games saved to 'team_standings.json'",
+                "write_team_standings",
+            )
+            json.dump(jsonpickle.encode(team_results), output_file)
 
     def write_newly_finished_games(
         self, newly_finished_games: Dict[str, List[WarzoneGame]]
@@ -641,11 +646,3 @@ class ParseGames:
                 "write_newly_finished_games",
             )
             json.dump(jsonpickle.encode(conmbined_newly_finished), output_file)
-
-    def write_team_standings(self, team_standings: Dict[str, TableTeamResult]):
-        with open("data/team_standings.json", "w", encoding="utf-8") as output_file:
-            log_message(
-                "JSON version of newly finished games saved to 'team_standings.json'",
-                "write_team_standings",
-            )
-            json.dump(jsonpickle.encode(team_standings), output_file)
