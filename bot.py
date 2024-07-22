@@ -1,7 +1,7 @@
 from datetime import datetime
 import os
 from time import sleep
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 import discord
 import json
 from discord.ext import commands
@@ -46,7 +46,7 @@ ROUND_TO_COLOUR = {
 }
 
 ROUND_TO_EMBED = {
-    "Qualifiers": 0,
+    "Qualifiers": 1264965867419074611,
     "Main": 0,
     "Finals": 0,
 }
@@ -92,25 +92,37 @@ class NCComands(commands.Cog):
                     # new embed
                     embed = discord.Embed(
                         title=phase,
+                        description="Scores are shown as:\n```team | W adjusted | G```",
                         colour=ROUND_TO_COLOUR[phase],
                     )
                     for group, team_results in group_standings.items():
-                        team_results.sort(
-                            key=lambda e: (e.wins_adjusted, -e.losses), reverse=True
+                        team_scores: Dict[str, Tuple[str, float, int, int, int]] = {}
+                        for result in team_results:
+                            if result.team not in team_scores:
+                                team_scores[result.team] = (result.team, result.wins_adjusted, result.wins, result.losses, result.wins+result.losses)
+                            else:
+                                scores = team_scores[result.team]
+                                team_scores[result.team] = (scores[0], scores[1]+result.wins_adjusted, scores[2]+result.wins, scores[3]+result.losses, scores[4]+result.wins+result.losses)
+                        team_scores_list = list(team_scores.values())
+                        team_scores_list.sort(
+                            key=lambda e: (e[1], -e[3]), reverse=True
                         )
 
+                        team_results_str = "\n".join(
+                                [
+                                    f"{e[0]:5} | {e[1]:4g} | {e[4]:2d}"
+                                    for e in team_scores_list
+                                ]
+                            )
                         embed.add_field(
                             name=group,
-                            value="\n".join(
-                                [
-                                    f"{e.team:5} | {e.wins_adjusted:4g} | {e.wins:2d} | {e.losses:2d}"
-                                    for e in team_results
-                                ]
-                            )[0:1024],
+                            value=f"```{team_results_str}```"[0:1024],
                             inline=True,
                         )
-                        embed.timestamp = datetime.now()
+                    embed.add_field(name='\u200b', value='\u200b')
+                    embed.timestamp = datetime.now()
                     sent_embed = await discord_channel.send(embed=embed)
+        await interaction.channel.send('')
 
     @app_commands.command(name="link", description="returns the google sheets link")
     async def link(self, interaction: discord.Interaction):
@@ -210,6 +222,56 @@ class NationsCupBot(commands.Bot):
                         successfully_posted += 1
                     except Exception as e:
                         log_exception(f"Error while handling game {game.link}: {e}")
+        # Update embeds now:
+        with open("data/team_standings.json", "r", encoding="utf-8") as input_file:
+            team_standings: Dict[str, TableTeamResult] = jsonpickle.decode(
+                json.load(input_file)
+            )
+
+            discord_channel = self.get_channel(int(self.config["score_channel"]))
+            for phase, embed in ROUND_TO_EMBED.items():
+                if embed != 0:
+                    group_standings: Dict[str, List[TableTeamResult]] = {}
+                    phase_standings = [
+                        ps for ps in team_standings.items() if phase in ps[0]
+                    ]
+                    for key, team_result in phase_standings:
+                        group_standings.setdefault(key.split("-")[1], []).append(
+                            team_result
+                        )
+
+                    message = await discord_channel.fetch_message(embed)
+                    embed = message.embeds[0]
+                    embed.clear_fields()
+                    for group, team_results in group_standings.items():
+                        team_scores: Dict[str, Tuple[str, float, int, int, int]] = {}
+                        for result in team_results:
+                            if result.team not in team_scores:
+                                team_scores[result.team] = (result.team, result.wins_adjusted, result.wins, result.losses, result.wins+result.losses)
+                            else:
+                                scores = team_scores[result.team]
+                                team_scores[result.team] = (scores[0], scores[1]+result.wins_adjusted, scores[2]+result.wins, scores[3]+result.losses, scores[4]+result.wins+result.losses)
+                        team_scores_list = list(team_scores.values())
+                        team_scores_list.sort(
+                            key=lambda e: (e[1], -e[3]), reverse=True
+                        )
+
+                        team_results_str = "\n".join(
+                                [
+                                    f"{e[0]:5} | {e[1]:4g}| {e[4]:2d}"
+                                    for e in team_scores_list
+                                ]
+                            )
+                        embed.add_field(
+                            name=group,
+                            value=f"```{team_results_str}```"[0:1024],
+                            inline=True,
+                        )
+                    embed.add_field(name='\u200b', value='\u200b')
+                    embed.timestamp = datetime.now()
+                    await message.edit(embed=embed)
+                    log_message(f"Successfully updated the embed for {phase}")
+        
         log_message(
             f"Successfully outputted {successfully_posted} of {total} game updates",
             "bot",
