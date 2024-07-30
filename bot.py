@@ -202,13 +202,13 @@ class NationsCupBot(commands.Bot):
                         )
                         embed.add_field(
                             name=f"{round} {ROUND_TO_TEMPLATE[round]} - {group}"[0:256],
-                            value=f"**{winners[0].team}** won"[0:1024],
+                            value=f"**{winners[0].team}** ({winners[0].score:g} pts) defeats **{losers[0].team}** ({losers[0].score:g} pts)"[0:1024],
                         )
-                        embed.set_footer(
-                            text=f"{winners[0].team} {winners[0].score:g} - {losers[0].team} {losers[0].score:g}"[
-                                0:2048
-                            ]
-                        )
+                        # embed.set_footer(
+                        #     text=f"{winners[0].team} {winners[0].score:g} - {losers[0].team} {losers[0].score:g}"[
+                        #         0:2048
+                        #     ]
+                        # )
                         sent_embed = await discord_channel.send(embed=embed)
 
                         if "CAN" in winners[0].team:
@@ -242,23 +242,30 @@ class NationsCupBot(commands.Bot):
 
                     message = await discord_channel.fetch_message(embed)
                     embed = message.embeds[0]
+                    # embed.description = "Scores are shown as:\n```Team | Pts | MP```"
                     embed.clear_fields()
                     for group, team_results in group_standings.items():
-                        team_scores: Dict[str, Tuple[str, float, int, int, int]] = {}
+                        if phase == "Qualifiers":
+                            total_games = (len(set([result.team for result in team_results]))-1)*6*2
+                        else:
+                            total_games = 60
+                        team_scores: Dict[str, Tuple[str, float, float]] = {}
                         for result in team_results:
                             if result.team not in team_scores:
-                                team_scores[result.team] = (result.team, result.wins_adjusted, result.wins, result.losses, result.wins+result.losses)
+                                # team_scores[result.team] = (result.team, result.wins_adjusted, result.wins, result.losses, result.wins+result.losses)
+                                team_scores[result.team] = (result.team, result.wins_adjusted, result.wins_adjusted-result.wins-result.losses+total_games)
                             else:
                                 scores = team_scores[result.team]
-                                team_scores[result.team] = (scores[0], scores[1]+result.wins_adjusted, scores[2]+result.wins, scores[3]+result.losses, scores[4]+result.wins+result.losses)
+                                # team_scores[result.team] = (scores[0], scores[1]+result.wins_adjusted, scores[2]+result.wins, scores[3]+result.losses, scores[4]+result.wins+result.losses)
+                                team_scores[result.team] = (scores[0], scores[1]+result.wins_adjusted, scores[2]+result.wins_adjusted-result.wins-result.losses)
                         team_scores_list = list(team_scores.values())
                         team_scores_list.sort(
-                            key=lambda e: (e[1], -e[3]), reverse=True
+                            key=lambda e: (e[1], e[2]), reverse=True
                         )
 
                         team_results_str = "\n".join(
                                 [
-                                    f"{e[0]:5} | {e[1]:4g} | {e[4]:2d}"
+                                    f"{e[0]:5}|{e[1]:4g}|{e[2]:4g}"
                                     for e in team_scores_list
                                 ]
                             )
