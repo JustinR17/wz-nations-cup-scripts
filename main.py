@@ -7,7 +7,7 @@ import sys
 import jsonpickle
 from CreateGames import CreateGames
 
-# from CreateMatches import CreateMatches
+from CreateMatches import CreateMatches
 # from GetFunStats import GetFunStats
 from ParseGames import ParseGames
 
@@ -17,7 +17,7 @@ from ValidatePlayers import ValidatePlayers
 # from ValidateResults import ValidateResults
 from bot import NationsCupBot
 from sheet import GoogleSheet
-from test import TestCommand
+# from test import TestCommand
 
 config = {"email": None, "token": None, "spreadsheet_id": None}
 if os.path.isfile("config.json"):
@@ -45,10 +45,6 @@ test = subparsers.add_parser("test", help="Testing ground for new commands")
 cmatches = subparsers.add_parser("cmatches", help="Create matches between teams")
 cmatches.add_argument("input", help="Input sheet tab name to read from")
 cmatches.add_argument("output", help="Output sheet tab name")
-cmatches.add_argument("round", help="Integer value specifying the round number")
-cmatches.add_argument(
-    "players", type=int, help="Integer value specifying the number of players per team"
-)
 
 cgames = subparsers.add_parser("cgames", help="Create Warzone games from matchups")
 
@@ -121,7 +117,10 @@ config["run"] = args.run
 # print(ns.get_rows("Player_Stats!A1:E200"))
 # sys.exit(0)
 
-if args.cmd == "cgames":
+if args.cmd == "cmatches":
+    create_games = CreateMatches(config)
+    create_games.run(args.input, args.output)
+elif args.cmd == "cgames":
     create_games = CreateGames(config)
     create_games.run()
 elif args.cmd == "pgames":
@@ -155,9 +154,9 @@ elif args.cmd == "validate_results":
 elif args.cmd == "funstats":
     fun_stats = GetFunStats(config)
     fun_stats.run()
-elif args.cmd == "test":
-    test = TestCommand(config)
-    test.run()
+# elif args.cmd == "test":
+#     test = TestCommand(config)
+#     test.run()
 else:
     # Should not occur due to argparse library
     raise f"Unknown command supplied: '{args.cmd}'"
