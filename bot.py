@@ -47,7 +47,7 @@ ROUND_TO_COLOUR = {
 
 ROUND_TO_EMBED = {
     "Qualifiers": 1264965867419074611,
-    "Main": 0,
+    "Main": 1271678678048444578,
     "Finals": 0,
 }
 
@@ -92,25 +92,37 @@ class NCComands(commands.Cog):
                     # new embed
                     embed = discord.Embed(
                         title=phase,
-                        description="Scores are shown as:\n```team | W adjusted | G```",
+                        description="Scores are shown as:\n```team | Pts | MP```",
                         colour=ROUND_TO_COLOUR[phase],
                     )
-                    for group, team_results in group_standings.items():
-                        team_scores: Dict[str, Tuple[str, float, int, int, int]] = {}
+                    for i, (group, team_results) in enumerate(group_standings.items()):
+                        if phase == "Main" and i % 2 == 0 and i != 0:
+                            embed.add_field(
+                                name='\u200b',
+                                value='\u200b',
+                                inline=True,
+                            )
+                        if phase == "Qualifiers":
+                            total_games = (len(set([result.team for result in team_results]))-1)*6*2
+                        else:
+                            total_games = 60
+                        team_scores: Dict[str, Tuple[str, float, float]] = {}
                         for result in team_results:
                             if result.team not in team_scores:
-                                team_scores[result.team] = (result.team, result.wins_adjusted, result.wins, result.losses, result.wins+result.losses)
+                                # team_scores[result.team] = (result.team, result.wins_adjusted, result.wins, result.losses, result.wins+result.losses)
+                                team_scores[result.team] = (result.team, result.wins_adjusted, result.wins_adjusted-result.wins-result.losses+total_games)
                             else:
                                 scores = team_scores[result.team]
-                                team_scores[result.team] = (scores[0], scores[1]+result.wins_adjusted, scores[2]+result.wins, scores[3]+result.losses, scores[4]+result.wins+result.losses)
+                                # team_scores[result.team] = (scores[0], scores[1]+result.wins_adjusted, scores[2]+result.wins, scores[3]+result.losses, scores[4]+result.wins+result.losses)
+                                team_scores[result.team] = (scores[0], scores[1]+result.wins_adjusted, scores[2]+result.wins_adjusted-result.wins-result.losses)
                         team_scores_list = list(team_scores.values())
                         team_scores_list.sort(
-                            key=lambda e: (e[1], -e[3]), reverse=True
+                            key=lambda e: (e[1], e[2]), reverse=True
                         )
 
                         team_results_str = "\n".join(
                                 [
-                                    f"{e[0]:5} | {e[1]:4g} | {e[4]:2d}"
+                                    f"{e[0]:5}|{e[1]:4g}|{e[2]:4g}"
                                     for e in team_scores_list
                                 ]
                             )
@@ -244,7 +256,13 @@ class NationsCupBot(commands.Bot):
                     embed = message.embeds[0]
                     # embed.description = "Scores are shown as:\n```Team | Pts | MP```"
                     embed.clear_fields()
-                    for group, team_results in group_standings.items():
+                    for i, (group, team_results) in enumerate(group_standings.items()):
+                        if phase == "Main" and i % 2 == 0 and i != 0:
+                            embed.add_field(
+                                name='\u200b',
+                                value='\u200b',
+                                inline=True,
+                            )
                         if phase == "Qualifiers":
                             total_games = (len(set([result.team for result in team_results]))-1)*6*2
                         else:
@@ -263,12 +281,20 @@ class NationsCupBot(commands.Bot):
                             key=lambda e: (e[1], e[2]), reverse=True
                         )
 
-                        team_results_str = "\n".join(
-                                [
-                                    f"{e[0]:5}|{e[1]:4g}|{e[2]:4g}"
-                                    for e in team_scores_list
-                                ]
-                            )
+                        if phase == "Qualifiers":
+                            team_results_str = "\n".join(
+                                    [
+                                        f"{e[0]:5}|{e[1]:4g}|{e[2]:4g}"
+                                        for e in team_scores_list
+                                    ]
+                                )
+                        else:
+                            team_results_str = "\n".join(
+                                    [
+                                        f"{e[0]:5} | {e[1]:2g} | {e[2]:2g}"
+                                        for e in team_scores_list
+                                    ]
+                                )
                         embed.add_field(
                             name=group,
                             value=f"```{team_results_str}```"[0:1024],
