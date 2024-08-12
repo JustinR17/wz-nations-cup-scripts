@@ -86,7 +86,7 @@ class CreateGames:
         """
         try:
             log_message("Running CreateGames", "CreateGames.run")
-            tabs = self.sheet.get_tabs_by_status(GoogleSheet.TabStatus.GAME_CREATION)
+            tabs = self.sheet.get_tabs_by_status([GoogleSheet.TabStatus.GAME_CREATION])
             log_message(
                 f"Found the following templates to create games on: {tabs}",
                 "CreateGames.run",

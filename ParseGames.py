@@ -33,14 +33,17 @@ class ParseGames:
         """
         try:
             log_message("Running ParseGames", "ParseGames.run")
+            all_tabs_to_score = self.sheet.get_tabs_by_status(
+                [GoogleSheet.TabStatus.IN_PROGRESS, GoogleSheet.TabStatus.FINISHED]
+            )
             tabs_to_update = self.sheet.get_tabs_by_status(
-                GoogleSheet.TabStatus.IN_PROGRESS
+                [GoogleSheet.TabStatus.IN_PROGRESS]
             )
             log_message(
                 f"The following tabs are in-progress: '{tabs_to_update}'",
                 "ParseGames.run",
             )
-            team_table_results = self.parse_team_table_results(tabs_to_update)
+            team_table_results = self.parse_team_table_results(all_tabs_to_score)
             newly_finished_games, games_to_delete, team_results, player_results = (
                 self.update_new_games(team_table_results, tabs_to_update)
             )

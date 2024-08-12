@@ -117,6 +117,6 @@ class GoogleSheet:
         except IndexError:
             return GoogleSheet.TabStatus.NOT_STARTED
 
-    def get_tabs_by_status(self, status: "GoogleSheet.TabStatus") -> List[str]:
+    def get_tabs_by_status(self, status: List["GoogleSheet.TabStatus"]) -> List[str]:
         tabs = self.get_game_tabs()
-        return [tab for tab in tabs if self.get_tab_status(tab) == status]
+        return [tab for tab in tabs if self.get_tab_status(tab) in status]
