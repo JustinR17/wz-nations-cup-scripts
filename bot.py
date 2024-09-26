@@ -329,6 +329,6 @@ class NationsCupBot(commands.Bot):
             scheduler = AsyncIOScheduler()
             scheduler.add_job(
                 self.post_game_updates_job,
-                CronTrigger(hour="*", minute="45", second="0"),
+                CronTrigger(hour="*", minute="*/5", second="0"),
             )
             scheduler.start()
