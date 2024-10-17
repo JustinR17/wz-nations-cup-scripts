@@ -48,13 +48,13 @@ ROUND_TO_COLOUR = {
 ROUND_TO_EMBED = {
     "Qualifiers": 1264965867419074611,
     "Main": 1271678678048444578,
-    "Finals": 0,
+    "Finals": 1296617255056179200,
 }
 
 
 class NCComands(commands.Cog):
 
-    def __init__(self, bot: 'NationsCupBot') -> None:
+    def __init__(self, bot: "NationsCupBot") -> None:
         self.bot = bot
 
     @app_commands.command(
@@ -98,43 +98,56 @@ class NCComands(commands.Cog):
                     for i, (group, team_results) in enumerate(group_standings.items()):
                         if phase == "Main" and i % 2 == 0 and i != 0:
                             embed.add_field(
-                                name='\u200b',
-                                value='\u200b',
+                                name="\u200b",
+                                value="\u200b",
                                 inline=True,
                             )
                         if phase == "Qualifiers":
-                            total_games = (len(set([result.team for result in team_results]))-1)*6*2
+                            total_games = (
+                                (len(set([result.team for result in team_results])) - 1)
+                                * 6
+                                * 2
+                            )
                         else:
                             total_games = 60
                         team_scores: Dict[str, Tuple[str, float, float]] = {}
                         for result in team_results:
                             if result.team not in team_scores:
                                 # team_scores[result.team] = (result.team, result.wins_adjusted, result.wins, result.losses, result.wins+result.losses)
-                                team_scores[result.team] = (result.team, result.wins_adjusted, result.wins_adjusted-result.wins-result.losses+total_games)
+                                team_scores[result.team] = (
+                                    result.team,
+                                    result.wins_adjusted,
+                                    result.wins_adjusted
+                                    - result.wins
+                                    - result.losses
+                                    + total_games,
+                                )
                             else:
                                 scores = team_scores[result.team]
                                 # team_scores[result.team] = (scores[0], scores[1]+result.wins_adjusted, scores[2]+result.wins, scores[3]+result.losses, scores[4]+result.wins+result.losses)
-                                team_scores[result.team] = (scores[0], scores[1]+result.wins_adjusted, scores[2]+result.wins_adjusted-result.wins-result.losses)
+                                team_scores[result.team] = (
+                                    scores[0],
+                                    scores[1] + result.wins_adjusted,
+                                    scores[2]
+                                    + result.wins_adjusted
+                                    - result.wins
+                                    - result.losses,
+                                )
                         team_scores_list = list(team_scores.values())
-                        team_scores_list.sort(
-                            key=lambda e: (e[1], e[2]), reverse=True
-                        )
+                        team_scores_list.sort(key=lambda e: (e[1], e[2]), reverse=True)
 
                         team_results_str = "\n".join(
-                                [
-                                    f"{e[0]:5}|{e[1]:4g}|{e[2]:4g}"
-                                    for e in team_scores_list
-                                ]
-                            )
+                            [f"{e[0]:5}|{e[1]:4g}|{e[2]:4g}" for e in team_scores_list]
+                        )
                         embed.add_field(
                             name=group,
                             value=f"```{team_results_str}```"[0:1024],
                             inline=True,
                         )
-                    embed.add_field(name='\u200b', value='\u200b')
+                    embed.add_field(name="\u200b", value="\u200b")
                     embed.timestamp = datetime.now()
                     sent_embed = await discord_channel.send(embed=embed)
-        await interaction.channel.send('')
+        await interaction.channel.send("")
 
     @app_commands.command(name="link", description="returns the google sheets link")
     async def link(self, interaction: discord.Interaction):
@@ -214,7 +227,9 @@ class NationsCupBot(commands.Bot):
                         )
                         embed.add_field(
                             name=f"{round} {ROUND_TO_TEMPLATE[round]} - {group}"[0:256],
-                            value=f"**{winners[0].team}** ({winners[0].score:g} pts) defeats **{losers[0].team}** ({losers[0].score:g} pts)"[0:1024],
+                            value=f"**{winners[0].team}** ({winners[0].score:g} pts) defeats **{losers[0].team}** ({losers[0].score:g} pts)"[
+                                0:1024
+                            ],
                         )
                         # embed.set_footer(
                         #     text=f"{winners[0].team} {winners[0].score:g} - {losers[0].team} {losers[0].score:g}"[
@@ -259,52 +274,68 @@ class NationsCupBot(commands.Bot):
                     for i, (group, team_results) in enumerate(group_standings.items()):
                         if phase == "Main" and i % 2 == 0 and i != 0:
                             embed.add_field(
-                                name='\u200b',
-                                value='\u200b',
+                                name="\u200b",
+                                value="\u200b",
                                 inline=True,
                             )
                         if phase == "Qualifiers":
-                            total_games = (len(set([result.team for result in team_results]))-1)*6*2
+                            total_games = (
+                                (len(set([result.team for result in team_results])) - 1)
+                                * 6
+                                * 2
+                            )
                         else:
                             total_games = 60
                         team_scores: Dict[str, Tuple[str, float, float]] = {}
                         for result in team_results:
                             if result.team not in team_scores:
                                 # team_scores[result.team] = (result.team, result.wins_adjusted, result.wins, result.losses, result.wins+result.losses)
-                                team_scores[result.team] = (result.team, result.wins_adjusted, result.wins_adjusted-result.wins-result.losses+total_games)
+                                team_scores[result.team] = (
+                                    result.team,
+                                    result.wins_adjusted,
+                                    result.wins_adjusted
+                                    - result.wins
+                                    - result.losses
+                                    + total_games,
+                                )
                             else:
                                 scores = team_scores[result.team]
                                 # team_scores[result.team] = (scores[0], scores[1]+result.wins_adjusted, scores[2]+result.wins, scores[3]+result.losses, scores[4]+result.wins+result.losses)
-                                team_scores[result.team] = (scores[0], scores[1]+result.wins_adjusted, scores[2]+result.wins_adjusted-result.wins-result.losses)
+                                team_scores[result.team] = (
+                                    scores[0],
+                                    scores[1] + result.wins_adjusted,
+                                    scores[2]
+                                    + result.wins_adjusted
+                                    - result.wins
+                                    - result.losses,
+                                )
                         team_scores_list = list(team_scores.values())
-                        team_scores_list.sort(
-                            key=lambda e: (e[1], e[2]), reverse=True
-                        )
+                        team_scores_list.sort(key=lambda e: (e[1], e[2]), reverse=True)
 
                         if phase == "Qualifiers":
                             team_results_str = "\n".join(
-                                    [
-                                        f"{e[0]:5}|{e[1]:4g}|{e[2]:4g}"
-                                        for e in team_scores_list
-                                    ]
-                                )
+                                [
+                                    f"{e[0]:5}|{e[1]:4g}|{e[2]:4g}"
+                                    for e in team_scores_list
+                                ]
+                            )
                         else:
                             team_results_str = "\n".join(
-                                    [
-                                        f"{e[0]:5} | {e[1]:2g} | {e[2]:2g}"
-                                        for e in team_scores_list
-                                    ]
-                                )
+                                [
+                                    f"{e[0]:5} | {e[1]:2g} | {e[2]:2g}"
+                                    for e in team_scores_list
+                                ]
+                            )
                         embed.add_field(
                             name=group,
                             value=f"```{team_results_str}```"[0:1024],
                             inline=True,
                         )
-                    embed.add_field(name='\u200b', value='\u200b')
+                    embed.add_field(name="\u200b", value="\u200b")
                     embed.timestamp = datetime.now()
                     await message.edit(embed=embed)
                     log_message(f"Successfully updated the embed for {phase}")
-        
+
         log_message(
             f"Successfully outputted {successfully_posted} of {total} game updates",
             "bot",
