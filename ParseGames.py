@@ -13,7 +13,11 @@ from NCTypes import (
     WarzonePlayer,
 )
 from api import API
-from data import TAB_TO_GAME_RANGE_MAPPING, TAB_TO_TABLE_RANGE_MAPPING
+from data import (
+    TAB_TO_GAME_RANGE_MAPPING,
+    TAB_TO_TABLE_RANGE_MAPPING,
+    CGAMES_TAB_TO_TABLE_RANGE_MAPPING,
+)
 from sheet import GoogleSheet
 import re
 
@@ -59,29 +63,27 @@ class ParseGames:
             table_range = TAB_TO_TABLE_RANGE_MAPPING[tab_phase]
             round = tab[1:]
 
-            table_rows_values = (
-                self.sheet.get_rows(f"{tab}!{table_range}") if table_range else None
-            )
+            table_rows_values = self.sheet.get_rows(f"{tab}!{table_range}")
 
             #######################
             ##### Parse Table #####
             #######################
-            if table_rows_values:
-                group = ""
-                for row in table_rows_values:
-                    row.extend("" for _ in range(7 - len(row)))
-                    if not row[0] and not row[1]:
-                        group = ""
-                    elif not group:
-                        # group section
+            group = ""
+            for row in table_rows_values:
+                row.extend("" for _ in range(7 - len(row)))
+                if not row[0] and not row[1]:
+                    group = ""
+                elif not group:
+                    # group section
+                    group = row[0]
+                else:
+                    if row[0]:
+                        # update group if finals tab (no divider between rounds)
                         group = row[0]
-                    else:
-                        # Parse team results
-                        team_table_results[f"{round}-{group}-{row[1]}"] = (
-                            TableTeamResult(
-                                round, group, row[1], row[2], row[3], row[4]
-                            )
-                        )
+                    # Parse team results
+                    team_table_results[f"{round}-{group}-{row[1]}"] = TableTeamResult(
+                        round, group, row[1], row[2], row[3], row[4]
+                    )
         return team_table_results
 
     def sum_team_standings_in_phase(
@@ -125,7 +127,7 @@ class ParseGames:
             tab_phase = re.search("^(_\w+)", tab).group(1)
             tab_status = self.sheet.get_rows(f"{tab}!A1:B1")
             game_range = TAB_TO_GAME_RANGE_MAPPING[tab_phase]
-            table_range = TAB_TO_TABLE_RANGE_MAPPING[tab_phase]
+            table_range = CGAMES_TAB_TO_TABLE_RANGE_MAPPING[tab_phase]
             round = tab[1:]
 
             tab_rows_values = self.sheet.get_rows(f"{tab}!{game_range}")
@@ -135,10 +137,13 @@ class ParseGames:
             table_rows_formulas = (
                 self.sheet.get_rows_formulas(f"{tab}!{table_range}")
                 if table_range
-                else None
+                else []
             )
 
-            log_message(f"Checking games in game log tab '{tab}' - {len(tab_rows_values)}", "update_new_games")
+            log_message(
+                f"Checking games in game log tab '{tab}' - {len(tab_rows_values)}",
+                "update_new_games",
+            )
             #######################
             ##### Parse Games #####
             #######################

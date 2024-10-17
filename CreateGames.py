@@ -1,13 +1,9 @@
 from datetime import datetime
-import json
-import os
 import re
-from typing import Dict, List
-from NCTypes import Game, Matchup, Player, RoundResult, Team, TeamResult
+from NCTypes import Game, Matchup, Player, Team
 from api import API
-from data import TAB_TO_GAME_RANGE_MAPPING, TAB_TO_TABLE_RANGE_MAPPING
+from data import TAB_TO_GAME_RANGE_MAPPING, CGAMES_TAB_TO_TABLE_RANGE_MAPPING
 from sheet import GoogleSheet
-import jsonpickle
 
 from utils import log_exception, log_message
 
@@ -105,7 +101,7 @@ class CreateGames:
         tab_phase = re.search("^(_\w+)", tab).group(1)
         tab_status = self.sheet.get_rows(f"{tab}!A1:B1")
         game_range = TAB_TO_GAME_RANGE_MAPPING[tab_phase]
-        table_range = TAB_TO_TABLE_RANGE_MAPPING[tab_phase]
+        table_range = CGAMES_TAB_TO_TABLE_RANGE_MAPPING[tab_phase]
 
         tab_rows_values = self.sheet.get_rows(f"{tab}!{game_range}")
         table_rows_values = (
