@@ -272,7 +272,11 @@ class NationsCupBot(commands.Bot):
                     # embed.description = "Scores are shown as:\n```Team | Pts | MP```"
                     embed.clear_fields()
                     for i, (group, team_results) in enumerate(group_standings.items()):
-                        if phase == "Main" and i % 2 == 0 and i != 0:
+                        if (
+                            (phase == "Main" or phase == "Finals")
+                            and i % 2 == 0
+                            and i != 0
+                        ):
                             embed.add_field(
                                 name="\u200b",
                                 value="\u200b",
@@ -284,6 +288,9 @@ class NationsCupBot(commands.Bot):
                                 * 6
                                 * 2
                             )
+                        elif phase == "Finals":
+                            # each round is separate
+                            total_games = 13
                         else:
                             total_games = 60
                         team_scores: Dict[str, Tuple[str, float, float]] = {}
