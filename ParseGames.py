@@ -130,7 +130,7 @@ class ParseGames:
 
             tab_rows_values = self.sheet.get_rows(f"{tab}!{game_range}")
             table_rows_values = (
-                self.sheet.get_rows(f"{tab}!{table_range}") if table_range else None
+                self.sheet.get_rows(f"{tab}!{table_range}") if table_range else []
             )
             table_rows_formulas = (
                 self.sheet.get_rows_formulas(f"{tab}!{table_range}")
