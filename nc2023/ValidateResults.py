@@ -6,7 +6,7 @@ import jsonpickle
 from NCTypes import (
     TEAM_NAME_TO_API_VALUE,
     Game,
-    GameResult,
+    RoundResult,
     PlayerResult,
     TeamResult,
     WarzoneGame,
@@ -45,7 +45,7 @@ class ValidateResults:
         """
 
         team_standings: Dict[str, TeamResult] = {}
-        player_standings: Dict[str, GameResult] = {}
+        player_standings: Dict[str, RoundResult] = {}
         for tab in self.get_game_tabs():
             is_2v2 = "2v2" in tab
             tab_rows = self.sheet.get_rows(f"{tab}!A1:{'K' if is_2v2 else'G'}300")
@@ -63,9 +63,17 @@ class ValidateResults:
                         # New teams to add
                         team_a, team_b = row[0].strip(), row[5 if is_2v2 else 3].strip()
                         team_standings.setdefault(team_a, TeamResult(team_a))
-                        team_standings[team_a].games_result[tab[0:2]] = GameResult(team_b, int(row[2 if is_2v2 else 1]), int(row[7 if is_2v2 else 4]))
+                        team_standings[team_a].games_result[tab[0:2]] = RoundResult(
+                            team_b,
+                            int(row[2 if is_2v2 else 1]),
+                            int(row[7 if is_2v2 else 4]),
+                        )
                         team_standings.setdefault(team_b, TeamResult(team_b))
-                        team_standings[team_b].games_result[tab[0:2]] = GameResult(team_a, int(row[7 if is_2v2 else 4]), int(row[2 if is_2v2 else 1]))
+                        team_standings[team_b].games_result[tab[0:2]] = RoundResult(
+                            team_a,
+                            int(row[7 if is_2v2 else 4]),
+                            int(row[2 if is_2v2 else 1]),
+                        )
                         if team_a:
                             log_message(
                                 f"Checking games for {tab} - {team_a} vs {team_b}",
@@ -87,33 +95,41 @@ class ValidateResults:
                                     WarzonePlayer(
                                         row[0],
                                         row[1],
-                                        "Won"
-                                        if row[4] == "defeats"
-                                        else "SurrenderAccepted",
+                                        (
+                                            "Won"
+                                            if row[4] == "defeats"
+                                            else "SurrenderAccepted"
+                                        ),
                                         team_a,
                                     ),
                                     WarzonePlayer(
                                         row[2],
                                         row[3],
-                                        "Won"
-                                        if row[4] == "defeats"
-                                        else "SurrenderAccepted",
+                                        (
+                                            "Won"
+                                            if row[4] == "defeats"
+                                            else "SurrenderAccepted"
+                                        ),
                                         team_a,
                                     ),
                                     WarzonePlayer(
                                         row[5],
                                         row[6],
-                                        "Won"
-                                        if row[4] == "loses to"
-                                        else "SurrenderAccepted",
+                                        (
+                                            "Won"
+                                            if row[4] == "loses to"
+                                            else "SurrenderAccepted"
+                                        ),
                                         team_b,
                                     ),
                                     WarzonePlayer(
                                         row[7],
                                         row[8],
-                                        "Won"
-                                        if row[4] == "loses to"
-                                        else "SurrenderAccepted",
+                                        (
+                                            "Won"
+                                            if row[4] == "loses to"
+                                            else "SurrenderAccepted"
+                                        ),
                                         team_b,
                                     ),
                                 ]
@@ -122,17 +138,21 @@ class ValidateResults:
                                     WarzonePlayer(
                                         row[0],
                                         row[1],
-                                        "Won"
-                                        if row[2] == "defeats"
-                                        else "SurrenderAccepted",
+                                        (
+                                            "Won"
+                                            if row[2] == "defeats"
+                                            else "SurrenderAccepted"
+                                        ),
                                         team_a,
                                     ),
                                     WarzonePlayer(
                                         row[3],
                                         row[4],
-                                        "Won"
-                                        if row[2] == "loses to"
-                                        else "SurrenderAccepted",
+                                        (
+                                            "Won"
+                                            if row[2] == "loses to"
+                                            else "SurrenderAccepted"
+                                        ),
                                         team_b,
                                     ),
                                 ]
@@ -242,7 +262,7 @@ class ValidateResults:
         teams: Tuple[str, str],
         tab: str,
         team_standings: Dict[str, TeamResult],
-        player_standings: Dict[str, GameResult],
+        player_standings: Dict[str, RoundResult],
     ):
         players_by_team: Dict[str, List[WarzonePlayer]] = {teams[0]: [], teams[1]: []}
         for player in game.players:
