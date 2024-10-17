@@ -1,5 +1,5 @@
 TAB_TO_GAME_RANGE_MAPPING = {
-    "_Finals": "K2:R105",
+    "_Finals": "K2:S105",
     "_Main": "J3:R169",
     "_Qualifiers": "J3:R313",
 }

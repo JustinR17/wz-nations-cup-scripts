@@ -109,7 +109,7 @@ class CreateGames:
 
         tab_rows_values = self.sheet.get_rows(f"{tab}!{game_range}")
         table_rows_values = (
-            self.sheet.get_rows(f"{tab}!{table_range}") if table_range else None
+            self.sheet.get_rows(f"{tab}!{table_range}") if table_range else []
         )
 
         team_modifiers = {}

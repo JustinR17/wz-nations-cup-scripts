@@ -138,7 +138,7 @@ class ParseGames:
                 else None
             )
 
-            log_message(f"Checking games in game log tab '{tab}'", "update_new_games")
+            log_message(f"Checking games in game log tab '{tab}' - {len(tab_rows_values)}", "update_new_games")
             #######################
             ##### Parse Games #####
             #######################
