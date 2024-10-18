@@ -269,7 +269,8 @@ class NationsCupBot(commands.Bot):
 
                     message = await discord_channel.fetch_message(embed)
                     embed = message.embeds[0]
-                    # embed.description = "Scores are shown as:\n```Team | Pts | MP```"
+                    if phase == "Finals":
+                        embed.description = "Each stage is best of 13 (first to 7 wins):"
                     embed.clear_fields()
                     for i, (group, team_results) in enumerate(group_standings.items()):
                         if (
@@ -326,6 +327,14 @@ class NationsCupBot(commands.Bot):
                                     for e in team_scores_list
                                 ]
                             )
+                        elif phase == "Finals":
+                            team_results_str = "  Team  | Pts\n"
+                            team_results_str += "\n".join(
+                                [
+                                    f"{'🏆 ' if e[1] > 6 else '  '}{e[0]:5} | {e[1]:2g}"
+                                    for e in team_scores_list
+                                ]
+                            )
                         else:
                             team_results_str = "\n".join(
                                 [
@@ -336,6 +345,12 @@ class NationsCupBot(commands.Bot):
                         embed.add_field(
                             name=group,
                             value=f"```{team_results_str}```"[0:1024],
+                            inline=True,
+                        )
+                    if phase == "Finals":
+                        embed.add_field(
+                            name="\u200b",
+                            value="\u200b",
                             inline=True,
                         )
                     embed.add_field(name="\u200b", value="\u200b")
