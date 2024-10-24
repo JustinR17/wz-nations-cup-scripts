@@ -29,6 +29,7 @@ ROUND_TO_TEMPLATE = {
     "Main R3": "Numenor",
     "Main R4": "Volcano Island",
     "Main R5": "Biomes",
+    "Finals": "",
 }
 
 # Reverse ROY G BIV; Finals is all gold

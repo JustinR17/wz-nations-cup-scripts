@@ -583,14 +583,14 @@ class ParseGames:
                     [
                         result[1].wins
                         for result in team_results.items()
-                        if row[0] in result[0]
+                        if row[0] in result[0].split("-")[2]
                     ]
                 )
                 row[2] = sum(
                     [
                         result[1].losses
                         for result in team_results.items()
-                        if row[0] in result[0]
+                        if row[0] in result[0].split("-")[2]
                     ]
                 )
                 seen_countries.add(row[0])
