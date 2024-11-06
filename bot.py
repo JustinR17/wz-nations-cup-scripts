@@ -53,6 +53,13 @@ ROUND_TO_EMBED = {
 }
 
 
+def format_finals_round_results(standings):
+    if standings[1] > 6:
+        return 'W '
+    elif standings[3] > 6:
+        return 'L '
+    return '  '
+
 class NCComands(commands.Cog):
 
     def __init__(self, bot: "NationsCupBot") -> None:
@@ -295,7 +302,7 @@ class NationsCupBot(commands.Bot):
                             total_games = 13
                         else:
                             total_games = 60
-                        team_scores: Dict[str, Tuple[str, float, float]] = {}
+                        team_scores: Dict[str, Tuple[str, float, float, int]] = {}
                         for result in team_results:
                             if result.team not in team_scores:
                                 # team_scores[result.team] = (result.team, result.wins_adjusted, result.wins, result.losses, result.wins+result.losses)
@@ -306,6 +313,7 @@ class NationsCupBot(commands.Bot):
                                     - result.wins
                                     - result.losses
                                     + total_games,
+                                    result.losses,
                                 )
                             else:
                                 scores = team_scores[result.team]
@@ -317,6 +325,7 @@ class NationsCupBot(commands.Bot):
                                     + result.wins_adjusted
                                     - result.wins
                                     - result.losses,
+                                    scores[3] + result.losses,
                                 )
                         team_scores_list = list(team_scores.values())
                         team_scores_list.sort(key=lambda e: (e[1], e[2]), reverse=True)
@@ -329,10 +338,10 @@ class NationsCupBot(commands.Bot):
                                 ]
                             )
                         elif phase == "Finals":
-                            team_results_str = "  Team  | Pts\n"
+                            team_results_str = f"  Team  | Pts\n"
                             team_results_str += "\n".join(
                                 [
-                                    f"{'🏆 ' if e[1] > 6 else '  '}{e[0]:5} | {e[1]:2g}"
+                                    f"{format_finals_round_results(e)}{e[0]:5} | {e[1]:2g}"
                                     for e in team_scores_list
                                 ]
                             )
