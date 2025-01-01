@@ -150,7 +150,7 @@ class ParseGames:
             group, team_a, team_b, score_row = "", "", "", []
             for row in tab_rows_values:
                 row.extend("" for _ in range(9 - len(row)))
-                if not row[0] and not row[1]:
+                if (not row[0] and not row[1]) or not row[6]:
                     # Finished the previous matchup
                     team_a, team_b, score_row = "", "", []
                 else:
