@@ -8,7 +8,9 @@ import jsonpickle
 from CreateGames import CreateGames
 
 from CreateMatches import CreateMatches
+
 # from GetFunStats import GetFunStats
+from GetFunStats import GetFunStats
 from ParseGames import ParseGames
 
 # from ParsePlayers import ParsePlayers
@@ -17,6 +19,7 @@ from ValidatePlayers import ValidatePlayers
 # from ValidateResults import ValidateResults
 from bot import NationsCupBot
 from sheet import GoogleSheet
+
 # from test import TestCommand
 
 config = {"email": None, "token": None, "spreadsheet_id": None}
