@@ -32,7 +32,7 @@ class GetFunStats:
                 )
                 games_with_chat[tab] = []
                 for row in tab_rows:
-                    if row and len(row) == 6 and "?GameID" in row[6]:
+                    if row and len(row) == 6 and "?GameID" in row[5]:
                         chat = self.api.get_game_chat(
                             self.convert_wz_game_link_to_id(row[-1])
                         )
