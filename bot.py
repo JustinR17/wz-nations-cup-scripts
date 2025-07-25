@@ -22,13 +22,13 @@ client = discord.Client(intents=intents)
 
 
 ROUND_TO_TEMPLATE = {
-    "Qualifiers R1": "Guiroma",
-    "Qualifiers R2": "French Brawl",
-    "Main R1": "Strategic MME",
-    "Main R2": "Africa Ultima",
-    "Main R3": "Numenor",
-    "Main R4": "Volcano Island",
-    "Main R5": "Biomes",
+    "Qualifiers R1": "Guiroma KU",
+    "Qualifiers R2": "Aseridith",
+    "Main R1": "French Brawl",
+    "Main R2": "Tarabonia's Choice",
+    "Main R3": "Landria",
+    "Main R4": "MME WR",
+    "Main R5": "Aseridith",
     "Finals": "",
 }
 
@@ -47,18 +47,19 @@ ROUND_TO_COLOUR = {
 }
 
 ROUND_TO_EMBED = {
-    "Qualifiers": 1264965867419074611,
-    "Main": 1271678678048444578,
-    "Finals": 1296617255056179200,
+    "Qualifiers": 0,
+    "Main": -1,
+    "Finals": -1,
 }
 
 
 def format_finals_round_results(standings):
     if standings[1] > 6:
-        return 'W '
+        return "W "
     elif standings[3] > 6:
-        return 'L '
-    return '  '
+        return "L "
+    return "  "
+
 
 class NCComands(commands.Cog):
 
@@ -128,6 +129,7 @@ class NCComands(commands.Cog):
                                     result.wins_adjusted
                                     - result.wins
                                     - result.losses
+                                    - result.unstarted_games
                                     + total_games,
                                 )
                             else:
@@ -139,7 +141,8 @@ class NCComands(commands.Cog):
                                     scores[2]
                                     + result.wins_adjusted
                                     - result.wins
-                                    - result.losses,
+                                    - result.losses
+                                    - result.unstarted_games,
                                 )
                         team_scores_list = list(team_scores.values())
                         team_scores_list.sort(key=lambda e: (e[1], e[2]), reverse=True)
@@ -160,7 +163,7 @@ class NCComands(commands.Cog):
     @app_commands.command(name="link", description="returns the google sheets link")
     async def link(self, interaction: discord.Interaction):
         await interaction.response.send_message(
-            "<https://docs.google.com/spreadsheets/d/1R7VDKXYN3ofo5xBkPQ_XOmcCCmb1W2w_kHXCO2qy_Xs>"
+            "<https://docs.google.com/spreadsheets/d/1kv2E-WfMKo4-YqkdHAqvOHMaXN1h94S4vOONnN-hYEs>"
         )
 
     @app_commands.command(name="kill", description="justin only command")
@@ -278,7 +281,9 @@ class NationsCupBot(commands.Bot):
                     message = await discord_channel.fetch_message(embed)
                     embed = message.embeds[0]
                     if phase == "Finals":
-                        embed.description = "Each stage is best of 13 (first to 7 wins):"
+                        embed.description = (
+                            "Each stage is best of 13 (first to 7 wins):"
+                        )
                     embed.clear_fields()
                     for i, (group, team_results) in enumerate(group_standings.items()):
                         if (
@@ -301,7 +306,7 @@ class NationsCupBot(commands.Bot):
                             # each round is separate
                             total_games = 13
                         else:
-                            total_games = 60
+                            total_games = 30
                         team_scores: Dict[str, Tuple[str, float, float, int]] = {}
                         for result in team_results:
                             if result.team not in team_scores:
@@ -312,6 +317,7 @@ class NationsCupBot(commands.Bot):
                                     result.wins_adjusted
                                     - result.wins
                                     - result.losses
+                                    - result.unstarted_games
                                     + total_games,
                                     result.losses,
                                 )
@@ -324,7 +330,8 @@ class NationsCupBot(commands.Bot):
                                     scores[2]
                                     + result.wins_adjusted
                                     - result.wins
-                                    - result.losses,
+                                    - result.losses
+                                    - result.unstarted_games,
                                     scores[3] + result.losses,
                                 )
                         team_scores_list = list(team_scores.values())

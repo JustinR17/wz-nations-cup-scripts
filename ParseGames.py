@@ -14,9 +14,11 @@ from NCTypes import (
 )
 from api import API
 from data import (
+    NO_GAME_PLAYED,
     TAB_TO_GAME_RANGE_MAPPING,
     TAB_TO_TABLE_RANGE_MAPPING,
     CGAMES_TAB_TO_TABLE_RANGE_MAPPING,
+    UNKNOWN_PLAYER_NAME,
 )
 from sheet import GoogleSheet
 import re
@@ -171,6 +173,18 @@ class ParseGames:
                                 "update_new_games",
                             )
                     elif not row[3]:
+                        # check if a game has been created (ie. there are players on both teams)
+                        if not row[6]:
+                            # No game, one or both players are missing
+                            row[3] = NO_GAME_PLAYED
+                            team_table_results[
+                                f"{round}-{group}-{team_a}"
+                            ].unstarted_games += 1
+                            team_table_results[
+                                f"{round}-{group}-{team_b}"
+                            ].unstarted_games += 1
+                            continue
+
                         # Game to check
                         game = self.api.check_game(
                             self.convert_wz_game_link_to_id(row[6].strip())
@@ -435,6 +449,10 @@ class ParseGames:
                             games_to_delete.append(game)
                     else:
                         # Game is already done, but add the win to player standings
+                        # only if game was actually played
+                        if row[3] == NO_GAME_PLAYED:
+                            continue
+
                         left_player_id = int(
                             re.search(r"^.*?p=(\d*).*$", row[2]).group(1)
                         )

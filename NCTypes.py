@@ -275,3 +275,4 @@ class TableTeamResult:
         self.wins_adjusted = float(wins_adjusted)
         self.wins = int(wins)
         self.losses = int(losses)
+        self.unstarted_games = 0

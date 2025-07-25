@@ -152,9 +152,16 @@ class CreateGames:
             )
             player_b = Player(
                 row[4].strip(),
-                int(re.search(r"^.*?p=(\d*).*$", row[5]).group(1)),
+                int(re.search(r"^.*?p=(\d*).*$", row[5] or 0).group(1)),
                 Team(team_b),
             )
+            if (
+                player_a.name == UNKNOWN_PLAYER_NAME
+                or player_b.name == UNKNOWN_PLAYER_NAME
+            ):
+                # one of the  teams does not have enough players. forfeit and do notcreate any game
+                continue
+
             if not row[6]:
                 # game does not exist yet
                 game = Game([player_a, player_b], Game.Outcome.UNDEFINED, row[6])
@@ -173,14 +180,14 @@ class CreateGames:
         self.sheet.update_rows_raw(f"{tab}!A1:B1", tab_status)
 
     def create_games(self, game: Game, round: str, template: str):
-        title = f"Nations' Cup 2024 {round}"
-        description = f"""This game is a part of the Nations' Cup 2024 {round}, run by Rento. You have 3 days to join the game.
+        title = f"Nations' Cup 2025 {round}"
+        description = f"""This game is a part of the Nations' Cup 2025 {round}, run by Rento. You have 3 days to join the game.
             
 Match is between:
 \t{game.players[0].name.encode()} in {game.players[0].team.name}
 \t{game.players[1].name.encode()} in {game.players[1].team.name}
 
-https://docs.google.com/spreadsheets/d/1R7VDKXYN3ofo5xBkPQ_XOmcCCmb1W2w_kHXCO2qy_Xs
+https://docs.google.com/spreadsheets/d/1kv2E-WfMKo4-YqkdHAqvOHMaXN1h94S4vOONnN-hYEs
 """
 
         try:
