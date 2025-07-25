@@ -40,7 +40,7 @@ class ValidatePlayers:
                 # New player to check
                 if row[0]:
                     print(f"Checking new team: {row[0].strip()}")
-                row.extend("" for _ in range(11 - len(row)))
+                row.extend("" for _ in range(10 - len(row)))
                 try:
                     validate_response = self.api.validate_player_template_access(
                         int(re.search(r"^.*?p=(\d*).*$", row[2]).group(1)), templates
