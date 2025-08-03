@@ -4,6 +4,17 @@ This project contains a collection of CLI commands for managing and running Nati
 
 Commands include managing matchup creation between teams, creating warzone games, processing created games and posting finished games to discord.
 
+## Setup
+
+The project uses python 3.10. To install and run the project, use the following:
+
+1. Create a venv or use pyenv ot create a 3.10 instance.
+2. Setup `config.json` with the appropriate values (use `config-example.json` for reference)
+3. Setup `token.json` with the appropriate values (use `token-example.json` for reference)
+4. To run the parse games check, use `run_parse_games.sh`
+5. TO run the bot, use `run_bot_startup.sh`
+
+
 ## Usage
 
 ```bash

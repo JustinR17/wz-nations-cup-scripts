@@ -1,0 +1,8 @@
+{
+    "discord_token": "<discord-bot-token",
+    "game_log_channel": "<discord-game-log-channel-id>",
+    "score_channel": "<discord-score-channel-id>",
+    "spreadsheet_id": "<spreadsheet-id>",
+    "token": "<warzone-token>",
+    "email": "<warzone-email>"
+}
