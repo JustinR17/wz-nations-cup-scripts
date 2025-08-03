@@ -3,7 +3,7 @@
 source /home/pi/.bashrc
 pushd /home/pi/Desktop/nc
 printf '%s\n' "$(date)"
-source /home/pi/Desktop/nc/venv/bin/activate
-python main.py pgames
+pyenv activate nc-venv
+python3 main.py pgames
 popd
 echo
