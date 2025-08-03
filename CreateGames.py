@@ -2,7 +2,7 @@ from datetime import datetime
 import re
 from NCTypes import Game, Matchup, Player, Team
 from api import API
-from data import TAB_TO_GAME_RANGE_MAPPING, CGAMES_TAB_TO_TABLE_RANGE_MAPPING
+from data import NO_GAME_PLAYED, TAB_TO_GAME_RANGE_MAPPING, CGAMES_TAB_TO_TABLE_RANGE_MAPPING, UNKNOWN_PLAYER_NAME
 from sheet import GoogleSheet
 
 from utils import log_exception, log_message
@@ -102,26 +102,12 @@ class CreateGames:
         tab_status = self.sheet.get_rows(f"{tab}!A1:B1")
         game_range = TAB_TO_GAME_RANGE_MAPPING[tab_phase]
         table_range = CGAMES_TAB_TO_TABLE_RANGE_MAPPING[tab_phase]
+        round = tab[1:]
 
         tab_rows_values = self.sheet.get_rows(f"{tab}!{game_range}")
         table_rows_values = (
             self.sheet.get_rows(f"{tab}!{table_range}") if table_range else []
         )
-
-        team_modifiers = {}
-        group, round = "", tab[1:]
-        for i, row in enumerate(table_rows_values):
-            # parse table to find standings
-            row.extend("" for _ in range(7 - len(row)))
-            if row[0]:
-                # new group
-                group = row[0]
-                continue
-            elif not row[1]:
-                continue
-            team_modifiers[f"{round}-{group}-{row[1]}"] = float(row[6])
-
-        print(team_modifiers)
 
         # parse the games to be made
         group, team_a, team_b = "", "", ""
@@ -141,6 +127,14 @@ class CreateGames:
             elif not row[1]:
                 continue
 
+            if (
+                row[1].strip() == UNKNOWN_PLAYER_NAME
+                or row[4].strip() == UNKNOWN_PLAYER_NAME
+            ):
+                # one of the  teams does not have enough players. forfeit and do notcreate any game
+                row[3] = NO_GAME_PLAYED
+                continue
+
             if row[8]:
                 print(f"\tChanging the template on line {i} to: {row[8]}")
                 template = row[8].strip()
@@ -155,12 +149,6 @@ class CreateGames:
                 int(re.search(r"^.*?p=(\d*).*$", row[5] or 0).group(1)),
                 Team(team_b),
             )
-            if (
-                player_a.name == UNKNOWN_PLAYER_NAME
-                or player_b.name == UNKNOWN_PLAYER_NAME
-            ):
-                # one of the  teams does not have enough players. forfeit and do notcreate any game
-                continue
 
             if not row[6]:
                 # game does not exist yet

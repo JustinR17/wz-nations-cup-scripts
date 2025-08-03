@@ -152,7 +152,7 @@ class ParseGames:
             group, team_a, team_b, score_row = "", "", "", []
             for row in tab_rows_values:
                 row.extend("" for _ in range(9 - len(row)))
-                if (not row[0] and not row[1]) or not row[6]:
+                if (not row[0] and not row[1]) or (not row[3] and not row[6]):
                     # Finished the previous matchup
                     team_a, team_b, score_row = "", "", []
                 else:
@@ -449,8 +449,14 @@ class ParseGames:
                             games_to_delete.append(game)
                     else:
                         # Game is already done, but add the win to player standings
-                        # only if game was actually played
                         if row[3] == NO_GAME_PLAYED:
+                            # No game, one or both players are missing
+                            team_table_results[
+                                f"{round}-{group}-{team_a}"
+                            ].unstarted_games += 1
+                            team_table_results[
+                                f"{round}-{group}-{team_b}"
+                            ].unstarted_games += 1
                             continue
 
                         left_player_id = int(

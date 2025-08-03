@@ -22,7 +22,7 @@ class ValidatePlayers:
         self.validate_players_on_templates()
 
     def validate_players_on_templates(self):
-        sheet_rows = self.sheet.get_rows("Rosters!C3:L221")
+        sheet_rows = self.sheet.get_rows("Rosters!C3:L300")
         status_cells = self.sheet.get_rows("Rosters!D1:E1")
         templates = []
 
@@ -74,6 +74,6 @@ class ValidatePlayers:
                     log_exception(
                         f"Error while handling {row[1].encode()} ({row[2]})\n{e}"
                     )
-        self.sheet.update_rows_raw("Rosters!C3:L221", sheet_rows)
+        self.sheet.update_rows_raw("Rosters!C3:L300", sheet_rows)
         status_cells[0][1] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.sheet.update_rows_raw("Rosters!D1:E1", status_cells)
