@@ -1,0 +1,4 @@
+# start the bot on restart
+@reboot /home/pi/Desktop/nc/run_bot_startup.sh
+# rum the parse games script every half-hour
+0,30 * * * * /home/pi/Desktop/nc/run_parse_games.sh
