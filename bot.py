@@ -48,8 +48,8 @@ ROUND_TO_COLOUR = {
 
 ROUND_TO_EMBED = {
     "Qualifiers": 1398551770829160550,
-    "Main": 0,
-    "Finals": 0,
+    "Main": 1409725880686608475,
+    "Finals": -1,
 }
 
 
