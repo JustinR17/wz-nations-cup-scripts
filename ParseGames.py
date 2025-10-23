@@ -447,6 +447,9 @@ class ParseGames:
                                 )
 
                             games_to_delete.append(game)
+                    elif not row[1] and not row[4]:
+                        # Empty matchup
+                        pass
                     else:
                         # Game is already done, but add the win to player standings
                         if row[3] == NO_GAME_PLAYED:
