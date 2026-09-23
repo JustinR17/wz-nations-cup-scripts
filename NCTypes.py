@@ -189,12 +189,17 @@ TEAM_NAME_TO_API_VALUE = bidict(
         "POL B": "25",
         "POL C": "26",
         "POL D": "27",
-        "UK A": "28",
+        "UK": "28",
         "UK B": "29",
         "USA A": "30",
         "USA B": "31",
         "USA C": "32",
         "USA D": "33",
+        "ESP": "34",
+        "CHL": "35",
+        "RKZ": "36",
+        "SIN": "37",
+        "IRL": "38",
     }
 )
 

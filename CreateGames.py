@@ -168,14 +168,14 @@ class CreateGames:
         self.sheet.update_rows_raw(f"{tab}!A1:B1", tab_status)
 
     def create_games(self, game: Game, round: str, template: str):
-        title = f"Nations' Cup 2025 {round}"
-        description = f"""This game is a part of the Nations' Cup 2025 {round}, run by Rento. You have 3 days to join the game.
+        title = f"Nations' Cup 2026 {round}"
+        description = f"""This game is a part of the Nations' Cup 2026 {round}, run by Rento. You have 3 days to join the game.
             
 Match is between:
 \t{game.players[0].name.encode()} in {game.players[0].team.name}
 \t{game.players[1].name.encode()} in {game.players[1].team.name}
 
-https://docs.google.com/spreadsheets/d/1kv2E-WfMKo4-YqkdHAqvOHMaXN1h94S4vOONnN-hYEs
+https://docs.google.com/spreadsheets/d/1SipgipmtNHqbRFL46U4k2AKSZa4U4A85VJH-PY-VXjI
 """
 
         try:
@@ -219,7 +219,7 @@ Match is between:
 \t{", ".join(players_by_team[matchup.teams[0].name]).encode()} in {matchup.teams[0].name}
 \t{", ".join(players_by_team[matchup.teams[1].name]).encode()} in {matchup.teams[1].name}
 
-https://docs.google.com/spreadsheets/d/1QPKGgwToBd2prap8u3XVUx9F47SuvMH9wJruvG0t2D4
+https://docs.google.com/spreadsheets/d/1SipgipmtNHqbRFL46U4k2AKSZa4U4A85VJH-PY-VXjI
 """
 
         try:

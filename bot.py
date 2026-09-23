@@ -22,8 +22,8 @@ client = discord.Client(intents=intents)
 
 
 ROUND_TO_TEMPLATE = {
-    "Qualifiers R1": "Guiroma KU",
-    "Qualifiers R2": "Aseridith",
+    "Qualifiers R1": "Imp Vulcanum",
+    "Qualifiers R2": "Greek Brawl",
     "Main R1": "French Brawl",
     "Main R2": "Tarabonia's Choice",
     "Main R3": "Landria",
@@ -47,9 +47,9 @@ ROUND_TO_COLOUR = {
 }
 
 ROUND_TO_EMBED = {
-    "Qualifiers": 1398551770829160550,
-    "Main": 1409725880686608475,
-    "Finals": 1430757705923952690,
+    "Qualifiers": 1552185831794413640,
+    "Main": 0,
+    "Finals": 0,
 }
 
 
