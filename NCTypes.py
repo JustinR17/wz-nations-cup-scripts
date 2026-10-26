@@ -166,7 +166,7 @@ TEAM_NAME_TO_API_VALUE = bidict(
         "ANZ B": "2",
         "ANZ C": "3",
         "ANZ D": "4",
-        "BEL A": "5",
+        "BEL": "5",
         "BEL B": "6",
         "CAN A": "7",
         "CAN B": "8",
